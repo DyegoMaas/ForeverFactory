@@ -86,10 +86,50 @@ person.LastName.Should().Be("Einstein");
 person.Age.Should().Be(56);
 ```
 
+## Custom constructors
+
+If your class has a constructor with parameters, like the one below, you'll have to configure it:
+
+```csharp
+public class Product
+{
+    public string Name { get; }
+    public string Category { get; }
+    public string Description { get; set; }
+
+    public Product(string name, string category)
+    {
+        Name = name;
+        Category = category;
+    }
+}
+```
+
+If you are using a *custom factory*, you can set the constructor function there:
+
+```csharp
+public class ProductFactory : MagicFactory<Product>
+{
+    public ProductFactory()
+    {
+        UseConstructor(() => new Product("Nimbus 2000", "Brooms"));
+        Set(x => x.Description = "Top of the line flying broom");
+    }
+}
+```
+
+Otherwise, you can just set it when building an object:
+```csharp
+var product = MagicFactory.For<Product>()
+    .UsingConstructor(() => new Product("Nimbus 2000", "Brooms"))
+    .With(x => x.Description = "Top of the line flying broom")
+    .Build();
+```
+
 ## Roadmap
 
+- Support multi-level object creation
 - The default factory could have an option to fill all properties with valid values
 - Allow configuration by rules
 - Allow sequences in numbers properties and things like email, etc
 - Support group configurations (WithFirst and WithLast) in the constructor of a custom factory
-- Support multi-level object creation
