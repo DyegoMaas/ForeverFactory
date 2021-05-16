@@ -2,6 +2,10 @@
 # Created by https://www.toptal.com/developers/gitignore/api/jetbrains+all,visualstudio,visualstudiocode,dotnetcore
 # Edit at https://www.toptal.com/developers/gitignore?templates=jetbrains+all,visualstudio,visualstudiocode,dotnetcore
 
+### Stryker.NET ###
+# Mutation Tests results folders
+StrykerOutput/
+
 ### DotnetCore ###
 # .NET Core build folders
 bin/

@@ -1,0 +1,28 @@
+name: mutation-tests
+on:
+  workflow_dispatch:
+jobs:
+  stryker:
+    runs-on: ubuntu-latest
+    name: Run Mutation Tests
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0x
+      - name: Install Stryker
+        run: |
+          dotnet new tool-manifest
+          dotnet tool install dotnet-stryker
+          dotnet tool restore
+      - name: Run Stryker
+        run: |
+          cd ./tests/ForeverFactoryTests
+          dotnet stryker
+          cd ../..
+      - name: Publish HTML results as artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: MutationResults
+          path: ./StrykerOutput
