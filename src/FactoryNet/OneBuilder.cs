@@ -10,7 +10,7 @@ namespace FactoryNet
 
         public IOneBuilder<T> With<TValue>(Func<T, TValue> setMember)
         {
-            _transforms.Add(new FuncTransform<T, TValue>(setMember));
+            _transforms.Add(new FuncTransform<T, TValue>(setMember, new NoConditionToApply()));
             return this;
         }
 

@@ -6,7 +6,7 @@ namespace FactoryNet
     {
         private readonly Func<T, TValue> _setMember;
 
-        public FuncTransform(Func<T, TValue> setMember, ConditionToApply conditionToApply = null) 
+        public FuncTransform(Func<T, TValue> setMember, ConditionToApply conditionToApply) 
             : base(conditionToApply)
         {
             _setMember = setMember;
@@ -18,21 +18,73 @@ namespace FactoryNet
         }
     }
 
-    public class ConditionToApply
+    public abstract class ConditionToApply
     {
-        public Condition Condition { get; }
         public int Count { get; }
+        public int SetSize { get; }
 
-        public ConditionToApply(Condition condition, int count)
+        public ConditionToApply(int count, int setSize)
         {
-            Condition = condition;
             Count = count;
+            SetSize = setSize;
+        }
+
+        public abstract bool CanApplyFor(int index);
+    }
+    
+    public class NoConditionToApply : ConditionToApply
+    {
+        public NoConditionToApply() 
+            : base(count: 0, setSize: 0)
+        {
+        }
+
+        public override bool CanApplyFor(int index)
+        {
+            return true;
         }
     }
-
-    public enum Condition
+    
+    public class ConditionToApplyFirst : ConditionToApply
     {
-        First,
-        Last
+        public ConditionToApplyFirst(int count, int setSize) 
+            : base(count, setSize)
+        {
+        }
+
+        public override bool CanApplyFor(int index)
+        {
+            return index < Count;
+        }
+    }
+    
+    public class ConditionToApplyLast : ConditionToApply
+    {
+        public ConditionToApplyLast(int count, int setSize) 
+            : base(count, setSize)
+        {
+        }
+
+        public override bool CanApplyFor(int index)
+        {
+            var firstToApply = SetSize - Count;
+            return index >= firstToApply;
+        }
+    }
+    
+    public class ConditionToApplyBetween : ConditionToApply
+    {
+        public int StartingFromIndex { get; }
+
+        public ConditionToApplyBetween(int count, int setSize, int startingFromIndex) 
+            : base(count, setSize)
+        {
+            StartingFromIndex = startingFromIndex;
+        }
+
+        public override bool CanApplyFor(int index)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

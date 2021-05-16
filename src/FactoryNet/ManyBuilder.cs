@@ -28,7 +28,7 @@ namespace FactoryNet
 
         public IManyBuilder<T> With<TValue>(Func<T, TValue> setMember)
         {
-            _transforms.Add(new FuncTransform<T,TValue>(setMember));
+            _transforms.Add(new FuncTransform<T,TValue>(setMember, new NoConditionToApply()));
             return this;
         }
 
@@ -39,10 +39,9 @@ namespace FactoryNet
                 throw new ArgumentOutOfRangeException("count", count,
                     $"Count should be less or equal to the set size ({_count})");
             }
-            _transforms.Add(new FuncTransform<T,TValue>(setMember, new ConditionToApply(Condition.First, count)));
+            _transforms.Add(new FuncTransform<T,TValue>(setMember, new ConditionToApplyFirst(count, setSize: _count)));
             return this;
         }
-        
         public IManyBuilder<T> WithLast<TValue>(int count, Func<T, TValue> setMember)
         {
             if (count > _count)
@@ -50,7 +49,7 @@ namespace FactoryNet
                 throw new ArgumentOutOfRangeException("count", count,
                     $"Count should be less or equal to the set size ({_count})");
             }
-            _transforms.Add(new FuncTransform<T,TValue>(setMember, new ConditionToApply(Condition.Last, count)));
+            _transforms.Add(new FuncTransform<T,TValue>(setMember, new ConditionToApplyLast(count, setSize: _count)));
             return this;
         }
 
@@ -71,18 +70,8 @@ namespace FactoryNet
                 T instance = new();
                 foreach (var transform in _transforms)
                 {
-                    if (transform.ConditionToApply?.Condition == Condition.First)
-                    {
-                        if (i >= transform.ConditionToApply.Count)
-                            continue;
-                    }
-                    
-                    if (transform.ConditionToApply?.Condition == Condition.Last)
-                    {
-                        var firstToApply = _count - transform.ConditionToApply.Count;
-                        if (i < firstToApply)
-                            continue;
-                    }
+                    if (transform.ConditionToApply.CanApplyFor(index: i) is false)
+                        continue;
                     
                     transform.ApplyTo(instance);
                 }

@@ -17,7 +17,7 @@ namespace FactoryNet
 
         protected void Set<TValue>(Func<T, TValue> setMember)
         {
-            _defaultTransforms.Add(new FuncTransform<T,TValue>(setMember));
+            _defaultTransforms.Add(new FuncTransform<T,TValue>(setMember, new NoConditionToApply()));
             _oneBuilder.With(setMember); // TODO refactor in order to not repeat this operation
         }
         
