@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using FactoryNet.Tests.ExampleFactories;
 using FluentAssertions;
 using Xunit;
@@ -48,6 +49,30 @@ namespace FactoryNet.Tests
                 person.LastName.Should().Be("Nobel");
                 person.Age.Should().Be(19);
             }
+        }
+
+        [Fact]
+        public void Should_throw_an_argument_exception_for_first_count_bigger_than_total_size()
+        {
+            Action invalidConfigurationBuild = () => _factory
+                .Many(count: 10)
+                .WithFirst(count: 11, x => x.Age = 19)
+                .Build();
+
+            invalidConfigurationBuild.Should()
+                .Throw<ArgumentException>("it is not possible to apply transformations beyond set size");
+        }
+        
+        [Fact]
+        public void Should_throw_an_argument_exception_for_last_count_bigger_than_total_size()
+        {
+            Action invalidConfigurationBuild = () => _factory
+                .Many(count: 10)
+                .WithLast(count: 11, x => x.Age = 19)
+                .Build();
+
+            invalidConfigurationBuild.Should()
+                .Throw<ArgumentException>("it is not possible to apply transformations beyond set size");
         }
         
         [Fact]
