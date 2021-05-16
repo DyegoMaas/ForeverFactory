@@ -1,9 +1,11 @@
-﻿namespace FactoryNet.Transforms.Conditions
+﻿using FactoryNet.ExecutionContext;
+
+namespace FactoryNet.Transforms.Conditions
 {
-    public class ConditionToApplyFirst : ConditionToApply
+    internal class ConditionToApplyFirst : ConditionToApply
     {
-        public ConditionToApplyFirst(int countToApply, int setSize) 
-            : base(countToApply, setSize)
+        public ConditionToApplyFirst(int count, IExecutionContext executionContext) 
+            : base(count, executionContext)
         {
         }
 

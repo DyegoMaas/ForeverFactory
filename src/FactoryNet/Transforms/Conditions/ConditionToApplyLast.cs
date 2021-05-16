@@ -1,15 +1,17 @@
-﻿namespace FactoryNet.Transforms.Conditions
+﻿using FactoryNet.ExecutionContext;
+
+namespace FactoryNet.Transforms.Conditions
 {
-    public class ConditionToApplyLast : ConditionToApply
+    internal class ConditionToApplyLast : ConditionToApply
     {
-        public ConditionToApplyLast(int countToApply, int setSize) 
-            : base(countToApply, setSize)
+        public ConditionToApplyLast(int count, IExecutionContext executionContext) 
+            : base(count, executionContext)
         {
         }
 
         public override bool CanApplyFor(int index)
         {
-            var firstToApply = SetSize - CountToApply;
+            var firstToApply = ExecutionContext.QuantityToProduce - CountToApply;
             return index >= firstToApply;
         }
     }

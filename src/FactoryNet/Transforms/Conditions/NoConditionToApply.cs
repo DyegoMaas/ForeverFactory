@@ -1,9 +1,11 @@
-﻿namespace FactoryNet.Transforms.Conditions
+﻿using FactoryNet.ExecutionContext;
+
+namespace FactoryNet.Transforms.Conditions
 {
-    public class NoConditionToApply : ConditionToApply
+    internal class NoConditionToApply : ConditionToApply
     {
         public NoConditionToApply() 
-            : base(countToApply: 0, setSize: 0)
+            : base(count: 0, new InstanceSetExecutionContext(quantityToProduce: 0))
         {
         }
 

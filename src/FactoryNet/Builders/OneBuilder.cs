@@ -5,7 +5,7 @@ using FactoryNet.Transforms.Conditions;
 
 namespace FactoryNet.Builders
 {
-    public class OneBuilder<T> : IOneBuilder<T>
+    internal class OneBuilder<T> : IOneBuilder<T>
         where T : class
     {
         private readonly List<Transform<T>> _transforms = new();

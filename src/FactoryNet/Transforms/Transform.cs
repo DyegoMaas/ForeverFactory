@@ -2,7 +2,7 @@
 
 namespace FactoryNet.Transforms
 {
-    public abstract class Transform<T>
+    internal abstract class Transform<T>
     {
         public ConditionToApply ConditionToApply { get; }
 

@@ -1,14 +1,16 @@
-﻿namespace FactoryNet.Transforms.Conditions
-{
-    public abstract class ConditionToApply
-    {
-        public int CountToApply { get; }
-        public int SetSize { get; }
+﻿using FactoryNet.ExecutionContext;
 
-        public ConditionToApply(int countToApply, int setSize) // TODO maybe it should receive an IExecutionContext instead of the setSize
+namespace FactoryNet.Transforms.Conditions
+{
+    internal abstract class ConditionToApply
+    {
+        protected int CountToApply { get; }
+        protected IExecutionContext ExecutionContext { get; }
+
+        public ConditionToApply(int count, IExecutionContext executionContext)
         {
-            CountToApply = countToApply;
-            SetSize = setSize;
+            CountToApply = count;
+            ExecutionContext = executionContext;
         }
 
         public abstract bool CanApplyFor(int index);
