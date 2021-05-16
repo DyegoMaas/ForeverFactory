@@ -49,5 +49,62 @@ namespace FactoryNet.Tests
                 person.Age.Should().Be(19);
             }
         }
+        
+        [Fact]
+        public void WithFirst_applies_transformation_only_over_the_first_x_instances_produced()
+        {
+            var persons = _factory
+                .Many(count: 10)
+                .WithFirst(count: 2, x => x.Age = 19)
+                .WithFirst(count: 2, x => x.LastName = "Nobel")
+                .Build()
+                .ToList();
+
+            persons.Should().HaveCount(10);
+            var firstTwo = persons.Take(2);
+            foreach (var person in firstTwo)
+            {
+                person.FirstName.Should().Be("Albert");
+                person.LastName.Should().Be("Nobel");
+                person.Age.Should().Be(19);
+            }
+            
+            var lastEight = persons.Skip(2);
+            foreach (var person in lastEight)
+            {
+                person.FirstName.Should().Be("Albert");
+                person.LastName.Should().Be("Einstein");
+                person.Age.Should().Be(56);
+            }
+        }
+        
+        [Fact]
+        public void WithLast_applies_transformation_only_over_the_last_x_instances_produced()
+        {
+            var persons = _factory
+                .Many(count: 10)
+                .WithLast(count: 2, x => x.Age = 19)
+                .WithLast(count: 2, x => x.LastName = "Nobel")
+                .Build()
+                .ToList();
+
+            persons.Should().HaveCount(10);
+  
+            var firstEigth = persons.Take(8);
+            foreach (var person in firstEigth)
+            {
+                person.FirstName.Should().Be("Albert");
+                person.LastName.Should().Be("Einstein");
+                person.Age.Should().Be(56);
+            }
+            
+            var lastTwo = persons.Skip(8);
+            foreach (var person in lastTwo)
+            {
+                person.FirstName.Should().Be("Albert");
+                person.LastName.Should().Be("Nobel");
+                person.Age.Should().Be(19);
+            }
+        }
     }
 }
