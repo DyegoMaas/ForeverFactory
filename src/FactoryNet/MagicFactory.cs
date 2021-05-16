@@ -36,20 +36,24 @@ namespace FactoryNet
             _oneBuilder.With(setMember); // TODO refactor in order to not repeat this operation
         }
 
+        # region OneBuilder Wrapper
+        
         public IOneBuilder<T> With<TValue>(Func<T, TValue> setMember)
         {
             _oneBuilder.With(setMember);
             return _oneBuilder;
         }
 
-        public IManyBuilder<T> Many(int count)
-        {
-            return new ManyBuilder<T>(count, _defaultTransforms, _customConstructor);
-        }
-
         public T Build()
         {
             return _oneBuilder.Build();
+        }
+        
+        #endregion
+
+        public IManyBuilder<T> Many(int count)
+        {
+            return new ManyBuilder<T>(count, _defaultTransforms, _customConstructor);
         }
     }
 }
