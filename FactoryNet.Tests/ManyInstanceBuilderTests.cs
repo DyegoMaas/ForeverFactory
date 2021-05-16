@@ -50,6 +50,7 @@ namespace FactoryNet.Tests
                 person.Age.Should().Be(19);
             }
         }
+        
 
         [Fact]
         public void Should_throw_an_argument_exception_for_first_count_bigger_than_total_size()
@@ -129,6 +130,54 @@ namespace FactoryNet.Tests
                 person.FirstName.Should().Be("Albert");
                 person.LastName.Should().Be("Nobel");
                 person.Age.Should().Be(19);
+            }
+        }
+        
+        [Fact]
+        public void It_should_generate_multiple_sets_of_configurable_instances()
+        {
+            var persons = _factory
+                .Many(count: 10)
+                .WithLast(count: 2, x => x.Age = 19)
+                .WithLast(count: 2, x => x.LastName = "Nobel")
+                .Plus(count: 5)
+                .WithFirst(count: 3, x => x.Age = 100)
+                .With(x => x.FirstName = "Anna")
+                .Build()
+                .ToList();
+
+            persons.Should().HaveCount(15);
+  
+            var firstEight = persons.Take(8);
+            foreach (var person in firstEight)
+            {
+                person.FirstName.Should().Be("Albert");
+                person.LastName.Should().Be("Einstein");
+                person.Age.Should().Be(56);
+            }
+            
+            var nextTwo = persons.Skip(8).Take(2);
+            foreach (var person in nextTwo)
+            {
+                person.FirstName.Should().Be("Albert");
+                person.LastName.Should().Be("Nobel");
+                person.Age.Should().Be(19);
+            }
+            
+            var nextThree = persons.Skip(10).Take(3);
+            foreach (var person in nextThree)
+            {
+                person.FirstName.Should().Be("Anna");
+                person.LastName.Should().Be("Einstein");
+                person.Age.Should().Be(100);
+            }
+            
+            nextTwo = persons.TakeLast(2);
+            foreach (var person in nextTwo)
+            {
+                person.FirstName.Should().Be("Anna");
+                person.LastName.Should().Be("Einstein");
+                person.Age.Should().Be(56);
             }
         }
     }
