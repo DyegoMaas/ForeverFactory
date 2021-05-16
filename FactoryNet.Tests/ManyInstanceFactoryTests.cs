@@ -6,11 +6,11 @@ using Xunit;
 
 namespace FactoryNet.Tests
 {
-    public class ManyInstanceBuilderTests
+    public class ManyInstanceFactoryTests
     {
         private readonly PersonFactory _factory;
 
-        public ManyInstanceBuilderTests()
+        public ManyInstanceFactoryTests()
         {
             _factory = new PersonFactory();
         }
