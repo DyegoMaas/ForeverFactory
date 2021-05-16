@@ -20,12 +20,12 @@ namespace FactoryNet
 
     public abstract class ConditionToApply
     {
-        public int Count { get; }
+        public int CountToApply { get; }
         public int SetSize { get; }
 
-        public ConditionToApply(int count, int setSize)
+        public ConditionToApply(int countToApply, int setSize)
         {
-            Count = count;
+            CountToApply = countToApply;
             SetSize = setSize;
         }
 
@@ -35,7 +35,7 @@ namespace FactoryNet
     public class NoConditionToApply : ConditionToApply
     {
         public NoConditionToApply() 
-            : base(count: 0, setSize: 0)
+            : base(countToApply: 0, setSize: 0)
         {
         }
 
@@ -47,27 +47,27 @@ namespace FactoryNet
     
     public class ConditionToApplyFirst : ConditionToApply
     {
-        public ConditionToApplyFirst(int count, int setSize) 
-            : base(count, setSize)
+        public ConditionToApplyFirst(int countToApply, int setSize) 
+            : base(countToApply, setSize)
         {
         }
 
         public override bool CanApplyFor(int index)
         {
-            return index < Count;
+            return index < CountToApply;
         }
     }
     
     public class ConditionToApplyLast : ConditionToApply
     {
-        public ConditionToApplyLast(int count, int setSize) 
-            : base(count, setSize)
+        public ConditionToApplyLast(int countToApply, int setSize) 
+            : base(countToApply, setSize)
         {
         }
 
         public override bool CanApplyFor(int index)
         {
-            var firstToApply = SetSize - Count;
+            var firstToApply = SetSize - CountToApply;
             return index >= firstToApply;
         }
     }
@@ -76,15 +76,15 @@ namespace FactoryNet
     {
         public int StartingFromIndex { get; }
 
-        public ConditionToApplyBetween(int count, int setSize, int startingFromIndex) 
-            : base(count, setSize)
+        public ConditionToApplyBetween(int countToApply, int startingFromIndex, int setSize) 
+            : base(countToApply, setSize)
         {
             StartingFromIndex = startingFromIndex;
         }
 
         public override bool CanApplyFor(int index)
         {
-            throw new NotImplementedException();
+            return index >= StartingFromIndex && index < StartingFromIndex + CountToApply;
         }
     }
 }

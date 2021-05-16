@@ -34,14 +34,35 @@ namespace FactoryNet
 
         public IManyBuilder<T> WithFirst<TValue>(int count, Func<T, TValue> setMember)
         {
+            ValidateCount(count);
+            
+            _transforms.Add(new FuncTransform<T,TValue>(setMember, new ConditionToApplyFirst(count, setSize: _count)));
+            return this;
+        }
+
+        public IManyBuilder<T> WithNext<TValue>(int count, Func<T, TValue> setMember)
+        {
+            ValidateCount(count);
+
+            var numberOfInstancesToSkip = _transforms
+                .Select(x => x.ConditionToApply)
+                .Where(x => x is ConditionToApplyFirst or ConditionToApplyBetween)
+                .Sum(x => x.CountToApply);
+            var startingIndex = numberOfInstancesToSkip;
+            
+            _transforms.Add(new FuncTransform<T,TValue>(setMember, new ConditionToApplyBetween(count, startingFromIndex: startingIndex, setSize: _count)));
+            return this;
+        }
+
+        private void ValidateCount(int count)
+        {
             if (count > _count)
             {
                 throw new ArgumentOutOfRangeException("count", count,
                     $"Count should be less or equal to the set size ({_count})");
             }
-            _transforms.Add(new FuncTransform<T,TValue>(setMember, new ConditionToApplyFirst(count, setSize: _count)));
-            return this;
         }
+
         public IManyBuilder<T> WithLast<TValue>(int count, Func<T, TValue> setMember)
         {
             if (count > _count)
