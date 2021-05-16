@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using FactoryNet.Transforms;
+using FactoryNet.Transforms.Conditions;
 
-namespace FactoryNet
+namespace FactoryNet.Builders
 {
     public class OneBuilder<T> : IOneBuilder<T>
         where T : new()

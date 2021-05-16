@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
+using FactoryNet.Builders;
+using FactoryNet.Transforms;
+using FactoryNet.Transforms.Conditions;
 
 namespace FactoryNet
 {
@@ -10,11 +12,6 @@ namespace FactoryNet
         private readonly OneBuilder<T> _oneBuilder = new();
         private readonly List<Transform<T>> _defaultTransforms = new();
         
-        protected void Set<TValue>(Expression<Func<T, TValue>> member, Func<T, TValue> value)
-        {
-            throw new NotImplementedException();
-        }
-
         protected void Set<TValue>(Func<T, TValue> setMember)
         {
             _defaultTransforms.Add(new FuncTransform<T,TValue>(setMember, new NoConditionToApply()));

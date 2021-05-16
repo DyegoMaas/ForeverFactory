@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FactoryNet
+namespace FactoryNet.Builders
 {
     public interface IOneBuilder<out T>
     {

@@ -1,4 +1,6 @@
-﻿namespace FactoryNet
+﻿using FactoryNet.Transforms.Conditions;
+
+namespace FactoryNet.Transforms
 {
     public abstract class Transform<T>
     {

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FactoryNet.Transforms;
+using FactoryNet.Transforms.Conditions;
 
-namespace FactoryNet
+namespace FactoryNet.Builders
 {
     public class ManyBuilder<T> : IManyBuilder<T>
         where T : new()
