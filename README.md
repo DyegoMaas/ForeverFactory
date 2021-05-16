@@ -132,6 +132,7 @@ var product = MagicFactory.For<Product>()
 ## Roadmap
 
 - Support multi-level object creation
+- Add automatic SemVer bumping
 - The default factory could have an option to fill all properties with valid values
 - Allow configuration by rules
 - Allow sequences in numbers properties and things like email, etc
