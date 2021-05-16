@@ -6,7 +6,12 @@ using FactoryNet.Transforms.Conditions;
 
 namespace FactoryNet
 {
-    public class MagicFactory<T> : IOneBuilder<T>
+    public static class MagicFactory
+    {
+        public static MagicFactory<T> For<T>() where T : new() => new DefaultFactory<T>();
+    }
+
+    public abstract class MagicFactory<T> : IOneBuilder<T>
         where T : new() // TODO see if it possible to allow constructors with parameters
     {
         private readonly OneBuilder<T> _oneBuilder = new();
