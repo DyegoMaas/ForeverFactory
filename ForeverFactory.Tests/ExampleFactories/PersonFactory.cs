@@ -1,4 +1,4 @@
-﻿namespace FactoryNet.Tests.ExampleFactories
+﻿namespace ForeverFactory.Tests.ExampleFactories
 {
     public class PersonFactory : MagicFactory<Person>
     {

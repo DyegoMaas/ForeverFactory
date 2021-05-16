@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FactoryNet.Builders
+namespace ForeverFactory.Builders
 {
     public interface IOneBuilder<out T>
     {

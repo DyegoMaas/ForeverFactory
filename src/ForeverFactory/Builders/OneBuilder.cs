@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using FactoryNet.Transforms;
-using FactoryNet.Transforms.Conditions;
+using ForeverFactory.Transforms;
+using ForeverFactory.Transforms.Conditions;
 
-namespace FactoryNet.Builders
+namespace ForeverFactory.Builders
 {
     internal class OneBuilder<T> : IOneBuilder<T>
         where T : class

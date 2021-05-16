@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FactoryNet.Builders
+namespace ForeverFactory.Builders
 {
     public interface IManyBuilder<out T>
     {

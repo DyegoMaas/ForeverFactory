@@ -1,8 +1,8 @@
-﻿using FactoryNet.Tests.ExampleFactories;
+﻿using ForeverFactory.Tests.ExampleFactories;
 using FluentAssertions;
 using Xunit;
 
-namespace FactoryNet.Tests
+namespace ForeverFactory.Tests
 {
     public class CustomConstructorTests
     {

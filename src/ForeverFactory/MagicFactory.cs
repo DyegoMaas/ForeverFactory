@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using FactoryNet.Builders;
-using FactoryNet.Transforms;
-using FactoryNet.Transforms.Conditions;
+using ForeverFactory.Builders;
+using ForeverFactory.Transforms;
+using ForeverFactory.Transforms.Conditions;
 
-namespace FactoryNet
+namespace ForeverFactory
 {
     public static class MagicFactory
     {

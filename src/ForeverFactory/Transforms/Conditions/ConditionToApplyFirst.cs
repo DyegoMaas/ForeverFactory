@@ -1,6 +1,6 @@
-﻿using FactoryNet.ExecutionContext;
+﻿using ForeverFactory.ExecutionContext;
 
-namespace FactoryNet.Transforms.Conditions
+namespace ForeverFactory.Transforms.Conditions
 {
     internal class ConditionToApplyFirst : ConditionToApply
     {

@@ -1,7 +1,7 @@
 ﻿using System;
-using FactoryNet.Transforms.Conditions;
+using ForeverFactory.Transforms.Conditions;
 
-namespace FactoryNet.Transforms
+namespace ForeverFactory.Transforms
 {
     internal sealed class FuncTransform<T, TValue> : Transform<T>
     {

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using FactoryNet.ExecutionContext;
-using FactoryNet.Transforms;
-using FactoryNet.Transforms.Conditions;
+using ForeverFactory.ExecutionContext;
+using ForeverFactory.Transforms;
+using ForeverFactory.Transforms.Conditions;
 
-namespace FactoryNet.Builders
+namespace ForeverFactory.Builders
 {
     /*
      * Assumptions:

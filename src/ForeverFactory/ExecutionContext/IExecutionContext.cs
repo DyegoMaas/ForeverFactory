@@ -1,4 +1,4 @@
-﻿namespace FactoryNet.ExecutionContext
+﻿namespace ForeverFactory.ExecutionContext
 {
     internal interface IExecutionContext
     {

@@ -1,10 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FactoryNet", "src\FactoryNet\FactoryNet.csproj", "{60DE81F1-F665-4930-A9A3-2FE61A35179D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForeverFactory", "src\ForeverFactory\ForeverFactory.csproj", "{60DE81F1-F665-4930-A9A3-2FE61A35179D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{55B70AE4-3D76-4C93-8C34-3F5B12DEF747}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FactoryNet.Tests", "FactoryNet.Tests\FactoryNet.Tests.csproj", "{021F2B8B-F7D5-490E-8476-F335A9DA04E5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForeverFactory.Tests", "ForeverFactory.Tests\ForeverFactory.Tests.csproj", "{021F2B8B-F7D5-490E-8476-F335A9DA04E5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{A5DED662-E03F-4B5C-8474-8EFABC2A9854}"
 ProjectSection(SolutionItems) = preProject

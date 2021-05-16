@@ -1,6 +1,6 @@
-﻿using FactoryNet.Transforms.Conditions;
+﻿using ForeverFactory.Transforms.Conditions;
 
-namespace FactoryNet.Transforms
+namespace ForeverFactory.Transforms
 {
     internal abstract class Transform<T>
     {
