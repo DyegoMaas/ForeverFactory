@@ -2,6 +2,8 @@
 
 ![License](https://img.shields.io/github/license/DyegoMaas/ForeverFactory.svg)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/DyegoMaas/ForeverFactory/build-and-test?label=tests)
+![Nuget](https://img.shields.io/nuget/v/ForeverFactory)
+![Nuget](https://img.shields.io/nuget/dt/ForeverFactory)
 
 **Forever Factory** is a .NET 5 library that helps you build custom objects. By merging design patterns like Factory and Builder, it makes it super easy to create hundreds of customized objects.
 
