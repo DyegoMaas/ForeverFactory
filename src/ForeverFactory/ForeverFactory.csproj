@@ -9,7 +9,7 @@
         <RepositoryUrl>https://github.com/DyegoMaas/ForeverFactory</RepositoryUrl>
         <PackageTags>ForeverFactory factory builder</PackageTags>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageVersion>1.0.0</PackageVersion>
+        <PackageVersion>1.0.1</PackageVersion>
     </PropertyGroup>
 
 </Project>

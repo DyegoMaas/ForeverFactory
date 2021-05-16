@@ -9,7 +9,9 @@
 
 With Forever Factory, building a new object can be as simple as `MagicFactory.For<Person>().Build()`.
 
-## Building a single object
+## How to use?
+
+### Building a single object
 
 Let's assume we have a class named Person:
 
@@ -37,7 +39,7 @@ var vitorHugo = MagicFactory.For<Person>()
     .Build();
 ```
 
-## Building a multiple objects
+### Building a multiple objects
 
 We can build a defined number of instances of this class as follows:
 
@@ -65,7 +67,7 @@ var hundredPeople = MagicFactory.For<Person>()
     .Build(); // creates 10 persons with age 5, and 20 with age 60
 ```
 
-## Custom Factories
+### Custom Factories
 
 You create your own factory, with predefined rules, like this:
 
@@ -91,7 +93,7 @@ person.LastName.Should().Be("Einstein");
 person.Age.Should().Be(56);
 ```
 
-## Custom constructors
+### Custom constructors
 
 If your class has a constructor with parameters, like the one below, you'll have to configure it:
 
@@ -129,6 +131,29 @@ var product = MagicFactory.For<Product>()
     .UsingConstructor(() => new Product("Nimbus 2000", "Brooms"))
     .With(x => x.Description = "Top of the line flying broom")
     .Build();
+```
+
+## How to contribute
+
+You can help this project in many ways. Here are some ideas:
+
+- Improving tests
+- Reporting issues
+- Making pull requests
+
+### Running mutation tests
+
+To assess the test suite quality, we use mutation testing with the tool Stryker.NET. After cloning this repository, you can install it by running the following command:  
+
+```bash
+dotnet tool restore
+```
+
+Then, you can navigate to the test project directory and then run stryker: 
+
+```bash
+cd ./tests/ForeverFactory.Tests
+dotnet stryker
 ```
 
 ## Roadmap
