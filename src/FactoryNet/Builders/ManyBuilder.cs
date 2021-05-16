@@ -7,23 +7,25 @@ using FactoryNet.Transforms.Conditions;
 namespace FactoryNet.Builders
 {
     public class ManyBuilder<T> : IManyBuilder<T>
-        where T : new()
+        where T : class
     {
         private readonly List<Transform<T>> _defaultTransforms;
         private readonly List<Transform<T>> _transforms = new();
         private readonly int _count;
-        
+
+        private readonly Func<T> _customConstructor;
         private readonly ManyBuilder<T> _previousBuilder;
 
-        public ManyBuilder(int count, IEnumerable<Transform<T>> defaultTransforms)
+        public ManyBuilder(int count, IEnumerable<Transform<T>> defaultTransforms, Func<T> customConstructor)
         {
             _defaultTransforms = defaultTransforms.ToList();
             _transforms.AddRange(_defaultTransforms);
+            _customConstructor = customConstructor;
             _count = count;
         }
         
-        private ManyBuilder(int count, IEnumerable<Transform<T>> defaultTransforms, ManyBuilder<T> previousBuilder)
-            : this(count, defaultTransforms)
+        private ManyBuilder(int count, IEnumerable<Transform<T>> defaultTransforms, Func<T> customConstructor, ManyBuilder<T> previousBuilder)
+            : this(count, defaultTransforms, customConstructor)
         {
             _previousBuilder = previousBuilder;
         }
@@ -78,7 +80,7 @@ namespace FactoryNet.Builders
 
         public IManyBuilder<T> Plus(int count)
         {
-            return new ManyBuilder<T>(count, _defaultTransforms, previousBuilder: this);
+            return new ManyBuilder<T>(count, _defaultTransforms, _customConstructor, previousBuilder: this);
         }
 
         public IEnumerable<T> Build()
@@ -90,7 +92,7 @@ namespace FactoryNet.Builders
 
             for (var i = 0; i < _count; i++)
             {
-                T instance = new();
+                var instance = _customConstructor?.Invoke() ?? Activator.CreateInstance<T>();
                 foreach (var transform in _transforms)
                 {
                     if (transform.ConditionToApply.CanApplyFor(index: i) is false)

@@ -6,9 +6,15 @@ using FactoryNet.Transforms.Conditions;
 namespace FactoryNet.Builders
 {
     public class OneBuilder<T> : IOneBuilder<T>
-        where T : new()
+        where T : class
     {
         private readonly List<Transform<T>> _transforms = new();
+        private Func<T> _customConstructor;
+
+        public void SetCustomConstructor(Func<T> customConstructor) 
+        {
+            _customConstructor = customConstructor;
+        }
 
         public IOneBuilder<T> With<TValue>(Func<T, TValue> setMember)
         {
@@ -18,7 +24,7 @@ namespace FactoryNet.Builders
 
         public T Build()
         {
-            T instance = new();
+            var instance = _customConstructor?.Invoke() ?? Activator.CreateInstance<T>();
             foreach (var transform in _transforms)
             {
                 transform.ApplyTo(instance);
