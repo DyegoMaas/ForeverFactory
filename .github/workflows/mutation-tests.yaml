@@ -21,7 +21,6 @@ jobs:
           ls -lhap
           cd ./tests/ForeverFactory.Tests
           dotnet stryker
-          cd ../..
       - name: Publish HTML results as artifacts
         uses: actions/upload-artifact@v1
         with:
