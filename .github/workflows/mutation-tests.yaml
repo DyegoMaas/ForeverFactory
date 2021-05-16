@@ -18,7 +18,8 @@ jobs:
           dotnet tool restore
       - name: Run Stryker
         run: |
-          cd ./tests/ForeverFactoryTests
+          ls -lhap
+          cd ./tests/ForeverFactory.Tests
           dotnet stryker
           cd ../..
       - name: Publish HTML results as artifacts
