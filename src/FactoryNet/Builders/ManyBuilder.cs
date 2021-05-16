@@ -6,78 +6,83 @@ using FactoryNet.Transforms.Conditions;
 
 namespace FactoryNet.Builders
 {
+    /*
+     * Assumptions:
+     * - transformations are applied in same order they are declared: this makes the system deterministic and
+     * consequently more understandable
+     */
     public class ManyBuilder<T> : IManyBuilder<T>
         where T : class
     {
         private readonly List<Transform<T>> _defaultTransforms;
         private readonly List<Transform<T>> _transforms = new();
-        private readonly int _count;
+        private readonly int _setSize;
 
         private readonly Func<T> _customConstructor;
         private readonly ManyBuilder<T> _previousBuilder;
 
-        public ManyBuilder(int count, IEnumerable<Transform<T>> defaultTransforms, Func<T> customConstructor)
+        public ManyBuilder(int setSize, IEnumerable<Transform<T>> defaultTransforms, Func<T> customConstructor)
         {
             _defaultTransforms = defaultTransforms.ToList();
             _transforms.AddRange(_defaultTransforms);
             _customConstructor = customConstructor;
-            _count = count;
+            _setSize = setSize;
         }
         
-        private ManyBuilder(int count, IEnumerable<Transform<T>> defaultTransforms, Func<T> customConstructor, ManyBuilder<T> previousBuilder)
-            : this(count, defaultTransforms, customConstructor)
+        private ManyBuilder(int setSize, IEnumerable<Transform<T>> defaultTransforms, Func<T> customConstructor, ManyBuilder<T> previousBuilder)
+            : this(setSize, defaultTransforms, customConstructor)
         {
             _previousBuilder = previousBuilder;
         }
 
+        /// <summary>
+        /// Works within the active context
+        /// </summary>
         public IManyBuilder<T> With<TValue>(Func<T, TValue> setMember)
         {
             _transforms.Add(new FuncTransform<T,TValue>(setMember, new NoConditionToApply()));
             return this;
         }
 
+        /// <summary>
+        /// Works within the active context
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public IManyBuilder<T> WithFirst<TValue>(int count, Func<T, TValue> setMember)
         {
             ValidateCount(count);
             
-            _transforms.Add(new FuncTransform<T,TValue>(setMember, new ConditionToApplyFirst(count, setSize: _count)));
-            return this;
-        }
-
-        public IManyBuilder<T> WithNext<TValue>(int count, Func<T, TValue> setMember)
-        {
-            ValidateCount(count);
-
-            var numberOfInstancesToSkip = _transforms
-                .Select(x => x.ConditionToApply)
-                .Where(x => x is ConditionToApplyFirst or ConditionToApplyBetween)
-                .Sum(x => x.CountToApply);
-            var startingIndex = numberOfInstancesToSkip;
-            
-            _transforms.Add(new FuncTransform<T,TValue>(setMember, new ConditionToApplyBetween(count, startingFromIndex: startingIndex, setSize: _count)));
+            _transforms.Add(new FuncTransform<T,TValue>(setMember, new ConditionToApplyFirst(count, setSize: _setSize)));
             return this;
         }
 
         private void ValidateCount(int count)
         {
-            if (count > _count)
+            if (count > _setSize)
             {
                 throw new ArgumentOutOfRangeException("count", count,
-                    $"Count should be less or equal to the set size ({_count})");
+                    $"Count should be less or equal to the set size ({_setSize})");
             }
         }
 
+        /// <summary>
+        /// Works within the active context
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public IManyBuilder<T> WithLast<TValue>(int count, Func<T, TValue> setMember)
         {
-            if (count > _count)
+            if (count > _setSize)
             {
                 throw new ArgumentOutOfRangeException("count", count,
-                    $"Count should be less or equal to the set size ({_count})");
+                    $"Count should be less or equal to the set size ({_setSize})");
             }
-            _transforms.Add(new FuncTransform<T,TValue>(setMember, new ConditionToApplyLast(count, setSize: _count)));
+            _transforms.Add(new FuncTransform<T,TValue>(setMember, new ConditionToApplyLast(count, setSize: _setSize)));
             return this;
         }
 
+        /// <summary>
+        /// Creates a new linked context
+        /// </summary>
         public IManyBuilder<T> Plus(int count)
         {
             return new ManyBuilder<T>(count, _defaultTransforms, _customConstructor, previousBuilder: this);
@@ -90,7 +95,7 @@ namespace FactoryNet.Builders
                 yield return instance;
             }
 
-            for (var i = 0; i < _count; i++)
+            for (var i = 0; i < _setSize; i++)
             {
                 var instance = _customConstructor?.Invoke() ?? Activator.CreateInstance<T>();
                 foreach (var transform in _transforms)
