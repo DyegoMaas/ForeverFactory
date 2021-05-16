@@ -6,7 +6,7 @@ With Forever Factory, building a new object can be as simple as `MagicFactory.Fo
 
 ## Building a single object
 
-Let's assume we have a POCO named Person:
+Let's assume we have a class named Person:
 
 ```csharp
 public class Person
