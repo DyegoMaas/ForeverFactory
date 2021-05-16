@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForeverFactory", "src\Forev
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{55B70AE4-3D76-4C93-8C34-3F5B12DEF747}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForeverFactory.Tests", "ForeverFactory.Tests\ForeverFactory.Tests.csproj", "{021F2B8B-F7D5-490E-8476-F335A9DA04E5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForeverFactory.Tests", "tests\ForeverFactory.Tests\ForeverFactory.Tests.csproj", "{021F2B8B-F7D5-490E-8476-F335A9DA04E5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{A5DED662-E03F-4B5C-8474-8EFABC2A9854}"
 ProjectSection(SolutionItems) = preProject

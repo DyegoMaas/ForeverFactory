@@ -21,7 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\src\ForeverFactory\ForeverFactory.csproj" />
+      <ProjectReference Include="..\..\src\ForeverFactory\ForeverFactory.csproj" />
     </ItemGroup>
 
 </Project>
