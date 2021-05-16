@@ -4,7 +4,7 @@ using Xunit;
 
 namespace ForeverFactory.Tests
 {
-    public class DynamicFactoryTests
+    public class MagicFactoryTests
     {
         [Fact]
         public void Should_create_instance_with_default_values()
