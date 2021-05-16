@@ -2,6 +2,14 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
+        <Authors>Dyego Alekssander Maas</Authors>
+        <PackageId>ForeverFactory</PackageId>
+        <Description>Forever Factory makes it super easy to build many customized objects.</Description>
+        <PackageProjectUrl>https://github.com/DyegoMaas/ForeverFactory</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/DyegoMaas/ForeverFactory</RepositoryUrl>
+        <PackageTags>ForeverFactory factory builder</PackageTags>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageVersion>1.0.0</PackageVersion>
     </PropertyGroup>
 
 </Project>

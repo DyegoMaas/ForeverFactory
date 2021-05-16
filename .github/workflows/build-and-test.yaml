@@ -1,5 +1,16 @@
 name: build-and-test
-on: [push, workflow_dispatch]
+on:
+  workflow_dispatch:    
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - 'LICENSE'
+      - 'README.md'
+  pull_request:
+    branches: [ main ]
+    paths-ignore:
+      - 'LICENSE'
+      - 'README.md'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,3 +26,21 @@ jobs:
           dotnet-version: ${{ matrix.dotnet }}
       - run: dotnet build ForeverFactory.sln
       - run: dotnet test ForeverFactory.sln
+
+  publish-to-nuget:
+    if: github.ref == 'refs/heads/master'
+    needs: build-and-test
+    runs-on: ubuntu-latest   
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+
+      - name: Pack
+        run: dotnet pack src/ForeverFactory/ForeverFactory.csproj -c Release -o nuget-package
+
+      - name: Publish to Nuget.org
+        run: dotnet nuget push nuget-package/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
