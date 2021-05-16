@@ -1,5 +1,8 @@
 # Forever Factory
 
+![License](https://img.shields.io/github/license/DyegoMaas/ForeverFactory.svg)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/DyegoMaas/ForeverFactory/build-and-test?label=tests)
+
 **Forever Factory** is a .NET 5 library that helps you build custom objects. By merging design patterns like Factory and Builder, it makes it super easy to create hundreds of customized objects.
 
 With Forever Factory, building a new object can be as simple as `MagicFactory.For<Person>().Build()`.
