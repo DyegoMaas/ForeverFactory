@@ -1,0 +1,33 @@
+name: Release
+
+on:
+  push:
+    tags:
+    - '*.*.*'
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+    runs-on: ubuntu-latest   
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+
+      - name: Clean
+        run: dotnet clean -c Release
+
+      - name: Build
+        run: dotnet build -c Release
+
+      - name: Test
+        run: dotnet test -c Release -r nuget-package --no-build -l trx --verbosity=normal
+
+      - name: Pack
+        run: dotnet pack src/ForeverFactory/ForeverFactory.csproj -c Release --no-build -o nuget-package
+
+      - name: Publish to Nuget.org
+        run: dotnet nuget push nuget-package/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
