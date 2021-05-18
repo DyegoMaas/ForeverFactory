@@ -11,6 +11,18 @@ With Forever Factory, building a new object can be as simple as `MagicFactory.Fo
 
 ## How to use?
 
+### Installing ForeverFactory
+
+You may install ForeverFactory with NuGet:
+
+`Install-Package ForeverFactory`
+
+Or via the .NET Core command line interface:
+
+`dotnet add package ForeverFactory`
+
+Either commands, from Package Manager Console or .NET Core CLI, will download and install ForeverFactory.
+
 ### Building a single object
 
 Let's assume we have a class named Person:
@@ -160,6 +172,7 @@ dotnet stryker
 
 - Support multi-level object creation
 - Add automatic SemVer bumping
+- Strongly sign packages  
 - The default factory could have an option to fill all properties with valid values
 - Allow configuration by rules
 - Allow sequences in numbers properties and things like email, etc
