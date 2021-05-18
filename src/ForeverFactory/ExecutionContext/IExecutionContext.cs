@@ -2,6 +2,6 @@
 {
     internal interface IExecutionContext
     {
-        public int QuantityToProduce { get; }
+        int QuantityToProduce { get; }
     }
 }

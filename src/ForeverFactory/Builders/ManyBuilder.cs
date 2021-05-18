@@ -16,7 +16,7 @@ namespace ForeverFactory.Builders
         where T : class
     {
         private readonly List<Transform<T>> _defaultTransforms;
-        private readonly List<Transform<T>> _transforms = new();
+        private readonly List<Transform<T>> _transforms = new List<Transform<T>>();
         private readonly int _quantityToProduce;
 
         private readonly Func<T> _customConstructor;
@@ -36,7 +36,7 @@ namespace ForeverFactory.Builders
             _previousBuilder = previousBuilder;
         }
 
-        private InstanceSetExecutionContext GetExecutionContext() => new(_quantityToProduce);
+        private InstanceSetExecutionContext GetExecutionContext() => new InstanceSetExecutionContext(_quantityToProduce);
 
         /// <summary>
         /// Works within the active context

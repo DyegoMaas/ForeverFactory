@@ -8,7 +8,7 @@ namespace ForeverFactory.Builders
     internal class OneBuilder<T> : IOneBuilder<T>
         where T : class
     {
-        private readonly List<Transform<T>> _transforms = new();
+        private readonly List<Transform<T>> _transforms = new List<Transform<T>>();
         private Func<T> _customConstructor;
 
         public void SetCustomConstructor(Func<T> customConstructor) 

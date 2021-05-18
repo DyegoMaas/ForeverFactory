@@ -14,8 +14,8 @@ namespace ForeverFactory
     public abstract class MagicFactory<T> : IOneBuilder<T>
         where T : class
     {
-        private readonly OneBuilder<T> _oneBuilder = new();
-        private readonly List<Transform<T>> _defaultTransforms = new();
+        private readonly OneBuilder<T> _oneBuilder = new OneBuilder<T>();
+        private readonly List<Transform<T>> _defaultTransforms = new List<Transform<T>>();
         private Func<T> _customConstructor;
 
         protected void UseConstructor(Func<T> customConstructor)

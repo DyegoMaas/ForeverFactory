@@ -1,14 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFrameworks>net5.0;netstandard2.0;netstandard2.1</TargetFrameworks>
         <Authors>Dyego Alekssander Maas</Authors>
+        <Copyright>Copyright Dyego Alekssander Maas</Copyright>
         <PackageId>ForeverFactory</PackageId>
         <Description>Forever Factory makes it super easy to build many customized objects.</Description>
         <PackageProjectUrl>https://github.com/DyegoMaas/ForeverFactory</PackageProjectUrl>
         <RepositoryUrl>https://github.com/DyegoMaas/ForeverFactory</RepositoryUrl>
         <PackageTags>ForeverFactory factory builder</PackageTags>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <MinVerTagPrefix>v</MinVerTagPrefix>
+        <IncludeSymbols>true</IncludeSymbols>
         <PackageVersion>1.0.2</PackageVersion>
     </PropertyGroup>
 
