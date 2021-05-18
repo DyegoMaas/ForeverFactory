@@ -12,6 +12,8 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <MinVerTagPrefix>v</MinVerTagPrefix>
         <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <PackageVersion>1.0.4</PackageVersion>
     </PropertyGroup>
 
