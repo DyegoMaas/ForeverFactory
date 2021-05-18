@@ -17,4 +17,8 @@
         <PackageVersion>1.0.5</PackageVersion>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DocumentationFile>bin\Release\ForeverFactory.xml</DocumentationFile>
+    </PropertyGroup>
+
 </Project>

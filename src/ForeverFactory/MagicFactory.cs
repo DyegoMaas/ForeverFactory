@@ -8,6 +8,11 @@ namespace ForeverFactory
 {
     public static class MagicFactory
     {
+        /// <summary>
+        /// Creates a factory for building instances of type "T".
+        /// </summary>
+        /// <typeparam name="T">The factory will build instances of this type</typeparam>
+        /// <returns>Factory of T</returns>
         public static MagicFactory<T> For<T>() where T : class => new DefaultFactory<T>();
     }
 
@@ -18,32 +23,52 @@ namespace ForeverFactory
         private readonly List<Transform<T>> _defaultTransforms = new List<Transform<T>>();
         private Func<T> _customConstructor;
 
+        /// <summary>
+        /// Configures this factory to instantiate the object of type "T" using this constructor.
+        /// </summary>
+        /// <param name="customConstructor">Constructor used to build "T" objects</param>
         protected void UseConstructor(Func<T> customConstructor)
         {
             _customConstructor = customConstructor;
             _oneBuilder.SetCustomConstructor(customConstructor);
         }
 
+        /// <summary>
+        /// Configures this factory to instantiate the object of type "T" using this constructor.
+        /// </summary>
+        /// <param name="customConstructor">Constructor used to build "T" objects</param>
         public MagicFactory<T> UsingConstructor(Func<T> customConstructor)
         {
             UseConstructor(customConstructor);
             return this;
         }
 
+        /// <summary>
+        /// Defines the default value of a property.
+        /// </summary>
+        /// <param name="setMember">Sets the value of a Property. <example>x => x.Name = "Karen"</example>></param>
         protected void Set<TValue>(Func<T, TValue> setMember)
         {
             _defaultTransforms.Add(new FuncTransform<T,TValue>(setMember, new NoConditionToApply()));
-            _oneBuilder.With(setMember); // TODO refactor in order to not repeat this operation
+            _oneBuilder.With(setMember);
         }
 
         # region OneBuilder Wrapper
         
+        /// <summary>
+        /// Defines the default value of a property.
+        /// </summary>
+        /// <param name="setMember">Sets the value of a Property. <example>x => x.Name = "Karen"</example>></param>
         public IOneBuilder<T> With<TValue>(Func<T, TValue> setMember)
         {
             _oneBuilder.With(setMember);
             return _oneBuilder;
         }
 
+        /// <summary>
+        /// Builds a new object applying all the configuration done with the factory 
+        /// </summary>
+        /// <returns>A new instance of "T", with all configurations applied.</returns>
         public T Build()
         {
             return _oneBuilder.Build();
@@ -51,6 +76,11 @@ namespace ForeverFactory
         
         #endregion
 
+        /// <summary>
+        /// Allows to build multiple objects. This method gives access to further group customization.
+        /// </summary>
+        /// <param name="count">The number of objects to be created.</param>
+        /// <returns>A builder for multiple objects.</returns>
         public IManyBuilder<T> Many(int count)
         {
             return new ManyBuilder<T>(count, _defaultTransforms, _customConstructor);
