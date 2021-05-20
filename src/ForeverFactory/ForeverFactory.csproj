@@ -32,7 +32,6 @@
     <ItemGroup>
       <Content Include="..\..\assets\logo\icon_128x128.png">
         <Link>icon_128x128.png</Link>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
     
