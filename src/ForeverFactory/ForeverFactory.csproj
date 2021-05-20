@@ -14,11 +14,23 @@
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
-        <PackageVersion>1.0.6</PackageVersion>
+        <PackageIcon>icon_128x128.png</PackageIcon>
+        <PackageVersion>1.0.7</PackageVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
       <DocumentationFile>bin\Release\ForeverFactory.xml</DocumentationFile>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\..\assets\logo\icon_128x128.png" Pack="true" PackagePath=""/>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Content Include="..\..\assets\logo\icon_128x128.png">
+        <Link>icon_128x128.png</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
 
 </Project>
