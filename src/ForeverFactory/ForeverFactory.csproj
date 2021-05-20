@@ -18,7 +18,7 @@
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-        <PackageVersion>1.0.9</PackageVersion>
+        <PackageVersion>1.0.10</PackageVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -30,15 +30,9 @@
     </ItemGroup>
     
     <ItemGroup>
-      <Content Include="..\..\assets\logo\icon_128x128.png">
-        <Link>icon_128x128.png</Link>
-      </Content>
-    </ItemGroup>
-    
-    <ItemGroup>
       <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
         <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        <IncludeAssets>runtime; build; native; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
     </ItemGroup>
 
