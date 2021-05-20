@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFrameworks>net5.0;netstandard2.0;netstandard2.1</TargetFrameworks>
+        <Features>strict</Features>
         <Authors>Dyego Alekssander Maas</Authors>
         <Copyright>Copyright Dyego Alekssander Maas</Copyright>
         <PackageId>ForeverFactory</PackageId>
@@ -11,11 +12,13 @@
         <PackageTags>ForeverFactory factory builder</PackageTags>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <MinVerTagPrefix>v</MinVerTagPrefix>
-        <IncludeSymbols>true</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <PackageIcon>icon_128x128.png</PackageIcon>
-        <PackageVersion>1.0.7</PackageVersion>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <PackageVersion>1.0.8</PackageVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -23,7 +26,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="..\..\assets\logo\icon_128x128.png" Pack="true" PackagePath=""/>
+        <None Include="..\..\assets\logo\icon_128x128.png" Pack="true" PackagePath="" />
     </ItemGroup>
     
     <ItemGroup>
@@ -31,6 +34,13 @@
         <Link>icon_128x128.png</Link>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
     </ItemGroup>
 
 </Project>
