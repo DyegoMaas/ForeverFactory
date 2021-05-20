@@ -6,6 +6,9 @@ using ForeverFactory.Transforms.Conditions;
 
 namespace ForeverFactory
 {
+    /// <summary>
+    /// Allows the creation of a customizable factory.
+    /// </summary>
     public static class MagicFactory
     {
         /// <summary>
@@ -16,6 +19,10 @@ namespace ForeverFactory
         public static MagicFactory<T> For<T>() where T : class => new DefaultFactory<T>();
     }
 
+    /// <summary>
+    /// A customizable factory of objects of type "T". It can be extended with predefined configurations.
+    /// </summary>
+    /// <typeparam name="T">The type of objects that this factory will build.</typeparam>
     public abstract class MagicFactory<T> : IOneBuilder<T>
         where T : class
     {
@@ -66,7 +73,7 @@ namespace ForeverFactory
         }
 
         /// <summary>
-        /// Builds a new object applying all the configuration done with the factory 
+        /// Applies all configurations and builds a new object of type "T". 
         /// </summary>
         /// <returns>A new instance of "T", with all configurations applied.</returns>
         public T Build()
