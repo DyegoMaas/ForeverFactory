@@ -52,5 +52,6 @@ jobs:
           
       - name: Upload code coverage to Codecov
         run: |
-          dotnet tool install codecov
-          dotnet codecov -f "opencover_coverage.xml" -t ${{ secrets.CODECOV_TOKEN }}
+          curl -s https://codecov.io/bash > codecov
+          chmod +x codecov
+          ./codecov -f "opencover_coverage.xml" -t ${{ secrets.CODECOV_TOKEN }}
