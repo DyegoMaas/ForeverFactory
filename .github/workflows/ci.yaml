@@ -40,7 +40,7 @@ jobs:
         
       - name: Calculate code coverage
         run: |
-          dotnet new tool-manifest
+          dotnet new tool-manifest --force
           dotnet tool install coverlet.console
           dotnet coverlet ./tests/ForeverFactory.Tests/bin/Debug/net5.0/ForeverFactory.Tests.dll --target "dotnet" --targetargs "test ./tests/ForeverFactory.Tests --no-build" --format=opencover --use-source-link --output=opencover_coverage.xml
 
