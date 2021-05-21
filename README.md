@@ -2,6 +2,7 @@
 
 ![License](https://img.shields.io/github/license/DyegoMaas/ForeverFactory.svg)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/DyegoMaas/ForeverFactory/build-and-test?label=tests)
+[![codecov](https://codecov.io/gh/DyegoMaas/ForeverFactory/branch/main/graph/badge.svg?token=IPBG3BP2D8)](https://codecov.io/gh/DyegoMaas/ForeverFactory)
 ![Nuget](https://img.shields.io/nuget/v/ForeverFactory)
 ![Nuget](https://img.shields.io/nuget/dt/ForeverFactory)
 
