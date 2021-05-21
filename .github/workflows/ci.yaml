@@ -30,10 +30,27 @@ jobs:
           dotnet-version: ${{ matrix.dotnet }}
 
       - name: Clean
-        run: dotnet clean -c Release
+        run: dotnet clean -c Debug
 
       - name: Build
-        run: dotnet build -c Release
+        run: dotnet build -c Debug
 
       - name: Test
-        run: dotnet test -c Release --no-build -l trx --verbosity=normal
+        run: dotnet test -c Debug --no-build -l trx --verbosity=normal
+        
+      - name: Calculate code coverage
+        run: |
+          dotnet new tool-manifest
+          dotnet tool install coverlet.console
+          dotnet coverlet ./tests/ForeverFactory.Tests/bin/Debug/net5.0/ForeverFactory.Tests.dll --target "dotnet" --targetargs "test ./tests/ForeverFactory.Tests --no-build" --format=opencover --use-source-link --output=opencover_coverage.xml
+
+      - name: Publish code coverage as artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: CodeCoverageReport
+          path: ./opencover_coverage.xml
+          
+      - name: Upload code coverage to Codecov
+        run: |
+          dotnet tool install codecov
+          dotnet codecov -f "opencover_coverage.xml" -t ${{ secrets.CODECOV_TOKEN }}
