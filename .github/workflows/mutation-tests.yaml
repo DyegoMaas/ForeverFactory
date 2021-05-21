@@ -15,7 +15,6 @@ jobs:
         run: |
           dotnet new tool-manifest
           dotnet tool install dotnet-stryker
-          dotnet tool restore
       - name: Run Stryker
         run: |
           ls -lhap
