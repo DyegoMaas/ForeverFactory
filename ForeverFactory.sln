@@ -14,6 +14,13 @@ EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FADD649E-F407-4358-A7CE-877FEE970BF1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{A07DA249-B4CB-4112-9A3E-BB9FB5879D68}"
+ProjectSection(SolutionItems) = preProject
+	.github\workflows\ci.yaml = .github\workflows\ci.yaml
+	.github\workflows\mutation-tests.yaml = .github\workflows\mutation-tests.yaml
+	.github\workflows\release.yaml = .github\workflows\release.yaml
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,5 +39,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{021F2B8B-F7D5-490E-8476-F335A9DA04E5} = {55B70AE4-3D76-4C93-8C34-3F5B12DEF747}
 		{60DE81F1-F665-4930-A9A3-2FE61A35179D} = {FADD649E-F407-4358-A7CE-877FEE970BF1}
+		{A07DA249-B4CB-4112-9A3E-BB9FB5879D68} = {A5DED662-E03F-4B5C-8474-8EFABC2A9854}
 	EndGlobalSection
 EndGlobal
