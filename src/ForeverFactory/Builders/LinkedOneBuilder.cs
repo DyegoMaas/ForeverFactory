@@ -64,5 +64,10 @@ namespace ForeverFactory.Builders
         {
             return new LinkedOneBuilder<T>(_defaultTransforms, this);
         }
+
+        public IManyBuilder<T> Plus(int count)
+        {
+            return new ManyBuilder<T>(count, _defaultTransforms, _customConstructor, this);
+        }
     }
 }

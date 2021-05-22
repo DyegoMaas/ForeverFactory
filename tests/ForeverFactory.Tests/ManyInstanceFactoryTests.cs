@@ -208,23 +208,25 @@ namespace ForeverFactory.Tests
         public void PlusOne_should_chain_previous_ManyBuilder_to_a_new_LinkedOneBuilder()
         {
             var persons = _factory
-                .Many(count: 10)
-                .With(x => x.Age = 99)
-                .PluOne()
-                .With(x => x.Age = 100)
+                .Many(count: 5).With(x => x.Age = 99)
+                .PluOne().With(x => x.Age = 100)
+                .PlusOne().With(x => x.Age = 101)
                 .Build()
                 .ToList();
 
-            persons.Should().HaveCount(11);
+            persons.Should().HaveCount(7);
             
-            var firstTen = persons.Take(10);
+            var firstTen = persons.Take(5);
             foreach (var person in firstTen)
             {
                 person.Age.Should().Be(99);
             }
 
-            var lastOne = persons.Last();
-            lastOne.Age.Should().Be(100);
+            var sixth = persons[5];
+            sixth.Age.Should().Be(100);
+            
+            var seventh = persons[6];
+            seventh.Age.Should().Be(101);
         }
     }
 }

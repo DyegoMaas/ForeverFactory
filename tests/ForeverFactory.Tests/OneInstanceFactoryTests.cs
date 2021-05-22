@@ -100,5 +100,27 @@ namespace ForeverFactory.Tests
 
             persons.Should().HaveCount(2);
         }
+        
+        [Fact]
+        public void When_plus_is_called_from_an_ILinkedOneBuilder_instance_it_chains_the_previous_default_configuration_to_the_next()
+        {
+            var persons = _factory
+                .With(x => x.Age = 5)
+                .PlusOne().With(x => x.Age = 6)
+                .Plus(5).With(x => x.Age = 7)
+                .Build()
+                .ToArray();
+
+            persons.Should().HaveCount(7);
+
+            persons[0].Age.Should().Be(5);
+            persons[1].Age.Should().Be(6);
+
+            var others = persons.Skip(2);
+            foreach (var person in others)
+            {
+                person.Age.Should().Be(7);
+            }
+        }
     }
 }

@@ -20,5 +20,6 @@ namespace ForeverFactory.Builders
         IEnumerable<T> Build();
 
         ILinkedOneBuilder<T> PlusOne();
+        IManyBuilder<T> Plus(int count);
     }
 }
