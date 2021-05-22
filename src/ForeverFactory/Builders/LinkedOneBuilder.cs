@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ForeverFactory.Transforms;
 using ForeverFactory.Transforms.Conditions;
 
@@ -9,22 +10,20 @@ namespace ForeverFactory.Builders
         where T : class
     {
         private readonly IOneBuilder<T> _previousNotLinked;
-        private readonly IEnumerable<Transform<T>> _defaultTransforms;
+        private readonly List<Transform<T>> _defaultTransforms = new List<Transform<T>>();
         private readonly ILinkedOneBuilder<T> _previousLinked;
         private readonly List<Transform<T>> _transforms = new List<Transform<T>>();
         private Func<T> _customConstructor;
 
         public LinkedOneBuilder(IEnumerable<Transform<T>> defaultTransforms, ILinkedOneBuilder<T> previousLinked)
         {
-            _defaultTransforms = defaultTransforms;
-            _transforms.AddRange(_defaultTransforms);
+            _defaultTransforms.AddRange(defaultTransforms);
             _previousLinked = previousLinked;
         }
         
         public LinkedOneBuilder(IEnumerable<Transform<T>> defaultTransforms, IOneBuilder<T> previousNotLinked)
         {
-            _defaultTransforms = defaultTransforms;
-            _transforms.AddRange(_defaultTransforms);
+            _defaultTransforms.AddRange(defaultTransforms);
             _previousNotLinked = previousNotLinked;
         }
         
@@ -53,7 +52,7 @@ namespace ForeverFactory.Builders
             }
 
             var instance = _customConstructor?.Invoke() ?? Activator.CreateInstance<T>();
-            foreach (var transform in _transforms)
+            foreach (var transform in _defaultTransforms.Union(_transforms))
             {
                 transform.ApplyTo(instance);
             }
