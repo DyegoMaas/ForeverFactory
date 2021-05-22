@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        dotnet: [ '5.0.x' ]
+        dotnet: [ '2.1.x', '3.1.x', '5.0.x' ]
     name: Dotnet ${{ matrix.dotnet }} build
     steps:
       - uses: actions/checkout@v2
@@ -42,7 +42,10 @@ jobs:
         run: |
           dotnet new tool-manifest --force
           dotnet tool install coverlet.console
-          dotnet coverlet ./tests/ForeverFactory.Tests/bin/Debug/net5.0/ForeverFactory.Tests.dll \
+          
+          DEBUG_TEST_ASSEMBLY=$(find ./tests/ForeverFactory.Tests/bin/Debug -type f -name ForeverFactory.Tests.dll | head -n 1)
+          echo "Debug assembly $DEBUG_TEST_ASSEMBLY"
+          dotnet coverlet $DEBUG_TEST_ASSEMBLY \
             --target "dotnet" --targetargs "test ./tests/ForeverFactory.Tests --no-build" \
             --format=opencover --use-source-link --output=opencover_coverage.xml
 
