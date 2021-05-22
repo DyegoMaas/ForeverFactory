@@ -1,4 +1,6 @@
-﻿namespace ForeverFactory.Builders
+﻿using ForeverFactory.Builders.Common;
+
+namespace ForeverFactory.Builders
 {
     internal abstract class LinkedBaseBuilder<T> : BaseBuilder<T>
         where T : class

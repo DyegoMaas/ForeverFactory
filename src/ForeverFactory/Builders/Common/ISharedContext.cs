@@ -1,7 +1,7 @@
 ﻿using System;
 using ForeverFactory.Transforms;
 
-namespace ForeverFactory.Builders
+namespace ForeverFactory.Builders.Common
 {
     internal interface ISharedContext<T>
         where T : class

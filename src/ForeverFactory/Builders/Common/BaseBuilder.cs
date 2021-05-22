@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using ForeverFactory.Transforms;
 
-namespace ForeverFactory.Builders
+namespace ForeverFactory.Builders.Common
 {
     internal abstract class BaseBuilder<T> 
         where T : class
     {
-        public ISharedContext<T> SharedContext { get; } // TODO protected
-        private TransformList<T> Transforms { get; } // TODO rename to ConfigurationTransforms?
+        protected ISharedContext<T> SharedContext { get; }
+        private TransformList<T> Transforms { get; }
 
         protected BaseBuilder(ISharedContext<T> sharedContext)
         {
