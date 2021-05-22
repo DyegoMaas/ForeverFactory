@@ -15,8 +15,6 @@ namespace ForeverFactory.Builders
     internal class ManyBuilder<T> : BaseBuilder<T>, IManyBuilder<T>
         where T : class
     {
-        // private readonly List<Transform<T>> _defaultTransforms;
-        // private readonly List<Transform<T>> _transforms = new List<Transform<T>>();
         private readonly int _quantityToProduce;
 
         private readonly Func<T> _customConstructor;
@@ -25,9 +23,6 @@ namespace ForeverFactory.Builders
         public ManyBuilder(int quantityToProduce, TransformList<T> defaultTransforms, Func<T> customConstructor, ILinkedBuilder<T> previousBuilder = null)
         {
             AddDefaultTransforms(defaultTransforms);
-            //
-            // _defaultTransforms = defaultTransforms.ToList();
-            // _transforms.AddRange(_defaultTransforms);
             _customConstructor = customConstructor;
             _quantityToProduce = quantityToProduce;
             _previousBuilder = previousBuilder;
@@ -119,10 +114,5 @@ namespace ForeverFactory.Builders
                 yield return instance;
             }
         }
-
-        // public ILinkedOneBuilder<T> PlusOne()
-        // {
-        //     return new LinkedOneBuilder<T>(_defaultTransforms, this);
-        // }
     }
 }

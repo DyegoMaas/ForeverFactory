@@ -24,7 +24,6 @@ namespace ForeverFactory.Builders
         public void SetDefault<TValue>(Func<T,TValue> setMember)
         {
             AddDefaultTransform(new FuncTransform<T, TValue>(setMember, new NoConditionToApply()));
-            // _defaultTransforms.Add(new FuncTransform<T, TValue>(setMember, new NoConditionToApply()));
         }
 
         public T Build()
