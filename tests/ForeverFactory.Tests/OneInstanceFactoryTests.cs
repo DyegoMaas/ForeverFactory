@@ -1,4 +1,5 @@
-﻿using ForeverFactory.Tests.ExampleFactories;
+﻿using System.Linq;
+using ForeverFactory.Tests.ExampleFactories;
 using FluentAssertions;
 using Xunit;
 
@@ -34,6 +35,31 @@ namespace ForeverFactory.Tests
             person.FirstName.Should().Be("Guilherme");
             person.LastName.Should().Be("Einstein");
             person.Age.Should().Be(19);
+        }
+        
+        [Fact]
+        public void It_is_possible_to_build_a_sequence_of_objects_one_by_one()
+        {
+            var persons = _factory
+                .With(x => x.FirstName = "Guilherme")
+                .With(x => x.Age = 30)
+                .PlusOne()
+                .With(x => x.FirstName = "Dyego")
+                .With(x => x.Age = 32)
+                .Build()
+                .ToArray();
+
+            persons.Should().HaveCount(2);
+            
+            var guilherme = persons[0];
+            guilherme.FirstName.Should().Be("Guilherme");
+            guilherme.LastName.Should().Be("Einstein");
+            guilherme.Age.Should().Be(30);
+            
+            var dyego = persons[1];
+            dyego.FirstName.Should().Be("Dyego");
+            dyego.LastName.Should().Be("Einstein");
+            dyego.Age.Should().Be(32);
         }
     }
 }

@@ -57,7 +57,7 @@ namespace ForeverFactory
         protected void Set<TValue>(Func<T, TValue> setMember)
         {
             _defaultTransforms.Add(new FuncTransform<T,TValue>(setMember, new NoConditionToApply()));
-            _oneBuilder.With(setMember);
+            _oneBuilder.SetDefault(setMember);
         }
 
         # region OneBuilder Wrapper
@@ -80,7 +80,12 @@ namespace ForeverFactory
         {
             return _oneBuilder.Build();
         }
-        
+
+        public ILinkedOneBuilder<T> PlusOne()
+        {
+            return new LinkedOneBuilder<T>(_defaultTransforms, this);
+        }
+
         #endregion
 
         /// <summary>
