@@ -86,6 +86,11 @@ namespace ForeverFactory.Builders
             return new ManyBuilder<T>(count, _defaultTransforms, _customConstructor, previousBuilder: this);
         }
 
+        public ILinkedOneBuilder<T> PluOne()
+        {
+            return new LinkedOneBuilder<T>(_defaultTransforms, this);
+        }
+
         public IEnumerable<T> Build()
         {
             foreach (var instance in _previousBuilder?.Build() ?? Enumerable.Empty<T>())

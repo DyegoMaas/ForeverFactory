@@ -203,5 +203,28 @@ namespace ForeverFactory.Tests
                 person.Age.Should().Be(56);
             }
         }
+
+        [Fact]
+        public void PlusOne_should_chain_previous_ManyBuilder_to_a_new_LinkedOneBuilder()
+        {
+            var persons = _factory
+                .Many(count: 10)
+                .With(x => x.Age = 99)
+                .PluOne()
+                .With(x => x.Age = 100)
+                .Build()
+                .ToList();
+
+            persons.Should().HaveCount(11);
+            
+            var firstTen = persons.Take(10);
+            foreach (var person in firstTen)
+            {
+                person.Age.Should().Be(99);
+            }
+
+            var lastOne = persons.Last();
+            lastOne.Age.Should().Be(100);
+        }
     }
 }

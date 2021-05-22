@@ -40,5 +40,7 @@ namespace ForeverFactory.Builders
         /// </summary>
         /// <returns>A collection of instances of "T", with all configurations applied.</returns>
         IEnumerable<T> Build();
+
+        ILinkedOneBuilder<T> PluOne();
     }
 }

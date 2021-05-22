@@ -11,11 +11,11 @@ namespace ForeverFactory.Builders
     {
         private readonly IOneBuilder<T> _previousNotLinked;
         private readonly List<Transform<T>> _defaultTransforms = new List<Transform<T>>();
-        private readonly ILinkedOneBuilder<T> _previousLinked;
+        private readonly ILinkedBuilder<T> _previousLinked;
         private readonly List<Transform<T>> _transforms = new List<Transform<T>>();
         private Func<T> _customConstructor;
 
-        public LinkedOneBuilder(IEnumerable<Transform<T>> defaultTransforms, ILinkedOneBuilder<T> previousLinked)
+        public LinkedOneBuilder(IEnumerable<Transform<T>> defaultTransforms, ILinkedBuilder<T> previousLinked)
         {
             _defaultTransforms.AddRange(defaultTransforms);
             _previousLinked = previousLinked;
@@ -27,7 +27,7 @@ namespace ForeverFactory.Builders
             _previousNotLinked = previousNotLinked;
         }
         
-        public void SetCustomConstructor(Func<T> customConstructor) 
+        public void SetCustomConstructor(Func<T> customConstructor) // TODO add tests
         {
             _customConstructor = customConstructor;
         }
