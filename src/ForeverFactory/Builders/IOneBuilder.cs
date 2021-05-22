@@ -22,6 +22,7 @@ namespace ForeverFactory.Builders
         /// <returns>A new instance of "T", with all configurations applied.</returns>
         T Build();
 
+        // TODO document
         ILinkedOneBuilder<T> PlusOne();
         
         /// <summary>

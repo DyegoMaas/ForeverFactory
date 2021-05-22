@@ -4,6 +4,7 @@ namespace ForeverFactory.Builders
 {
     public interface ILinkedBuilder<out T>
     {
+        // TODO document
         ILinkedOneBuilder<T> PlusOne();
         
         /// <summary>
