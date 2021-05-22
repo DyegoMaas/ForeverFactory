@@ -27,7 +27,7 @@ namespace ForeverFactory
         where T : class
     {
         private readonly OneBuilder<T> _oneBuilder = new OneBuilder<T>();
-        private readonly List<Transform<T>> _defaultTransforms = new List<Transform<T>>();
+        private readonly TransformList<T> _defaultTransforms = new TransformList<T>();
         private Func<T> _customConstructor;
 
         /// <summary>
@@ -83,24 +83,40 @@ namespace ForeverFactory
 
         public ILinkedOneBuilder<T> PlusOne()
         {
-            return new LinkedOneBuilder<T>(_defaultTransforms, this);
+            return new LinkedOneBuilder<T>(new TransformList<T>(), this);
         }
 
         public IManyBuilder<T> Plus(int count)
         {
-            return new ManyBuilder<T>(count, _defaultTransforms, _customConstructor, 
-                previousBuilder: new MagicFactoryOneBuilderToLinkedOneBuilderAdapter<T>(this)
+            return new ManyBuilder<T>(count, new TransformList<T>(), _customConstructor, 
+                previousBuilder: new MagicFactoryOneBuilderToLinkedOneBuilderAdapter(this, _defaultTransforms, _customConstructor)
             );
         }
         
-        private class MagicFactoryOneBuilderToLinkedOneBuilderAdapter<T> : ILinkedBuilder<T> 
-            where T : class
+        private class MagicFactoryOneBuilderToLinkedOneBuilderAdapter : ILinkedBuilder<T> 
         {
             private readonly IOneBuilder<T> _builder;
+            private readonly TransformList<T> _defaultTransforms;
+            private readonly Func<T> _customConstructor;
 
-            public MagicFactoryOneBuilderToLinkedOneBuilderAdapter(IOneBuilder<T> builder)
+            public MagicFactoryOneBuilderToLinkedOneBuilderAdapter(
+                MagicFactory<T> builder,
+                TransformList<T> defaultTransforms,
+                Func<T> customConstructor)
             {
                 _builder = builder;
+                _defaultTransforms = defaultTransforms;
+                _customConstructor = customConstructor;
+            }
+
+            public ILinkedOneBuilder<T> PlusOne()
+            {
+                return new LinkedOneBuilder<T>(_defaultTransforms, _builder);
+            }
+
+            public IManyBuilder<T> Plus(int count)
+            {
+                return new ManyBuilder<T>(count, _defaultTransforms, _customConstructor, previousBuilder: null);
             }
 
             public IEnumerable<T> Build()

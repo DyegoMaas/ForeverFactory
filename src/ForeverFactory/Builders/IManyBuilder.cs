@@ -29,18 +29,12 @@ namespace ForeverFactory.Builders
         /// <param name="setMember">Sets the value of a Property. <example>x => x.Name = "Karen"</example></param>
         IManyBuilder<T> WithLast<TValue>(int count, Func<T, TValue> setMember);
         
-        /// <summary>
-        /// Creates a new set of customizable objects, following the previous sets created used the "Many" or "Plus" methods.
-        /// </summary>
-        /// <param name="count">The number of objects to be created.<param>
-        IManyBuilder<T> Plus(int count);
+        // /// <summary>
+        // /// Creates a new set of customizable objects, following the previous sets created used the "Many" or "Plus" methods.
+        // /// </summary>
+        // /// <param name="count">The number of objects to be created.<param>
+        // IManyBuilder<T> Plus(int count);
         
-        /// <summary>
-        /// Builds all the objects configured, including all sets created used the "Many" or "Plus" methods. 
-        /// </summary>
-        /// <returns>A collection of instances of "T", with all configurations applied.</returns>
-        IEnumerable<T> Build();
-
-        ILinkedOneBuilder<T> PluOne();
+        // ILinkedOneBuilder<T> PluOne();
     }
 }

@@ -12,20 +12,22 @@ namespace ForeverFactory.Builders
      * - transformations are applied in same order they are declared: this makes the system deterministic and
      * consequently more understandable
      */
-    internal class ManyBuilder<T> : IManyBuilder<T>
+    internal class ManyBuilder<T> : BaseBuilder<T>, IManyBuilder<T>
         where T : class
     {
-        private readonly List<Transform<T>> _defaultTransforms;
-        private readonly List<Transform<T>> _transforms = new List<Transform<T>>();
+        // private readonly List<Transform<T>> _defaultTransforms;
+        // private readonly List<Transform<T>> _transforms = new List<Transform<T>>();
         private readonly int _quantityToProduce;
 
         private readonly Func<T> _customConstructor;
         private readonly ILinkedBuilder<T> _previousBuilder;
 
-        public ManyBuilder(int quantityToProduce, IEnumerable<Transform<T>> defaultTransforms, Func<T> customConstructor, ILinkedBuilder<T> previousBuilder = null)
+        public ManyBuilder(int quantityToProduce, TransformList<T> defaultTransforms, Func<T> customConstructor, ILinkedBuilder<T> previousBuilder = null)
         {
-            _defaultTransforms = defaultTransforms.ToList();
-            _transforms.AddRange(_defaultTransforms);
+            AddDefaultTransforms(defaultTransforms);
+            //
+            // _defaultTransforms = defaultTransforms.ToList();
+            // _transforms.AddRange(_defaultTransforms);
             _customConstructor = customConstructor;
             _quantityToProduce = quantityToProduce;
             _previousBuilder = previousBuilder;
@@ -38,7 +40,7 @@ namespace ForeverFactory.Builders
         /// </summary>
         public IManyBuilder<T> With<TValue>(Func<T, TValue> setMember)
         {
-            _transforms.Add(new FuncTransform<T,TValue>(setMember, new NoConditionToApply()));
+            AddTransform(new FuncTransform<T,TValue>(setMember, new NoConditionToApply()));
             return this;
         }
 
@@ -50,7 +52,7 @@ namespace ForeverFactory.Builders
         {
             ValidateCount(count);
             
-            _transforms.Add(new FuncTransform<T,TValue>(setMember, new ConditionToApplyFirst(count, GetExecutionContext())));
+            AddTransform(new FuncTransform<T,TValue>(setMember, new ConditionToApplyFirst(count, GetExecutionContext())));
             return this;
         }
 
@@ -74,8 +76,13 @@ namespace ForeverFactory.Builders
                 throw new ArgumentOutOfRangeException("count", count,
                     $"Count should be less or equal to the set size ({_quantityToProduce})");
             }
-            _transforms.Add(new FuncTransform<T,TValue>(setMember, new ConditionToApplyLast(count, GetExecutionContext())));
+            AddTransform(new FuncTransform<T,TValue>(setMember, new ConditionToApplyLast(count, GetExecutionContext())));
             return this;
+        }
+
+        public ILinkedOneBuilder<T> PlusOne() // TODO test
+        {
+            return new LinkedOneBuilder<T>(DefaultTransforms, this);
         }
 
         /// <summary>
@@ -83,12 +90,12 @@ namespace ForeverFactory.Builders
         /// </summary>
         public IManyBuilder<T> Plus(int count)
         {
-            return new ManyBuilder<T>(count, _defaultTransforms, _customConstructor, previousBuilder: this);
+            return new ManyBuilder<T>(count, DefaultTransforms, _customConstructor, previousBuilder: this);
         }
 
         public ILinkedOneBuilder<T> PluOne()
         {
-            return new LinkedOneBuilder<T>(_defaultTransforms, this);
+            return new LinkedOneBuilder<T>(DefaultTransforms, this);
         }
 
         public IEnumerable<T> Build()
@@ -101,7 +108,7 @@ namespace ForeverFactory.Builders
             for (var i = 0; i < _quantityToProduce; i++)
             {
                 var instance = _customConstructor?.Invoke() ?? Activator.CreateInstance<T>();
-                foreach (var transform in _transforms)
+                foreach (var transform in GetTransformsToApply())
                 {
                     if (transform.ConditionToApply.CanApplyFor(index: i) is false)
                         continue;

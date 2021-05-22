@@ -209,7 +209,7 @@ namespace ForeverFactory.Tests
         {
             var persons = _factory
                 .Many(count: 5).With(x => x.Age = 99)
-                .PluOne().With(x => x.Age = 100)
+                .PlusOne().With(x => x.Age = 100)
                 .PlusOne().With(x => x.Age = 101)
                 .Build()
                 .ToList();
