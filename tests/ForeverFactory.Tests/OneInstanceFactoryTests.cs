@@ -89,5 +89,16 @@ namespace ForeverFactory.Tests
                 person.Age.Should().Be(32);    
             }
         }
+        
+        [Fact]
+        public void When_plus_is_called_from_a_MagicFactory_instance_it_chains_the_previous_default_configuration_to_the_next()
+        {
+            var persons = _factory
+                .Plus(1)
+                .Build()
+                .ToArray();
+
+            persons.Should().HaveCount(2);
+        }
     }
 }

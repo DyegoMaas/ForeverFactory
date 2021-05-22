@@ -88,7 +88,25 @@ namespace ForeverFactory
 
         public IManyBuilder<T> Plus(int count)
         {
-            throw new NotImplementedException();
+            return new ManyBuilder<T>(count, _defaultTransforms, _customConstructor, 
+                previousBuilder: new MagicFactoryOneBuilderToLinkedOneBuilderAdapter<T>(this)
+            );
+        }
+        
+        private class MagicFactoryOneBuilderToLinkedOneBuilderAdapter<T> : ILinkedBuilder<T> 
+            where T : class
+        {
+            private readonly IOneBuilder<T> _builder;
+
+            public MagicFactoryOneBuilderToLinkedOneBuilderAdapter(IOneBuilder<T> builder)
+            {
+                _builder = builder;
+            }
+
+            public IEnumerable<T> Build()
+            {
+                yield return _builder.Build();
+            }
         }
 
         #endregion

@@ -22,17 +22,12 @@ namespace ForeverFactory.Builders
         private readonly Func<T> _customConstructor;
         private readonly ILinkedBuilder<T> _previousBuilder;
 
-        public ManyBuilder(int quantityToProduce, IEnumerable<Transform<T>> defaultTransforms, Func<T> customConstructor)
+        public ManyBuilder(int quantityToProduce, IEnumerable<Transform<T>> defaultTransforms, Func<T> customConstructor, ILinkedBuilder<T> previousBuilder = null)
         {
             _defaultTransforms = defaultTransforms.ToList();
             _transforms.AddRange(_defaultTransforms);
             _customConstructor = customConstructor;
             _quantityToProduce = quantityToProduce;
-        }
-        
-        public ManyBuilder(int quantityToProduce, IEnumerable<Transform<T>> defaultTransforms, Func<T> customConstructor, ILinkedBuilder<T> previousBuilder)
-            : this(quantityToProduce, defaultTransforms, customConstructor)
-        {
             _previousBuilder = previousBuilder;
         }
 
