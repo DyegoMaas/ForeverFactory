@@ -1,14 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ForeverFactory.Transforms;
 
 namespace ForeverFactory.Builders
 {
-    internal abstract class BaseBuilder<T>
+    internal abstract class BaseBuilder<T> : ISharedContext<T>
         where T : class
     {
-        protected TransformList<T> DefaultTransforms { get; } = new TransformList<T>();
-        private TransformList<T> Transforms { get; } = new TransformList<T>(); // TODO rename to ConfigurationTransforms?
-  
+        public TransformList<T> DefaultTransforms { get; }
+        public  Func<T> CustomConstructor { get; private set; }
+        private TransformList<T> Transforms { get; } // TODO rename to ConfigurationTransforms?
+
+        protected BaseBuilder()
+        {
+            DefaultTransforms = new TransformList<T>();
+            Transforms = new TransformList<T>();
+        }
+
         protected void AddDefaultTransforms(TransformList<T> transforms)
         {
             DefaultTransforms.AddRange(transforms);
@@ -23,12 +31,22 @@ namespace ForeverFactory.Builders
         {
             Transforms.Add(transform);
         }
+        
+        protected void SetCustomConstructor(Func<T> customConstructor) // TODO test scenarios where all the chain uses the same custom constructor
+        {
+            CustomConstructor = customConstructor;
+        }
 
         protected IEnumerable<Transform<T>> GetTransformsToApply()
         {
             return DefaultTransforms
                 .Union(Transforms)
                 .AsEnumerable();
+        }
+
+        protected T CreateInstance()
+        {
+            return CustomConstructor?.Invoke() ?? Activator.CreateInstance<T>();
         }
     }
 }

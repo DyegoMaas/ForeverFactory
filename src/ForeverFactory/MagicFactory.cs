@@ -83,14 +83,30 @@ namespace ForeverFactory
 
         public ILinkedOneBuilder<T> PlusOne()
         {
-            return new LinkedOneBuilder<T>(new TransformList<T>(), this);
+            return new LinkedOneBuilder<T>(
+                defaultTransforms: new TransformList<T>(),
+                previous: new MagicFactoryOneBuilderToLinkedOneBuilderAdapter(this, _defaultTransforms, _customConstructor)
+            );
         }
 
         public IManyBuilder<T> Plus(int count)
         {
-            return new ManyBuilder<T>(count, new TransformList<T>(), _customConstructor, 
+            return new ManyBuilder<T>(count,
+                sharedContext: new SharedContext(_defaultTransforms,_customConstructor                ),
                 previousBuilder: new MagicFactoryOneBuilderToLinkedOneBuilderAdapter(this, _defaultTransforms, _customConstructor)
             );
+        }
+
+        private class SharedContext : ISharedContext<T>
+        {
+            public TransformList<T> DefaultTransforms { get; }
+            public Func<T> CustomConstructor { get; set; }
+
+            public SharedContext(TransformList<T> defaultTransforms, Func<T> customConstructor)
+            {
+                DefaultTransforms = defaultTransforms;
+                CustomConstructor = customConstructor;
+            }
         }
         
         private class MagicFactoryOneBuilderToLinkedOneBuilderAdapter : ILinkedBuilder<T> 
@@ -111,12 +127,15 @@ namespace ForeverFactory
 
             public ILinkedOneBuilder<T> PlusOne()
             {
-                return new LinkedOneBuilder<T>(_defaultTransforms, _builder);
+                return new LinkedOneBuilder<T>(_defaultTransforms, this);
             }
 
             public IManyBuilder<T> Plus(int count)
             {
-                return new ManyBuilder<T>(count, _defaultTransforms, _customConstructor, previousBuilder: null);
+                return new ManyBuilder<T>(count, 
+                    new SharedContext(_defaultTransforms, _customConstructor), 
+                    previousBuilder: null
+                );
             }
 
             public IEnumerable<T> Build()
@@ -134,7 +153,7 @@ namespace ForeverFactory
         /// <returns>A builder for multiple objects.</returns>
         public IManyBuilder<T> Many(int count)
         {
-            return new ManyBuilder<T>(count, _defaultTransforms, _customConstructor);
+            return new ManyBuilder<T>(count, new SharedContext(_defaultTransforms, _customConstructor));
         }
     }
 }

@@ -1,32 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ForeverFactory.Transforms;
 using ForeverFactory.Transforms.Conditions;
 
 namespace ForeverFactory.Builders
 {
-    internal class LinkedOneBuilder<T> : BaseBuilder<T>, ILinkedOneBuilder<T>
+    internal class LinkedOneBuilder<T> : LinkedBaseBuilder<T>, ILinkedOneBuilder<T>
         where T : class
     {
-        private readonly IOneBuilder<T> _previousNotLinked;
-        private readonly ILinkedBuilder<T> _previousLinked;
-        private Func<T> _customConstructor;
-
-        public LinkedOneBuilder(TransformList<T> defaultTransforms, ILinkedBuilder<T> previousLinked)
+        public LinkedOneBuilder(TransformList<T> defaultTransforms, ILinkedBuilder<T> previous)
+            : base (previous)
         {
             AddDefaultTransforms(defaultTransforms);
-            _previousLinked = previousLinked;
-        }
-        
-        public LinkedOneBuilder(TransformList<T> defaultTransforms, IOneBuilder<T> previousNotLinked)
-        {
-            AddDefaultTransforms(defaultTransforms);
-            _previousNotLinked = previousNotLinked;
-        }
-        
-        public void SetCustomConstructor(Func<T> customConstructor) // TODO add tests
-        {
-            _customConstructor = customConstructor;
         }
 
         public ILinkedOneBuilder<T> With<TValue>(Func<T, TValue> setMember)
@@ -37,18 +23,12 @@ namespace ForeverFactory.Builders
 
         public IEnumerable<T> Build()
         {
-            if (_previousNotLinked != null)
-                yield return _previousNotLinked.Build();
-            
-            if (_previousLinked != null)
+            foreach (var linkedInstance in Previous?.Build() ?? Enumerable.Empty<T>())
             {
-                foreach (var linkedInstance in _previousLinked.Build())
-                {
-                    yield return linkedInstance;
-                }
+                yield return linkedInstance;
             }
 
-            var instance = _customConstructor?.Invoke() ?? Activator.CreateInstance<T>();
+            var instance = CreateInstance();
             foreach (var transform in GetTransformsToApply())
             {
                 transform.ApplyTo(instance);
@@ -64,7 +44,10 @@ namespace ForeverFactory.Builders
 
         public IManyBuilder<T> Plus(int count)
         {
-            return new ManyBuilder<T>(count, DefaultTransforms, _customConstructor, this);
+            return new ManyBuilder<T>(count, 
+                sharedContext: this,
+                previousBuilder: this
+            );
         }
     }
 }

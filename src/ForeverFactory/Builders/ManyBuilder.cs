@@ -12,20 +12,32 @@ namespace ForeverFactory.Builders
      * - transformations are applied in same order they are declared: this makes the system deterministic and
      * consequently more understandable
      */
-    internal class ManyBuilder<T> : BaseBuilder<T>, IManyBuilder<T>
+    internal class ManyBuilder<T> : LinkedBaseBuilder<T>, IManyBuilder<T>
         where T : class
     {
         private readonly int _quantityToProduce;
 
-        private readonly Func<T> _customConstructor;
-        private readonly ILinkedBuilder<T> _previousBuilder;
+        // private readonly Func<T> _customConstructor;
+        // private readonly ILinkedBuilder<T> _previousBuilder;
 
-        public ManyBuilder(int quantityToProduce, TransformList<T> defaultTransforms, Func<T> customConstructor, ILinkedBuilder<T> previousBuilder = null)
+        // public ManyBuilder(int quantityToProduce, TransformList<T> defaultTransforms, Func<T> customConstructor, ILinkedBuilder<T> previousBuilder = null)
+        //     : base(previousBuilder)
+        // {
+        //     AddDefaultTransforms(defaultTransforms);
+        //     // _customConstructor = customConstructor;
+        //     SetCustomConstructor(customConstructor);
+        //     _quantityToProduce = quantityToProduce;
+        //     // _previousBuilder = previousBuilder;
+        // }
+        
+        public ManyBuilder(int quantityToProduce, ISharedContext<T> sharedContext, ILinkedBuilder<T> previousBuilder = null)
+            : base(previousBuilder)
         {
-            AddDefaultTransforms(defaultTransforms);
-            _customConstructor = customConstructor;
+            AddDefaultTransforms(sharedContext.DefaultTransforms);
+            SetCustomConstructor(sharedContext.CustomConstructor);
             _quantityToProduce = quantityToProduce;
-            _previousBuilder = previousBuilder;
+            // _customConstructor = customConstructor;
+            // _previousBuilder = previousBuilder;
         }
 
         private InstanceSetExecutionContext GetExecutionContext() => new InstanceSetExecutionContext(_quantityToProduce);
@@ -85,7 +97,10 @@ namespace ForeverFactory.Builders
         /// </summary>
         public IManyBuilder<T> Plus(int count)
         {
-            return new ManyBuilder<T>(count, DefaultTransforms, _customConstructor, previousBuilder: this);
+            return new ManyBuilder<T>(count, 
+                sharedContext: this,
+                previousBuilder: this
+            );
         }
 
         public ILinkedOneBuilder<T> PluOne()
@@ -95,14 +110,14 @@ namespace ForeverFactory.Builders
 
         public IEnumerable<T> Build()
         {
-            foreach (var instance in _previousBuilder?.Build() ?? Enumerable.Empty<T>())
+            foreach (var linkedInstance in Previous?.Build() ?? Enumerable.Empty<T>())
             {
-                yield return instance;
+                yield return linkedInstance;
             }
 
             for (var i = 0; i < _quantityToProduce; i++)
             {
-                var instance = _customConstructor?.Invoke() ?? Activator.CreateInstance<T>();
+                var instance = CreateInstance();
                 foreach (var transform in GetTransformsToApply())
                 {
                     if (transform.ConditionToApply.CanApplyFor(index: i) is false)

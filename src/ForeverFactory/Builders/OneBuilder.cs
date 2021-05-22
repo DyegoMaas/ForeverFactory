@@ -8,11 +8,12 @@ namespace ForeverFactory.Builders
     internal class OneBuilder<T> : BaseBuilder<T>, IOneBuilder<T>
         where T : class
     {
-        private Func<T> _customConstructor;
+        // private Func<T> _customConstructor;
 
-        public void SetCustomConstructor(Func<T> customConstructor) 
+        public new void SetCustomConstructor(Func<T> customConstructor) 
         {
-            _customConstructor = customConstructor;
+            // _customConstructor = customConstructor;
+            base.SetCustomConstructor(customConstructor);
         }
 
         public IOneBuilder<T> With<TValue>(Func<T, TValue> setMember)
@@ -28,7 +29,7 @@ namespace ForeverFactory.Builders
 
         public T Build()
         {
-            var instance = _customConstructor?.Invoke() ?? Activator.CreateInstance<T>();
+            var instance = CreateInstance();
             foreach (var transform in GetTransformsToApply())
             {
                 transform.ApplyTo(instance);
@@ -39,13 +40,15 @@ namespace ForeverFactory.Builders
 
         public ILinkedOneBuilder<T> PlusOne()
         {
-            return new LinkedOneBuilder<T>(DefaultTransforms, this);
+            return new LinkedOneBuilder<T>(DefaultTransforms, new OneBuilderToLinkedOneBuilderAdapter(this));
         }
 
         public IManyBuilder<T> Plus(int count)
         {
-            return new ManyBuilder<T>(count, DefaultTransforms, 
-                customConstructor: null, 
+            return new ManyBuilder<T>(count, 
+                sharedContext: this,    
+                // DefaultTransforms, 
+                // customConstructor: null, 
                 previousBuilder: new OneBuilderToLinkedOneBuilderAdapter(this))
             ; // TODO review custom constructor (difference between one set in custom factory and with UsingConstructor 
         }
@@ -61,13 +64,13 @@ namespace ForeverFactory.Builders
 
             public ILinkedOneBuilder<T> PlusOne()
             {
-                return new LinkedOneBuilder<T>(_builder.DefaultTransforms, _builder);
+                return new LinkedOneBuilder<T>(_builder.DefaultTransforms, this);
             }
 
             public IManyBuilder<T> Plus(int count)
             {
-                return new ManyBuilder<T>(count, _builder.DefaultTransforms, 
-                    customConstructor: null, 
+                return new ManyBuilder<T>(count,
+                    sharedContext: _builder,
                     previousBuilder: null
                 );
             }
