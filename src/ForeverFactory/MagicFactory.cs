@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ForeverFactory.Builders;
+using ForeverFactory.Builders.Common;
 using ForeverFactory.Transforms;
 using ForeverFactory.Transforms.Conditions;
 
@@ -26,18 +27,19 @@ namespace ForeverFactory
     public abstract class MagicFactory<T> : IOneBuilder<T>
         where T : class
     {
-        private readonly OneBuilder<T> _oneBuilder = new OneBuilder<T>();
+        // private readonly OneBuilder<T> _oneBuilder = new OneBuilder<T>();
         private readonly TransformList<T> _defaultTransforms = new TransformList<T>();
+        private readonly List<Transform<T>> _transforms = new List<Transform<T>>();
         private Func<T> _customConstructor;
 
         /// <summary>
         /// Configures this factory to instantiate the object of type "T" using this constructor.
         /// </summary>
         /// <param name="customConstructor">Constructor used to build "T" objects</param>
-        protected void UseConstructor(Func<T> customConstructor)
+        protected void UseConstructor(Func<T> customConstructor) // TODO test
         {
             _customConstructor = customConstructor;
-            _oneBuilder.SetCustomConstructor(customConstructor);
+            // _oneBuilder.SetCustomConstructor(customConstructor);
         }
 
         /// <summary>
@@ -57,7 +59,7 @@ namespace ForeverFactory
         protected void Set<TValue>(Func<T, TValue> setMember)
         {
             _defaultTransforms.Add(new FuncTransform<T,TValue>(setMember, new NoConditionToApply()));
-            _oneBuilder.SetDefault(setMember);
+            // _oneBuilder.AddDefault(setMember);
         }
 
         # region OneBuilder Wrapper
@@ -68,8 +70,8 @@ namespace ForeverFactory
         /// <param name="setMember">Sets the value of a Property. <example>x => x.Name = "Karen"</example>></param>
         public IOneBuilder<T> With<TValue>(Func<T, TValue> setMember)
         {
-            _oneBuilder.With(setMember);
-            return _oneBuilder;
+            _transforms.Add(new FuncTransform<T,TValue>(setMember, new NoConditionToApply()));
+            return this;
         }
 
         /// <summary>
@@ -78,13 +80,19 @@ namespace ForeverFactory
         /// <returns>A new instance of "T", with all configurations applied.</returns>
         public T Build()
         {
-            return _oneBuilder.Build();
+            var oneBuilder = new OneBuilder<T>(new SharedContext<T>(_defaultTransforms, _customConstructor));
+            foreach (var transform in _transforms)
+            {
+                oneBuilder.With(transform);
+            }
+            return oneBuilder.Build();
         }
 
         public ILinkedOneBuilder<T> PlusOne()
         {
             return new LinkedOneBuilder<T>(
-                defaultTransforms: new TransformList<T>(),
+                // sharedContext: new SharedContext<T>(Enumerable.Empty<T>(), _customConstructor),
+                sharedContext: new SharedContext<T>(_defaultTransforms,_customConstructor),
                 previous: new MagicFactoryOneBuilderToLinkedOneBuilderAdapter(this, _defaultTransforms, _customConstructor)
             );
         }
@@ -92,21 +100,9 @@ namespace ForeverFactory
         public IManyBuilder<T> Plus(int count)
         {
             return new ManyBuilder<T>(count,
-                sharedContext: new SharedContext(_defaultTransforms,_customConstructor                ),
-                previousBuilder: new MagicFactoryOneBuilderToLinkedOneBuilderAdapter(this, _defaultTransforms, _customConstructor)
+                sharedContext: new SharedContext<T>(_defaultTransforms,_customConstructor                ),
+                previous: new MagicFactoryOneBuilderToLinkedOneBuilderAdapter(this, _defaultTransforms, _customConstructor)
             );
-        }
-
-        private class SharedContext : ISharedContext<T>
-        {
-            public TransformList<T> DefaultTransforms { get; }
-            public Func<T> CustomConstructor { get; set; }
-
-            public SharedContext(TransformList<T> defaultTransforms, Func<T> customConstructor)
-            {
-                DefaultTransforms = defaultTransforms;
-                CustomConstructor = customConstructor;
-            }
         }
         
         private class MagicFactoryOneBuilderToLinkedOneBuilderAdapter : ILinkedBuilder<T> 
@@ -127,14 +123,17 @@ namespace ForeverFactory
 
             public ILinkedOneBuilder<T> PlusOne()
             {
-                return new LinkedOneBuilder<T>(_defaultTransforms, this);
+                return new LinkedOneBuilder<T>(
+                    new SharedContext<T>(_defaultTransforms, _customConstructor),
+                    previous: this
+                );
             }
 
             public IManyBuilder<T> Plus(int count)
             {
                 return new ManyBuilder<T>(count, 
-                    new SharedContext(_defaultTransforms, _customConstructor), 
-                    previousBuilder: null
+                    new SharedContext<T>(_defaultTransforms, _customConstructor), 
+                    previous: null
                 );
             }
 
@@ -153,7 +152,7 @@ namespace ForeverFactory
         /// <returns>A builder for multiple objects.</returns>
         public IManyBuilder<T> Many(int count)
         {
-            return new ManyBuilder<T>(count, new SharedContext(_defaultTransforms, _customConstructor));
+            return new ManyBuilder<T>(count, new SharedContext<T>(_defaultTransforms, _customConstructor));
         }
     }
 }

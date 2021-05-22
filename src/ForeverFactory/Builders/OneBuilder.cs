@@ -8,12 +8,8 @@ namespace ForeverFactory.Builders
     internal class OneBuilder<T> : BaseBuilder<T>, IOneBuilder<T>
         where T : class
     {
-        // private Func<T> _customConstructor;
-
-        public new void SetCustomConstructor(Func<T> customConstructor) 
+        public OneBuilder(ISharedContext<T> sharedContext) : base(sharedContext)
         {
-            // _customConstructor = customConstructor;
-            base.SetCustomConstructor(customConstructor);
         }
 
         public IOneBuilder<T> With<TValue>(Func<T, TValue> setMember)
@@ -21,10 +17,11 @@ namespace ForeverFactory.Builders
             AddTransform(new FuncTransform<T, TValue>(setMember, new NoConditionToApply()));
             return this;
         }
-
-        public void SetDefault<TValue>(Func<T,TValue> setMember)
+        
+        public IOneBuilder<T> With(Transform<T> setMember)
         {
-            AddDefaultTransform(new FuncTransform<T, TValue>(setMember, new NoConditionToApply()));
+            AddTransform(setMember);
+            return this;
         }
 
         public T Build()
@@ -40,16 +37,13 @@ namespace ForeverFactory.Builders
 
         public ILinkedOneBuilder<T> PlusOne()
         {
-            return new LinkedOneBuilder<T>(DefaultTransforms, new OneBuilderToLinkedOneBuilderAdapter(this));
+            return new LinkedOneBuilder<T>(SharedContext, new OneBuilderToLinkedOneBuilderAdapter(this));
         }
 
         public IManyBuilder<T> Plus(int count)
         {
-            return new ManyBuilder<T>(count, 
-                sharedContext: this,    
-                // DefaultTransforms, 
-                // customConstructor: null, 
-                previousBuilder: new OneBuilderToLinkedOneBuilderAdapter(this))
+            return new ManyBuilder<T>(count, SharedContext,    
+                previous: new OneBuilderToLinkedOneBuilderAdapter(this))
             ; // TODO review custom constructor (difference between one set in custom factory and with UsingConstructor 
         }
 
@@ -64,14 +58,14 @@ namespace ForeverFactory.Builders
 
             public ILinkedOneBuilder<T> PlusOne()
             {
-                return new LinkedOneBuilder<T>(_builder.DefaultTransforms, this);
+                return new LinkedOneBuilder<T>(_builder.SharedContext, this);
             }
 
             public IManyBuilder<T> Plus(int count)
             {
                 return new ManyBuilder<T>(count,
-                    sharedContext: _builder,
-                    previousBuilder: null
+                    sharedContext: _builder.SharedContext,
+                    previous: null
                 );
             }
 

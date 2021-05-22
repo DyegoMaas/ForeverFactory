@@ -5,7 +5,8 @@
     {
         protected ILinkedBuilder<T> Previous { get; }
 
-        protected LinkedBaseBuilder(ILinkedBuilder<T> previous)
+        protected LinkedBaseBuilder(ISharedContext<T> sharedContext, ILinkedBuilder<T> previous) 
+            : base(sharedContext) 
         {
             Previous = previous;
         }

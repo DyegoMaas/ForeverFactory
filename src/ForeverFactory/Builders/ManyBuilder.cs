@@ -17,11 +17,9 @@ namespace ForeverFactory.Builders
     {
         private readonly int _quantityToProduce;
         
-        public ManyBuilder(int quantityToProduce, ISharedContext<T> sharedContext, ILinkedBuilder<T> previousBuilder = null)
-            : base(previousBuilder)
+        public ManyBuilder(int quantityToProduce, ISharedContext<T> sharedContext, ILinkedBuilder<T> previous = null)
+            : base(sharedContext, previous)
         {
-            AddDefaultTransforms(sharedContext.DefaultTransforms);
-            SetCustomConstructor(sharedContext.CustomConstructor);
             _quantityToProduce = quantityToProduce;
         }
 
@@ -74,7 +72,7 @@ namespace ForeverFactory.Builders
 
         public ILinkedOneBuilder<T> PlusOne() // TODO test
         {
-            return new LinkedOneBuilder<T>(DefaultTransforms, this);
+            return new LinkedOneBuilder<T>(SharedContext, previous: this);
         }
 
         /// <summary>
@@ -82,15 +80,13 @@ namespace ForeverFactory.Builders
         /// </summary>
         public IManyBuilder<T> Plus(int count)
         {
-            return new ManyBuilder<T>(count, 
-                sharedContext: this,
-                previousBuilder: this
+            return new ManyBuilder<T>(count, SharedContext, previous: this
             );
         }
 
         public ILinkedOneBuilder<T> PluOne()
         {
-            return new LinkedOneBuilder<T>(DefaultTransforms, this);
+            return new LinkedOneBuilder<T>(SharedContext, previous: this);
         }
 
         public IEnumerable<T> Build()

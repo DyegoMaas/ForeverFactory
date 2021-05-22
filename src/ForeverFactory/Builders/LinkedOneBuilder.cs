@@ -9,10 +9,9 @@ namespace ForeverFactory.Builders
     internal class LinkedOneBuilder<T> : LinkedBaseBuilder<T>, ILinkedOneBuilder<T>
         where T : class
     {
-        public LinkedOneBuilder(TransformList<T> defaultTransforms, ILinkedBuilder<T> previous)
-            : base (previous)
+        public LinkedOneBuilder(ISharedContext<T> sharedContext, ILinkedBuilder<T> previous)
+            : base(sharedContext, previous)
         {
-            AddDefaultTransforms(defaultTransforms);
         }
 
         public ILinkedOneBuilder<T> With<TValue>(Func<T, TValue> setMember)
@@ -39,14 +38,12 @@ namespace ForeverFactory.Builders
 
         public ILinkedOneBuilder<T> PlusOne()
         {
-            return new LinkedOneBuilder<T>(DefaultTransforms, this);
+            return new LinkedOneBuilder<T>(SharedContext, previous: this);
         }
 
         public IManyBuilder<T> Plus(int count)
         {
-            return new ManyBuilder<T>(count, 
-                sharedContext: this,
-                previousBuilder: this
+            return new ManyBuilder<T>(count, SharedContext, previous: this
             );
         }
     }
