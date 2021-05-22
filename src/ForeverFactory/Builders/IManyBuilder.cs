@@ -7,7 +7,7 @@ namespace ForeverFactory.Builders
     /// This interface allows building many customized objects of type "T".
     /// </summary>
     /// <typeparam name="T">The type of objects that will be built.</typeparam>
-    public interface IManyBuilder<out T>
+    public interface IManyBuilder<out T> : ILinkedBuilder<T>
     {
         /// <summary>
         /// Defines the default value of a property for all instances.

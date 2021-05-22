@@ -20,7 +20,7 @@ namespace ForeverFactory.Builders
         private readonly int _quantityToProduce;
 
         private readonly Func<T> _customConstructor;
-        private readonly ManyBuilder<T> _previousBuilder;
+        private readonly ILinkedBuilder<T> _previousBuilder;
 
         public ManyBuilder(int quantityToProduce, IEnumerable<Transform<T>> defaultTransforms, Func<T> customConstructor)
         {
@@ -30,7 +30,7 @@ namespace ForeverFactory.Builders
             _quantityToProduce = quantityToProduce;
         }
         
-        private ManyBuilder(int quantityToProduce, IEnumerable<Transform<T>> defaultTransforms, Func<T> customConstructor, ManyBuilder<T> previousBuilder)
+        public ManyBuilder(int quantityToProduce, IEnumerable<Transform<T>> defaultTransforms, Func<T> customConstructor, ILinkedBuilder<T> previousBuilder)
             : this(quantityToProduce, defaultTransforms, customConstructor)
         {
             _previousBuilder = previousBuilder;
@@ -112,5 +112,10 @@ namespace ForeverFactory.Builders
                 yield return instance;
             }
         }
+
+        // public ILinkedOneBuilder<T> PlusOne()
+        // {
+        //     return new LinkedOneBuilder<T>(_defaultTransforms, this);
+        // }
     }
 }

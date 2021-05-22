@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ForeverFactory.Builders
 {
-    public interface ILinkedOneBuilder<out T>
+    public interface ILinkedOneBuilder<out T> : ILinkedBuilder<T>
     {
         // TODO support custom constructor
         

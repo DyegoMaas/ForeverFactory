@@ -86,6 +86,11 @@ namespace ForeverFactory
             return new LinkedOneBuilder<T>(_defaultTransforms, this);
         }
 
+        public IManyBuilder<T> Plus(int count)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         /// <summary>

@@ -61,5 +61,33 @@ namespace ForeverFactory.Tests
             dyego.LastName.Should().Be("Einstein");
             dyego.Age.Should().Be(32);
         }
+        
+        [Fact]
+        public void It_is_possible_to_build_many_after_just_one()
+        {
+            var persons = _factory
+                .With(x => x.FirstName = "Guilherme")
+                .With(x => x.Age = 30)
+                .Plus(10)
+                .With(x => x.FirstName = "Dyego")
+                .With(x => x.Age = 32)
+                .Build()
+                .ToArray();
+
+            persons.Should().HaveCount(11);
+            
+            var guilherme = persons.First();
+            guilherme.FirstName.Should().Be("Guilherme");
+            guilherme.LastName.Should().Be("Einstein");
+            guilherme.Age.Should().Be(30);
+            
+            var otherPersons = persons.Skip(1).ToArray();
+            foreach (var person in otherPersons)
+            {
+                person.FirstName.Should().Be("Dyego");
+                person.LastName.Should().Be("Einstein");
+                person.Age.Should().Be(32);    
+            }
+        }
     }
 }

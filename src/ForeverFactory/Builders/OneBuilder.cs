@@ -44,5 +44,25 @@ namespace ForeverFactory.Builders
         {
             return new LinkedOneBuilder<T>(_defaultTransforms, this);
         }
+
+        public IManyBuilder<T> Plus(int count)
+        {
+            return new ManyBuilder<T>(count, _defaultTransforms, customConstructor: null, previousBuilder: new OneBuilderToLinkedOneBuilderAdapter<T>(this)); // TODO review custom constructor (difference between one set in custom factory and with UsingConstructor 
+        }
+
+        private class OneBuilderToLinkedOneBuilderAdapter<T> : ILinkedBuilder<T> where T : class
+        {
+            private readonly OneBuilder<T> _builder;
+
+            public OneBuilderToLinkedOneBuilderAdapter(OneBuilder<T> builder)
+            {
+                _builder = builder;
+            }
+
+            public IEnumerable<T> Build()
+            {
+                yield return _builder.Build();
+            }
+        }
     }
 }
