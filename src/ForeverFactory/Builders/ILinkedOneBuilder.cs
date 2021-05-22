@@ -11,7 +11,5 @@ namespace ForeverFactory.Builders
         /// </summary>
         /// <param name="setMember">Sets the value of a Property. <example>x => x.Name = "Karen"</example>></param>
         ILinkedOneBuilder<T> With<TValue>(Func<T, TValue> setMember);
-        // ILinkedOneBuilder<T> PlusOne();
-        // IEnumerable<T> Build();
     }
 }

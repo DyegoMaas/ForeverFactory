@@ -23,6 +23,11 @@ namespace ForeverFactory.Builders
         T Build();
 
         ILinkedOneBuilder<T> PlusOne();
+        
+        /// <summary>
+        /// Creates a new set of customizable objects, in addition to the one already configured.
+        /// </summary>
+        /// <param name="count">The number of objects to be created.<param>
         IManyBuilder<T> Plus(int count);
     }
 }

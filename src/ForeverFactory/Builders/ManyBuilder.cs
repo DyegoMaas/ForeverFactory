@@ -16,19 +16,6 @@ namespace ForeverFactory.Builders
         where T : class
     {
         private readonly int _quantityToProduce;
-
-        // private readonly Func<T> _customConstructor;
-        // private readonly ILinkedBuilder<T> _previousBuilder;
-
-        // public ManyBuilder(int quantityToProduce, TransformList<T> defaultTransforms, Func<T> customConstructor, ILinkedBuilder<T> previousBuilder = null)
-        //     : base(previousBuilder)
-        // {
-        //     AddDefaultTransforms(defaultTransforms);
-        //     // _customConstructor = customConstructor;
-        //     SetCustomConstructor(customConstructor);
-        //     _quantityToProduce = quantityToProduce;
-        //     // _previousBuilder = previousBuilder;
-        // }
         
         public ManyBuilder(int quantityToProduce, ISharedContext<T> sharedContext, ILinkedBuilder<T> previousBuilder = null)
             : base(previousBuilder)
@@ -36,8 +23,6 @@ namespace ForeverFactory.Builders
             AddDefaultTransforms(sharedContext.DefaultTransforms);
             SetCustomConstructor(sharedContext.CustomConstructor);
             _quantityToProduce = quantityToProduce;
-            // _customConstructor = customConstructor;
-            // _previousBuilder = previousBuilder;
         }
 
         private InstanceSetExecutionContext GetExecutionContext() => new InstanceSetExecutionContext(_quantityToProduce);

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace ForeverFactory.Builders
 {
@@ -28,13 +27,5 @@ namespace ForeverFactory.Builders
         /// <param name="count">How many instances will have this property set.</param>
         /// <param name="setMember">Sets the value of a Property. <example>x => x.Name = "Karen"</example></param>
         IManyBuilder<T> WithLast<TValue>(int count, Func<T, TValue> setMember);
-        
-        // /// <summary>
-        // /// Creates a new set of customizable objects, following the previous sets created used the "Many" or "Plus" methods.
-        // /// </summary>
-        // /// <param name="count">The number of objects to be created.<param>
-        // IManyBuilder<T> Plus(int count);
-        
-        // ILinkedOneBuilder<T> PluOne();
     }
 }
