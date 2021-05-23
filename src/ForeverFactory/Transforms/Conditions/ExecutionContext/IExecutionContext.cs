@@ -1,4 +1,4 @@
-﻿namespace ForeverFactory.ExecutionContext
+﻿namespace ForeverFactory.Transforms.Conditions.ExecutionContext
 {
     internal interface IExecutionContext
     {

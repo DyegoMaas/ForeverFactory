@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using ForeverFactory.Builders;
+using ForeverFactory.Builders.Adapters;
+using ForeverFactory.Builders.Common;
 using ForeverFactory.Transforms;
 using ForeverFactory.Transforms.Conditions;
 
@@ -16,7 +18,12 @@ namespace ForeverFactory
         /// </summary>
         /// <typeparam name="T">The factory will build instances of this type</typeparam>
         /// <returns>Factory of T</returns>
-        public static MagicFactory<T> For<T>() where T : class => new DefaultFactory<T>();
+        public static MagicFactory<T> For<T>() where T : class => new DynamicFactory<T>();
+        
+        private sealed class DynamicFactory<T> : MagicFactory<T>
+            where T : class
+        {
+        }
     }
 
     /// <summary>
@@ -26,8 +33,8 @@ namespace ForeverFactory
     public abstract class MagicFactory<T> : IOneBuilder<T>
         where T : class
     {
-        private readonly OneBuilder<T> _oneBuilder = new OneBuilder<T>();
-        private readonly List<Transform<T>> _defaultTransforms = new List<Transform<T>>();
+        private readonly TransformList<T> _defaultTransforms = new TransformList<T>();
+        private readonly List<Transform<T>> _transforms = new List<Transform<T>>();
         private Func<T> _customConstructor;
 
         /// <summary>
@@ -37,7 +44,6 @@ namespace ForeverFactory
         protected void UseConstructor(Func<T> customConstructor)
         {
             _customConstructor = customConstructor;
-            _oneBuilder.SetCustomConstructor(customConstructor);
         }
 
         /// <summary>
@@ -56,8 +62,7 @@ namespace ForeverFactory
         /// <param name="setMember">Sets the value of a Property. <example>x => x.Name = "Karen"</example>></param>
         protected void Set<TValue>(Func<T, TValue> setMember)
         {
-            _defaultTransforms.Add(new FuncTransform<T,TValue>(setMember, new NoConditionToApply()));
-            _oneBuilder.With(setMember);
+            _defaultTransforms.Add(new FuncTransform<T,TValue>(setMember, Conditions.NoConditions()));
         }
 
         # region OneBuilder Wrapper
@@ -68,8 +73,8 @@ namespace ForeverFactory
         /// <param name="setMember">Sets the value of a Property. <example>x => x.Name = "Karen"</example>></param>
         public IOneBuilder<T> With<TValue>(Func<T, TValue> setMember)
         {
-            _oneBuilder.With(setMember);
-            return _oneBuilder;
+            _transforms.Add(new FuncTransform<T,TValue>(setMember, Conditions.NoConditions()));
+            return this;
         }
 
         /// <summary>
@@ -78,10 +83,13 @@ namespace ForeverFactory
         /// <returns>A new instance of "T", with all configurations applied.</returns>
         public T Build()
         {
-            return _oneBuilder.Build();
+            var oneBuilder = new OneBuilder<T>(new SharedContext<T>(_defaultTransforms, _customConstructor));
+            foreach (var transform in _transforms)
+            {
+                oneBuilder.With(transform);
+            }
+            return oneBuilder.Build();
         }
-        
-        #endregion
 
         /// <summary>
         /// Allows to build multiple objects. This method gives access to further group customization.
@@ -90,7 +98,34 @@ namespace ForeverFactory
         /// <returns>A builder for multiple objects.</returns>
         public IManyBuilder<T> Many(int count)
         {
-            return new ManyBuilder<T>(count, _defaultTransforms, _customConstructor);
+            return new LinkedManyBuilder<T>(count, new SharedContext<T>(_defaultTransforms, _customConstructor));
         }
+
+        
+        /// <summary>
+        /// Creates a new builder of "T". It will build a new object, in addition to the previous configurations. 
+        /// </summary>
+        /// <returns>A builder of "T"</returns>
+        public ILinkedOneBuilder<T> PlusOne()
+        {
+            return new LinkedOneBuilder<T>(
+                sharedContext: new SharedContext<T>(_defaultTransforms,_customConstructor),
+                previous: new MagicFactoryOneBuilderToLinkedOneBuilderAdapter<T>(this, _defaultTransforms, _customConstructor)
+            );
+        }
+
+        /// <summary>
+        /// Creates a new set of customizable objects, following the previous sets created used the "Many" or "Plus" methods.
+        /// </summary>
+        /// <param name="count">The number of objects to be created.<param>
+        public IManyBuilder<T> Plus(int count)
+        {
+            return new LinkedManyBuilder<T>(count,
+                sharedContext: new SharedContext<T>(_defaultTransforms,_customConstructor                ),
+                previous: new MagicFactoryOneBuilderToLinkedOneBuilderAdapter<T>(this, _defaultTransforms, _customConstructor)
+            );
+        }
+
+        #endregion
     }
 }

@@ -1,36 +1,51 @@
 ﻿using System;
-using System.Collections.Generic;
+using ForeverFactory.Builders.Adapters;
+using ForeverFactory.Builders.Common;
 using ForeverFactory.Transforms;
 using ForeverFactory.Transforms.Conditions;
 
 namespace ForeverFactory.Builders
 {
-    internal class OneBuilder<T> : IOneBuilder<T>
+    internal class OneBuilder<T> : BaseBuilder<T>, IOneBuilder<T>
         where T : class
     {
-        private readonly List<Transform<T>> _transforms = new List<Transform<T>>();
-        private Func<T> _customConstructor;
-
-        public void SetCustomConstructor(Func<T> customConstructor) 
+        public OneBuilder(ISharedContext<T> sharedContext) : base(sharedContext)
         {
-            _customConstructor = customConstructor;
         }
 
         public IOneBuilder<T> With<TValue>(Func<T, TValue> setMember)
         {
-            _transforms.Add(new FuncTransform<T, TValue>(setMember, new NoConditionToApply()));
+            AddTransform(new FuncTransform<T, TValue>(setMember, Conditions.NoConditions()));
+            return this;
+        }
+        
+        public IOneBuilder<T> With(Transform<T> setMember)
+        {
+            AddTransform(setMember);
             return this;
         }
 
         public T Build()
         {
-            var instance = _customConstructor?.Invoke() ?? Activator.CreateInstance<T>();
-            foreach (var transform in _transforms)
+            var instance = CreateInstance();
+            foreach (var transform in GetTransformsToApply())
             {
                 transform.ApplyTo(instance);
             }
             
             return instance;
+        }
+
+        public ILinkedOneBuilder<T> PlusOne()
+        {
+            return new LinkedOneBuilder<T>(SharedContext, new OneBuilderToLinkedOneBuilderAdapter<T>(this));
+        }
+
+        public IManyBuilder<T> Plus(int count)
+        {
+            return new LinkedManyBuilder<T>(count, SharedContext,    
+                previous: new OneBuilderToLinkedOneBuilderAdapter<T>(this))
+            ; 
         }
     }
 }
