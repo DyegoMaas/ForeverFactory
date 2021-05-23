@@ -17,7 +17,7 @@ namespace ForeverFactory.Builders
 
         public ILinkedOneBuilder<T> With<TValue>(Func<T, TValue> setMember)
         {
-            AddTransform(new FuncTransform<T,TValue>(setMember, new NoConditionToApply()));
+            AddTransform(new FuncTransform<T,TValue>(setMember, Conditions.NoConditions()));
             return this;
         }
 
@@ -44,8 +44,7 @@ namespace ForeverFactory.Builders
 
         public IManyBuilder<T> Plus(int count)
         {
-            return new LinkedManyBuilder<T>(count, SharedContext, previous: this
-            );
+            return new LinkedManyBuilder<T>(count, SharedContext, previous: this);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace ForeverFactory.Builders
 
         public IOneBuilder<T> With<TValue>(Func<T, TValue> setMember)
         {
-            AddTransform(new FuncTransform<T, TValue>(setMember, new NoConditionToApply()));
+            AddTransform(new FuncTransform<T, TValue>(setMember, Conditions.NoConditions()));
             return this;
         }
         

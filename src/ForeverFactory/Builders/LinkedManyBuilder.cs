@@ -23,7 +23,7 @@ namespace ForeverFactory.Builders
 
         public IManyBuilder<T> With<TValue>(Func<T, TValue> setMember)
         {
-            AddTransform(new FuncTransform<T,TValue>(setMember, new NoConditionToApply()));
+            AddTransform(new FuncTransform<T,TValue>(setMember, Conditions.NoConditions()));
             return this;
         }
 
@@ -31,7 +31,15 @@ namespace ForeverFactory.Builders
         {
             ValidateCount(count);
             
-            AddTransform(new FuncTransform<T,TValue>(setMember, new ConditionToApplyFirst(count, GetExecutionContext())));
+            AddTransform(new FuncTransform<T,TValue>(setMember, Conditions.ToApplyFirst(count, GetExecutionContext())));
+            return this;
+        }
+
+        public IManyBuilder<T> WithLast<TValue>(int count, Func<T, TValue> setMember)
+        {
+            ValidateCount(count);
+           
+            AddTransform(new FuncTransform<T,TValue>(setMember, Conditions.ToApplyLast(count, GetExecutionContext())));
             return this;
         }
 
@@ -42,17 +50,6 @@ namespace ForeverFactory.Builders
                 throw new ArgumentOutOfRangeException("count", count,
                     $"Count should be less or equal to the set size ({_quantityToProduce})");
             }
-        }
-
-        public IManyBuilder<T> WithLast<TValue>(int count, Func<T, TValue> setMember)
-        {
-            if (count > _quantityToProduce)
-            {
-                throw new ArgumentOutOfRangeException("count", count,
-                    $"Count should be less or equal to the set size ({_quantityToProduce})");
-            }
-            AddTransform(new FuncTransform<T,TValue>(setMember, new ConditionToApplyLast(count, GetExecutionContext())));
-            return this;
         }
 
         public ILinkedOneBuilder<T> PlusOne() // TODO test

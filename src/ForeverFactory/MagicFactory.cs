@@ -62,7 +62,7 @@ namespace ForeverFactory
         /// <param name="setMember">Sets the value of a Property. <example>x => x.Name = "Karen"</example>></param>
         protected void Set<TValue>(Func<T, TValue> setMember)
         {
-            _defaultTransforms.Add(new FuncTransform<T,TValue>(setMember, new NoConditionToApply()));
+            _defaultTransforms.Add(new FuncTransform<T,TValue>(setMember, Conditions.NoConditions()));
         }
 
         # region OneBuilder Wrapper
@@ -73,7 +73,7 @@ namespace ForeverFactory
         /// <param name="setMember">Sets the value of a Property. <example>x => x.Name = "Karen"</example>></param>
         public IOneBuilder<T> With<TValue>(Func<T, TValue> setMember)
         {
-            _transforms.Add(new FuncTransform<T,TValue>(setMember, new NoConditionToApply()));
+            _transforms.Add(new FuncTransform<T,TValue>(setMember, Conditions.NoConditions()));
             return this;
         }
 

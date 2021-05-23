@@ -11,11 +11,6 @@ namespace ForeverFactory.Transforms
             _transforms.AddRange(transforms);
         }
         
-        public void AddRange(TransformList<T> transformList)
-        {
-            _transforms.AddRange(transformList._transforms);
-        }
-
         public void Add(Transform<T> transform)
         {
             _transforms.Add(transform);
