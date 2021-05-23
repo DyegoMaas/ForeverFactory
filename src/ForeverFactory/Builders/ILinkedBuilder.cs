@@ -4,7 +4,10 @@ namespace ForeverFactory.Builders
 {
     public interface ILinkedBuilder<out T>
     {
-        // TODO document
+        /// <summary>
+        /// Creates a new builder of "T". It will build a new object, in addition to the previous configurations. 
+        /// </summary>
+        /// <returns>A builder of "T"</returns>
         ILinkedOneBuilder<T> PlusOne();
         
         /// <summary>

@@ -101,7 +101,11 @@ namespace ForeverFactory
             return new LinkedManyBuilder<T>(count, new SharedContext<T>(_defaultTransforms, _customConstructor));
         }
 
-        // TODO document
+        
+        /// <summary>
+        /// Creates a new builder of "T". It will build a new object, in addition to the previous configurations. 
+        /// </summary>
+        /// <returns>A builder of "T"</returns>
         public ILinkedOneBuilder<T> PlusOne()
         {
             return new LinkedOneBuilder<T>(
@@ -110,7 +114,10 @@ namespace ForeverFactory
             );
         }
 
-        // TODO document
+        /// <summary>
+        /// Creates a new set of customizable objects, following the previous sets created used the "Many" or "Plus" methods.
+        /// </summary>
+        /// <param name="count">The number of objects to be created.<param>
         public IManyBuilder<T> Plus(int count)
         {
             return new LinkedManyBuilder<T>(count,

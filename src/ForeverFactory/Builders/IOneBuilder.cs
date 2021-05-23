@@ -8,8 +8,6 @@ namespace ForeverFactory.Builders
     /// <typeparam name="T">The type of object that will be built.</typeparam>
     public interface IOneBuilder<out T>
     {
-        // TODO support custom constructor
-        
         /// <summary>
         /// Defines the default value of a property.
         /// </summary>
@@ -21,14 +19,5 @@ namespace ForeverFactory.Builders
         /// </summary>
         /// <returns>A new instance of "T", with all configurations applied.</returns>
         T Build();
-
-        // TODO document
-        ILinkedOneBuilder<T> PlusOne();
-        
-        /// <summary>
-        /// Creates a new set of customizable objects, in addition to the one already configured.
-        /// </summary>
-        /// <param name="count">The number of objects to be created.<param>
-        IManyBuilder<T> Plus(int count);
     }
 }

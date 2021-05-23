@@ -4,8 +4,6 @@ namespace ForeverFactory.Builders
 {
     public interface ILinkedOneBuilder<out T> : ILinkedBuilder<T>
     {
-        // TODO support custom constructor
-        
         /// <summary>
         /// Defines the default value of a property.
         /// </summary>

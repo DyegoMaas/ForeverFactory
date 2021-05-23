@@ -19,7 +19,7 @@ namespace ForeverFactory.Builders
             return this;
         }
         
-        public IOneBuilder<T> With(Transform<T> setMember) // TODO test better
+        public IOneBuilder<T> With(Transform<T> setMember)
         {
             AddTransform(setMember);
             return this;
@@ -45,7 +45,7 @@ namespace ForeverFactory.Builders
         {
             return new LinkedManyBuilder<T>(count, SharedContext,    
                 previous: new OneBuilderToLinkedOneBuilderAdapter<T>(this))
-            ; // TODO review custom constructor (difference between one set in custom factory and with UsingConstructor 
+            ; 
         }
     }
 }
