@@ -101,9 +101,7 @@ namespace ForeverFactory.Tests.Builders
         {
             var linkedOneBuilder = CreateBuilder<TravelLog>(previous: null);
 
-            var travelLogs = linkedOneBuilder
-                .With(x => x.Destination = "Las Vegas")
-                .Build();
+            var travelLogs = linkedOneBuilder.Build();
 
             travelLogs.Should().HaveCount(1, "it is not linked with others");
         }
