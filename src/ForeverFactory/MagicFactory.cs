@@ -98,7 +98,7 @@ namespace ForeverFactory
         /// <returns>A builder for multiple objects.</returns>
         public IManyBuilder<T> Many(int count)
         {
-            return new ManyBuilder<T>(count, new SharedContext<T>(_defaultTransforms, _customConstructor));
+            return new LinkedManyBuilder<T>(count, new SharedContext<T>(_defaultTransforms, _customConstructor));
         }
 
         // TODO document
@@ -113,7 +113,7 @@ namespace ForeverFactory
         // TODO document
         public IManyBuilder<T> Plus(int count)
         {
-            return new ManyBuilder<T>(count,
+            return new LinkedManyBuilder<T>(count,
                 sharedContext: new SharedContext<T>(_defaultTransforms,_customConstructor                ),
                 previous: new MagicFactoryOneBuilderToLinkedOneBuilderAdapter<T>(this, _defaultTransforms, _customConstructor)
             );

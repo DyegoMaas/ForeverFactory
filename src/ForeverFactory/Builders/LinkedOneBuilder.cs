@@ -44,7 +44,7 @@ namespace ForeverFactory.Builders
 
         public IManyBuilder<T> Plus(int count)
         {
-            return new ManyBuilder<T>(count, SharedContext, previous: this
+            return new LinkedManyBuilder<T>(count, SharedContext, previous: this
             );
         }
     }

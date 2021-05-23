@@ -32,7 +32,7 @@ namespace ForeverFactory.Builders.Adapters
 
         public IManyBuilder<T> Plus(int count)
         {
-            return new ManyBuilder<T>(count, 
+            return new LinkedManyBuilder<T>(count, 
                 new SharedContext<T>(_defaultTransforms, _customConstructor), 
                 previous: null
             );

@@ -43,7 +43,7 @@ namespace ForeverFactory.Builders
 
         public IManyBuilder<T> Plus(int count)
         {
-            return new ManyBuilder<T>(count, SharedContext,    
+            return new LinkedManyBuilder<T>(count, SharedContext,    
                 previous: new OneBuilderToLinkedOneBuilderAdapter<T>(this))
             ; // TODO review custom constructor (difference between one set in custom factory and with UsingConstructor 
         }

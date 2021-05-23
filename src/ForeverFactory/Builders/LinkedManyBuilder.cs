@@ -8,12 +8,12 @@ using ForeverFactory.Transforms.Conditions;
 
 namespace ForeverFactory.Builders
 {
-    internal class ManyBuilder<T> : LinkedBaseBuilder<T>, IManyBuilder<T>
+    internal class LinkedManyBuilder<T> : LinkedBaseBuilder<T>, IManyBuilder<T>
         where T : class
     {
         private readonly int _quantityToProduce;
         
-        public ManyBuilder(int quantityToProduce, ISharedContext<T> sharedContext, ILinkedBuilder<T> previous = null)
+        public LinkedManyBuilder(int quantityToProduce, ISharedContext<T> sharedContext, ILinkedBuilder<T> previous = null)
             : base(sharedContext, previous)
         {
             _quantityToProduce = quantityToProduce;
@@ -62,7 +62,7 @@ namespace ForeverFactory.Builders
 
         public IManyBuilder<T> Plus(int count)
         {
-            return new ManyBuilder<T>(count, SharedContext, previous: this);
+            return new LinkedManyBuilder<T>(count, SharedContext, previous: this);
         }
 
         public IEnumerable<T> Build()
