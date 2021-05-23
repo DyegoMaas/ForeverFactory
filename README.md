@@ -77,7 +77,8 @@ Additionally, we can create multiple sets of objects:
 var hundredPeople = MagicFactory.For<Person>()
     .Many(10).With(x => x.Age = 5)
     .Plus(20).With(x => x.Age = 60)
-    .Build(); // creates 10 persons with age 5, and 20 with age 60
+    .PlusOne().With(x => x.Age = 100)
+    .Build(); // creates 10 persons with age 5, 20 with age 60, and 1 with age 100
 ```
 
 ### Custom Factories
@@ -172,6 +173,7 @@ dotnet stryker
 ## Roadmap
 
 - Support multi-level object creation
+- Support custom constructor scoped by builder (for now, custom constructors are shared along the linked builders)
 - The default factory could have an option to fill all properties with valid values
 - Allow configuration by rules
 - Allow sequences in numbers properties and things like email, etc
