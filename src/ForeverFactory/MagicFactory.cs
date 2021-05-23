@@ -117,7 +117,7 @@ namespace ForeverFactory
         /// <summary>
         /// Creates a new set of customizable objects, following the previous sets created used the "Many" or "Plus" methods.
         /// </summary>
-        /// <param name="count">The number of objects to be created.<param>
+        /// <param name="count">The number of objects to be created.</param>
         public IManyBuilder<T> Plus(int count)
         {
             return new LinkedManyBuilder<T>(count,
