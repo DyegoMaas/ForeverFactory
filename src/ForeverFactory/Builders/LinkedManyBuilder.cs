@@ -52,7 +52,7 @@ namespace ForeverFactory.Builders
 
         private InstanceSetExecutionContext GetExecutionContext() => new InstanceSetExecutionContext(_quantityToProduce);
 
-        public ILinkedOneBuilder<T> PlusOne() // TODO test
+        public ILinkedOneBuilder<T> PlusOne()
         {
             return new LinkedOneBuilder<T>(SharedContext, previous: this);
         }

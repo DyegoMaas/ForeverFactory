@@ -11,19 +11,20 @@ using Xunit;
 
 namespace ForeverFactory.Tests.Builders
 {
-    public class OneBuilderTests
+    public class LinkedBuilderTests
     {
         [Fact]
         public void It_should_apply_all_transforms_configured_through_With_method()
         {
-            var oneBuilder = CreateBuilder<TravelLog>(defaultTransforms: null, customConstructor: null);
+            var linkedOneBuilder = CreateBuilder<TravelLog>(defaultTransforms: null, customConstructor: null);
 
-            var travelLog = oneBuilder
+            var travelLog = linkedOneBuilder
                 .With(x => x.Destination = "Maui")
                 .With(x => x.PictureUrl = "https://somedomain/user/pictures/1234")
                 .With(x => x.StartDate = 10.May(2020))
                 .With(x => x.EndDate = 20.May(2020))
-                .Build();
+                .Build()
+                .First();
 
             travelLog.Destination.Should().Be("Maui");
             travelLog.PictureUrl.Should().Be("https://somedomain/user/pictures/1234");
@@ -32,23 +33,11 @@ namespace ForeverFactory.Tests.Builders
         }
         
         [Fact]
-        public void It_should_apply_all_transforms_configured_through_With_method_using_a_transform()
-        {
-            var oneBuilder = CreateBuilder<TravelLog>(defaultTransforms: null, customConstructor: null);
-
-            var travelLog = oneBuilder
-                .With(BuildTransform<TravelLog, string>(x => x.Destination = "Texas"))
-                .Build();
-
-            travelLog.Destination.Should().Be("Texas");
-        }
-        
-        [Fact]
         public void It_should_apply_no_transforms_if_none_is_set()
         {
-            var oneBuilder = CreateBuilder<TravelLog>(defaultTransforms: null, customConstructor: null);
+            var linkedOneBuilder = CreateBuilder<TravelLog>(defaultTransforms: null, customConstructor: null);
 
-            var travelLog = oneBuilder.Build();
+            var travelLog = linkedOneBuilder.Build().First();
 
             travelLog.Destination.Should().BeNull();
             travelLog.PictureUrl.Should().BeNull();
@@ -59,11 +48,11 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void It_should_apply_use_constructor_if_set()
         {
-            var oneBuilder = CreateBuilder(
+            var linkedOneBuilder = CreateBuilder(
                 customConstructor: () => new TravelLog { StartDate = DateTime.Today + 30.Days() }
             );
             
-            var travelLog = oneBuilder.Build();
+            var travelLog = linkedOneBuilder.Build().First();
 
             travelLog.Destination.Should().BeNull();
             travelLog.PictureUrl.Should().BeNull();
@@ -74,7 +63,7 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void It_should_apply_default_transforms_if_set()
         {
-            var oneBuilder = CreateBuilder(
+            var linkedOneBuilder = CreateBuilder(
                 defaultTransforms: new Transform<TravelLog>[]
                 {
                     BuildTransform<TravelLog, string>(x => x.Destination = "Hawaii"),
@@ -82,7 +71,7 @@ namespace ForeverFactory.Tests.Builders
                 }
             );
 
-            var travelLog = oneBuilder.Build();
+            var travelLog = linkedOneBuilder.Build().First();
 
             travelLog.Destination.Should().Be("Hawaii");
             travelLog.PictureUrl.Should().BeNull();
@@ -93,28 +82,79 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void It_should_override_default_transforms_with_transforms_set_via_the_With_method()
         {
-            var oneBuilder = CreateBuilder(
+            var linkedOneBuilder = CreateBuilder(
                 defaultTransforms: new Transform<TravelLog>[]
                 {
                     BuildTransform<TravelLog, string>(x => x.Destination = "Hawaii"),
                 } 
             );
 
-            var travelLog = oneBuilder
+            var travelLog = linkedOneBuilder
                 .With(x => x.Destination = "Las Vegas")
-                .Build();
+                .Build().First();
 
             travelLog.Destination.Should().Be("Las Vegas");
         }
+        
+        [Fact]
+        public void It_should_create_only_one_instance_if_not_linked_with_more_builders()
+        {
+            var linkedOneBuilder = CreateBuilder<TravelLog>(previous: null);
 
-        private static OneBuilder<T> CreateBuilder<T>(IEnumerable<Transform<T>> defaultTransforms = null, Func<T> customConstructor = null) 
+            var travelLogs = linkedOneBuilder
+                .With(x => x.Destination = "Las Vegas")
+                .Build();
+
+            travelLogs.Should().HaveCount(1, "it is not linked with others");
+        }
+        
+        [Fact]
+        public void It_should_create_only_three_instances_when_linked_to_two_more_builders()
+        {
+            var linkedOneBuilderA = CreateBuilder<TravelLog>(previous: null);
+            var linkedOneBuilderB = CreateBuilder<TravelLog>(previous: linkedOneBuilderA);
+            var linkedOneBuilderC = CreateBuilder<TravelLog>(previous: linkedOneBuilderB);
+
+            var travelLogs = linkedOneBuilderC.Build();
+
+            travelLogs.Should().HaveCount(3, "there are three builders linked");
+        }
+        
+        [Fact]
+        public void All_linked_builders_should_share_the_same_building_context()
+        {
+            var builder = CreateBuilder<TravelLog>(
+                customConstructor: () => new TravelLog { StartDate = 20.November(2022)},
+                defaultTransforms: new []
+                {
+                    BuildTransform<TravelLog, string>(x => x.Destination = "Blumenau")
+                }
+            );
+
+            var travelLogs = builder
+                .PlusOne()
+                .PlusOne()
+                .Build();
+
+            travelLogs.Should().HaveCount(3, "there are three builders linked");
+            foreach (var log in travelLogs)
+            {
+                log.StartDate.Should().Be(20.November(2022));
+                log.Destination.Should().Be("Blumenau");
+            }
+        }
+
+        private static LinkedOneBuilder<T> CreateBuilder<T>(
+            IEnumerable<Transform<T>> defaultTransforms = null, 
+            Func<T> customConstructor = null,
+            ILinkedBuilder<T> previous = null) 
             where T : class
         {
             var transformList = new TransformList<T>();
             transformList.AddRange(defaultTransforms ?? Enumerable.Empty<Transform<T>>());
             
             var sharedContext = new SharedContext<T>(transformList, customConstructor);
-            return new OneBuilder<T>(sharedContext);
+            return new LinkedOneBuilder<T>(sharedContext, previous);
         }
 
         private FuncTransform<T, TValue> BuildTransform<T, TValue>(Func<T, TValue> setMember) =>
