@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ForeverFactory.Builders;
+using ForeverFactory.Builders.Adapters;
 using ForeverFactory.Builders.Common;
 using ForeverFactory.Transforms;
 using ForeverFactory.Transforms.Conditions;
@@ -18,6 +19,11 @@ namespace ForeverFactory
         /// <typeparam name="T">The factory will build instances of this type</typeparam>
         /// <returns>Factory of T</returns>
         public static MagicFactory<T> For<T>() where T : class => new DefaultFactory<T>();
+        
+        private sealed class DefaultFactory<T> : MagicFactory<T>
+            where T : class
+        {
+        }
     }
 
     /// <summary>
@@ -27,7 +33,6 @@ namespace ForeverFactory
     public abstract class MagicFactory<T> : IOneBuilder<T>
         where T : class
     {
-        // private readonly OneBuilder<T> _oneBuilder = new OneBuilder<T>();
         private readonly TransformList<T> _defaultTransforms = new TransformList<T>();
         private readonly List<Transform<T>> _transforms = new List<Transform<T>>();
         private Func<T> _customConstructor;
@@ -39,7 +44,6 @@ namespace ForeverFactory
         protected void UseConstructor(Func<T> customConstructor) // TODO test
         {
             _customConstructor = customConstructor;
-            // _oneBuilder.SetCustomConstructor(customConstructor);
         }
 
         /// <summary>
@@ -59,7 +63,6 @@ namespace ForeverFactory
         protected void Set<TValue>(Func<T, TValue> setMember)
         {
             _defaultTransforms.Add(new FuncTransform<T,TValue>(setMember, new NoConditionToApply()));
-            // _oneBuilder.AddDefault(setMember);
         }
 
         # region OneBuilder Wrapper
@@ -88,63 +91,6 @@ namespace ForeverFactory
             return oneBuilder.Build();
         }
 
-        public ILinkedOneBuilder<T> PlusOne()
-        {
-            return new LinkedOneBuilder<T>(
-                // sharedContext: new SharedContext<T>(Enumerable.Empty<T>(), _customConstructor),
-                sharedContext: new SharedContext<T>(_defaultTransforms,_customConstructor),
-                previous: new MagicFactoryOneBuilderToLinkedOneBuilderAdapter(this, _defaultTransforms, _customConstructor)
-            );
-        }
-
-        public IManyBuilder<T> Plus(int count)
-        {
-            return new ManyBuilder<T>(count,
-                sharedContext: new SharedContext<T>(_defaultTransforms,_customConstructor                ),
-                previous: new MagicFactoryOneBuilderToLinkedOneBuilderAdapter(this, _defaultTransforms, _customConstructor)
-            );
-        }
-        
-        private class MagicFactoryOneBuilderToLinkedOneBuilderAdapter : ILinkedBuilder<T> 
-        {
-            private readonly IOneBuilder<T> _builder;
-            private readonly TransformList<T> _defaultTransforms;
-            private readonly Func<T> _customConstructor;
-
-            public MagicFactoryOneBuilderToLinkedOneBuilderAdapter(
-                MagicFactory<T> builder,
-                TransformList<T> defaultTransforms,
-                Func<T> customConstructor)
-            {
-                _builder = builder;
-                _defaultTransforms = defaultTransforms;
-                _customConstructor = customConstructor;
-            }
-
-            public ILinkedOneBuilder<T> PlusOne()
-            {
-                return new LinkedOneBuilder<T>(
-                    new SharedContext<T>(_defaultTransforms, _customConstructor),
-                    previous: this
-                );
-            }
-
-            public IManyBuilder<T> Plus(int count)
-            {
-                return new ManyBuilder<T>(count, 
-                    new SharedContext<T>(_defaultTransforms, _customConstructor), 
-                    previous: null
-                );
-            }
-
-            public IEnumerable<T> Build()
-            {
-                yield return _builder.Build();
-            }
-        }
-
-        #endregion
-
         /// <summary>
         /// Allows to build multiple objects. This method gives access to further group customization.
         /// </summary>
@@ -154,5 +100,25 @@ namespace ForeverFactory
         {
             return new ManyBuilder<T>(count, new SharedContext<T>(_defaultTransforms, _customConstructor));
         }
+
+        // TODO document
+        public ILinkedOneBuilder<T> PlusOne()
+        {
+            return new LinkedOneBuilder<T>(
+                sharedContext: new SharedContext<T>(_defaultTransforms,_customConstructor),
+                previous: new MagicFactoryOneBuilderToLinkedOneBuilderAdapter<T>(this, _defaultTransforms, _customConstructor)
+            );
+        }
+
+        // TODO document
+        public IManyBuilder<T> Plus(int count)
+        {
+            return new ManyBuilder<T>(count,
+                sharedContext: new SharedContext<T>(_defaultTransforms,_customConstructor                ),
+                previous: new MagicFactoryOneBuilderToLinkedOneBuilderAdapter<T>(this, _defaultTransforms, _customConstructor)
+            );
+        }
+
+        #endregion
     }
 }

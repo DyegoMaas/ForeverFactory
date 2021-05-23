@@ -7,7 +7,7 @@ namespace ForeverFactory.Builders.Common
     internal abstract class BaseBuilder<T> 
         where T : class
     {
-        protected ISharedContext<T> SharedContext { get; }
+        public ISharedContext<T> SharedContext { get; }
         private TransformList<T> Transforms { get; }
 
         protected BaseBuilder(ISharedContext<T> sharedContext)

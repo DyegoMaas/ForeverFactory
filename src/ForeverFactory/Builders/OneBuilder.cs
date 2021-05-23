@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using ForeverFactory.Builders.Adapters;
 using ForeverFactory.Builders.Common;
 using ForeverFactory.Transforms;
 using ForeverFactory.Transforms.Conditions;
@@ -19,7 +19,7 @@ namespace ForeverFactory.Builders
             return this;
         }
         
-        public IOneBuilder<T> With(Transform<T> setMember)
+        public IOneBuilder<T> With(Transform<T> setMember) // TODO test better
         {
             AddTransform(setMember);
             return this;
@@ -38,42 +38,14 @@ namespace ForeverFactory.Builders
 
         public ILinkedOneBuilder<T> PlusOne()
         {
-            return new LinkedOneBuilder<T>(SharedContext, new OneBuilderToLinkedOneBuilderAdapter(this));
+            return new LinkedOneBuilder<T>(SharedContext, new OneBuilderToLinkedOneBuilderAdapter<T>(this));
         }
 
         public IManyBuilder<T> Plus(int count)
         {
             return new ManyBuilder<T>(count, SharedContext,    
-                previous: new OneBuilderToLinkedOneBuilderAdapter(this))
+                previous: new OneBuilderToLinkedOneBuilderAdapter<T>(this))
             ; // TODO review custom constructor (difference between one set in custom factory and with UsingConstructor 
-        }
-
-        private class OneBuilderToLinkedOneBuilderAdapter : ILinkedBuilder<T>
-        {
-            private readonly OneBuilder<T> _builder;
-
-            public OneBuilderToLinkedOneBuilderAdapter(OneBuilder<T> builder)
-            {
-                _builder = builder;
-            }
-
-            public ILinkedOneBuilder<T> PlusOne()
-            {
-                return new LinkedOneBuilder<T>(_builder.SharedContext, this);
-            }
-
-            public IManyBuilder<T> Plus(int count)
-            {
-                return new ManyBuilder<T>(count,
-                    sharedContext: _builder.SharedContext,
-                    previous: null
-                );
-            }
-
-            public IEnumerable<T> Build()
-            {
-                yield return _builder.Build();
-            }
         }
     }
 }

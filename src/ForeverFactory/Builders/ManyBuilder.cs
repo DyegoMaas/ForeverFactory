@@ -5,15 +5,9 @@ using ForeverFactory.Builders.Common;
 using ForeverFactory.ExecutionContext;
 using ForeverFactory.Transforms;
 using ForeverFactory.Transforms.Conditions;
-using ForeverFactory.Transforms.Conditions.ExecutionContext;
 
 namespace ForeverFactory.Builders
 {
-    /*
-     * Assumptions:
-     * - transformations are applied in same order they are declared: this makes the system deterministic and
-     * consequently more understandable
-     */
     internal class ManyBuilder<T> : LinkedBaseBuilder<T>, IManyBuilder<T>
         where T : class
     {
@@ -27,19 +21,12 @@ namespace ForeverFactory.Builders
 
         private InstanceSetExecutionContext GetExecutionContext() => new InstanceSetExecutionContext(_quantityToProduce);
 
-        /// <summary>
-        /// Works within the active context
-        /// </summary>
         public IManyBuilder<T> With<TValue>(Func<T, TValue> setMember)
         {
             AddTransform(new FuncTransform<T,TValue>(setMember, new NoConditionToApply()));
             return this;
         }
 
-        /// <summary>
-        /// Works within the active context
-        /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public IManyBuilder<T> WithFirst<TValue>(int count, Func<T, TValue> setMember)
         {
             ValidateCount(count);
@@ -57,10 +44,6 @@ namespace ForeverFactory.Builders
             }
         }
 
-        /// <summary>
-        /// Works within the active context
-        /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public IManyBuilder<T> WithLast<TValue>(int count, Func<T, TValue> setMember)
         {
             if (count > _quantityToProduce)
@@ -77,18 +60,9 @@ namespace ForeverFactory.Builders
             return new LinkedOneBuilder<T>(SharedContext, previous: this);
         }
 
-        /// <summary>
-        /// Creates a new linked context
-        /// </summary>
         public IManyBuilder<T> Plus(int count)
         {
-            return new ManyBuilder<T>(count, SharedContext, previous: this
-            );
-        }
-
-        public ILinkedOneBuilder<T> PluOne()
-        {
-            return new LinkedOneBuilder<T>(SharedContext, previous: this);
+            return new ManyBuilder<T>(count, SharedContext, previous: this);
         }
 
         public IEnumerable<T> Build()
