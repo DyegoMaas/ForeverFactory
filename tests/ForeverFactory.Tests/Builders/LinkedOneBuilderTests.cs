@@ -141,6 +141,26 @@ namespace ForeverFactory.Tests.Builders
                 log.Destination.Should().Be("Blumenau");
             }
         }
+        
+        [Fact]
+        public void It_should_link_to_a_LinkedManyBuilder_with_method_Plus()
+        {
+            var builder = CreateBuilder<TravelLog>();
+
+            IManyBuilder<TravelLog> newBuilder = builder.Plus(5);
+
+            newBuilder.Should().BeOfType<LinkedManyBuilder<TravelLog>>();
+        }
+        
+        [Fact]
+        public void It_should_link_to_a_LinkedOneBuilder_with_method_Plus()
+        {
+            var builder = CreateBuilder<TravelLog>();
+
+            ILinkedOneBuilder<TravelLog> newBuilder = builder.PlusOne();
+
+            newBuilder.Should().BeOfType<LinkedOneBuilder<TravelLog>>();
+        }
 
         private static LinkedOneBuilder<T> CreateBuilder<T>(
             IEnumerable<Transform<T>> defaultTransforms = null, 

@@ -18,9 +18,9 @@ namespace ForeverFactory
         /// </summary>
         /// <typeparam name="T">The factory will build instances of this type</typeparam>
         /// <returns>Factory of T</returns>
-        public static MagicFactory<T> For<T>() where T : class => new DefaultFactory<T>();
+        public static MagicFactory<T> For<T>() where T : class => new DynamicFactory<T>();
         
-        private sealed class DefaultFactory<T> : MagicFactory<T>
+        private sealed class DynamicFactory<T> : MagicFactory<T>
             where T : class
         {
         }
@@ -41,7 +41,7 @@ namespace ForeverFactory
         /// Configures this factory to instantiate the object of type "T" using this constructor.
         /// </summary>
         /// <param name="customConstructor">Constructor used to build "T" objects</param>
-        protected void UseConstructor(Func<T> customConstructor) // TODO test
+        protected void UseConstructor(Func<T> customConstructor)
         {
             _customConstructor = customConstructor;
         }

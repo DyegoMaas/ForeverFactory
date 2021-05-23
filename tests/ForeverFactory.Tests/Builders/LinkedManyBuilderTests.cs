@@ -236,29 +236,105 @@ namespace ForeverFactory.Tests.Builders
         
             songs.Should().HaveCount(6, "there are three linked builders that produce two instances each");
         }
-        
+
         [Fact]
         public void All_linked_builders_should_share_the_same_building_context()
         {
             var builder = CreateBuilder<Song>(count: 10,
-                customConstructor: () => new Song { PublishDate = 20.November(2020)},
-                defaultTransforms: new []
+                customConstructor: () => new Song {PublishDate = 20.November(2020)},
+                defaultTransforms: new[]
                 {
                     BuildTransform<Song, string>(x => x.Name = "Dies Irae")
                 }
             );
-        
+
             var songs = builder
                 .Plus(10)
                 .Plus(10)
                 .Build();
-        
+
             songs.Should().HaveCount(30, "there are three linked builders that produce 10 instances each");
             foreach (var song in songs)
             {
                 song.PublishDate.Should().Be(20.November(2020));
                 song.Name.Should().Be("Dies Irae");
             }
+        }
+
+        [Fact]
+        public void It_should_generate_multiple_sets_of_configurable_instances2()
+        {
+            var builder = CreateBuilder<Song>(count: 10,
+                customConstructor: () => new Song
+                {
+                    Artist = "Daft Punk", 
+                    Name = "Da Funk", 
+                    PublishDate = 1.January(1995)
+                }
+            );
+            
+            var songs = builder
+                .WithLast(count: 2, x => x.PublishDate = 1.January(1999))
+                .WithLast(count: 2, x => x.Name = "Around the World")
+                .Plus(count: 5)
+                .WithFirst(count: 3, x => x.PublishDate = 1.January(2000))
+                .With(x => x.Name = "Get Lucky")
+                .Build()
+                .ToList();
+
+            songs.Should().HaveCount(15);
+
+            var firstEight = songs.Take(8);
+            foreach (var song in firstEight)
+            {
+                song.Artist.Should().Be("Daft Punk");
+                song.Name.Should().Be("Da Funk");
+                song.PublishDate.Should().Be(1.January(1995));
+            }
+        
+            var nextTwo = songs.Skip(8).Take(2);
+            foreach (var song in nextTwo)
+            {
+                song.Artist.Should().Be("Daft Punk");
+                song.Name.Should().Be("Around the World");
+                song.PublishDate.Should().Be(1.January(1999));
+            }
+        
+            var nextThree = songs.Skip(10).Take(3);
+            foreach (var song in nextThree)
+            {
+                song.Artist.Should().Be("Daft Punk");
+                song.Name.Should().Be("Get Lucky");
+                song.PublishDate.Should().Be(1.January(2000));
+            }
+        
+            nextTwo = songs.TakeLast(2);
+            foreach (var song in nextTwo)
+            {
+                song.Artist.Should().Be("Daft Punk");
+                song.Name.Should().Be("Get Lucky");
+                song.PublishDate.Should().Be(1.January(1995));
+            }
+        }
+        
+        [Fact]
+        public void It_should_link_to_a_LinkedManyBuilder_with_method_Plus()
+        {
+            var builder = CreateBuilder<Song>(count: 2);
+
+            IManyBuilder<Song> newBuilder = builder.Plus(5);
+
+            newBuilder.Should().BeOfType<LinkedManyBuilder<Song>>();
+        }
+        
+        [Fact]
+        public void It_should_link_to_a_LinkedOneBuilder_with_method_Plus()
+        {
+            var builder = CreateBuilder<Song>(count: 2);
+
+            ILinkedOneBuilder<Song> newBuilder = builder.PlusOne();
+
+            newBuilder.Should().BeOfType<LinkedOneBuilder<Song>>();
         }
         
         private static LinkedManyBuilder<T> CreateBuilder<T>(

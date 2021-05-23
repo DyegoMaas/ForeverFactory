@@ -5,7 +5,7 @@
         public ProductFactory()
         {
             UseConstructor(() => new Product("Nimbus 2000", "Brooms"));
-            Set(x => x.Description = "You will fly");
+            Set(x => x.Description = "The best flight await you!");
         }
     }
 
