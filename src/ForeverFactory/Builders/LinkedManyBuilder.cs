@@ -19,8 +19,6 @@ namespace ForeverFactory.Builders
             _quantityToProduce = quantityToProduce;
         }
 
-        private InstanceSetExecutionContext GetExecutionContext() => new InstanceSetExecutionContext(_quantityToProduce);
-
         public IManyBuilder<T> With<TValue>(Func<T, TValue> setMember)
         {
             AddTransform(new FuncTransform<T,TValue>(setMember, Conditions.NoConditions()));
@@ -51,6 +49,8 @@ namespace ForeverFactory.Builders
                     $"Count should be less or equal to the set size ({_quantityToProduce})");
             }
         }
+
+        private InstanceSetExecutionContext GetExecutionContext() => new InstanceSetExecutionContext(_quantityToProduce);
 
         public ILinkedOneBuilder<T> PlusOne() // TODO test
         {
