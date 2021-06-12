@@ -6,7 +6,7 @@ using FluentAssertions.Extensions;
 using ForeverFactory.Builders;
 using ForeverFactory.Builders.Common;
 using ForeverFactory.Transforms;
-using ForeverFactory.Transforms.Conditions;
+using static ForeverFactory.Tests.Helpers.TestHelpers;
 using Xunit;
 
 namespace ForeverFactory.Tests.Builders
@@ -16,7 +16,7 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void It_should_produce_the_correct_number_of_instances()
         {
-            var builder = CreateBuilder<Song>(count: 10, defaultTransforms: null, customConstructor: null);
+            var builder = GetBuilderFor<Song>(count: 10, defaultTransforms: null, customConstructor: null);
             
             var persons = builder.Build()
                 .ToList();
@@ -28,7 +28,7 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void It_produces_many_instances_with_overwritten_properties()
         {
-            var builder = CreateBuilder<Song>(count: 10);
+            var builder = GetBuilderFor<Song>(count: 10);
             
             var songs = builder
                 .With(x => x.Name = "Requiem II: Dies Irae")
@@ -48,7 +48,7 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void Should_throw_an_argument_exception_for_first_count_bigger_than_total_size()
         {
-            var builder = CreateBuilder<Song>(count: 10);
+            var builder = GetBuilderFor<Song>(count: 10);
             
             Action invalidConfigurationBuild = () => builder
                 .WithFirst(count: 11, x => x.PublishDate = 1.January(1500))
@@ -61,7 +61,7 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void Should_not_throw_an_argument_exception_for_first_if_count_is_same_or_less_than_total_size()
         {
-            var builder = CreateBuilder<Song>(count: 10);
+            var builder = GetBuilderFor<Song>(count: 10);
             
             Action invalidConfigurationBuild = () => builder
                 .WithFirst(count: 10, x => x.PublishDate = 1.January(1500))
@@ -74,7 +74,7 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void Should_throw_an_argument_exception_for_last_count_bigger_than_total_size()
         {
-            var builder = CreateBuilder<Song>(count: 10);
+            var builder = GetBuilderFor<Song>(count: 10);
             
             Action invalidConfigurationBuild = () => builder
                 .WithLast(count: 11, x => x.PublishDate = 1.January(1500))
@@ -87,7 +87,7 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void Should_not_throw_an_argument_exception_for_last_if_count_is_same_or_less_than_total_size()
         {
-            var builder = CreateBuilder<Song>(count: 10);
+            var builder = GetBuilderFor<Song>(count: 10);
             
             Action invalidConfigurationBuild = () => builder
                 .WithLast(count: 10, x => x.PublishDate = 1.January(1500))
@@ -100,7 +100,7 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void WithFirst_applies_transformation_only_over_the_first_n_instances_produced()
         {
-            var builder = CreateBuilder<Song>(count: 10);
+            var builder = GetBuilderFor<Song>(count: 10);
             
             var songs = builder
                 .With(x => x.Name = "Dies Irae")
@@ -127,7 +127,7 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void WithLast_applies_transformation_only_over_the_last_x_instances_produced()
         {
-            var builder = CreateBuilder<Song>(count: 10);
+            var builder = GetBuilderFor<Song>(count: 10);
             
             var songs = builder
                 .With(x => x.Name = "Dies Irae")
@@ -165,7 +165,7 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void It_should_apply_use_constructor_if_set()
         {
-            var builder = CreateBuilder<Song>(count: 5,
+            var builder = GetBuilderFor<Song>(count: 5,
                 customConstructor: () => new Song { PublishDate = 2.November(2000) }
             );
             
@@ -181,11 +181,11 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void It_should_apply_default_transforms_if_set()
         {
-            var builder = CreateBuilder(count: 5,
+            var builder = GetBuilderFor(count: 5,
                 defaultTransforms: new Transform<Song>[]
                 {
-                    BuildTransform<Song, string>(x => x.Name = "Hallelujah"),
-                    BuildTransform<Song, DateTime>(x => x.PublishDate = 2.April(1984)),
+                    FuncTransform<Song, string>(x => x.Name = "Hallelujah"),
+                    FuncTransform<Song, DateTime>(x => x.PublishDate = 2.April(1984)),
                 }
             );
         
@@ -201,10 +201,10 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void It_should_override_default_transforms_with_transforms_set_via_the_With_method()
         {
-            var builder = CreateBuilder(count: 5,
+            var builder = GetBuilderFor(count: 5,
                 defaultTransforms: new Transform<Song>[]
                 {
-                    BuildTransform<Song, string>(x => x.Name = "Hallelujah"),
+                    FuncTransform<Song, string>(x => x.Name = "Hallelujah"),
                 }
             );
         
@@ -218,7 +218,7 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void It_should_create_only_the_instances_of_this_builder_if_not_linked_with_more_builders()
         {
-            var builder = CreateBuilder<Song>(count: 5, previous: null);
+            var builder = GetBuilderFor<Song>(count: 5, previous: null);
         
             var songs = builder.Build();
         
@@ -228,9 +228,9 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void It_should_create_only_three_instances_when_linked_to_two_more_builders()
         {
-            var linkedManyBuilderA = CreateBuilder<Song>(count: 2, previous: null);
-            var linkedManyBuilderB = CreateBuilder<Song>(count: 2, previous: linkedManyBuilderA);
-            var linkedManyBuilderC = CreateBuilder<Song>(count: 2, previous: linkedManyBuilderB);
+            var linkedManyBuilderA = GetBuilderFor<Song>(count: 2, previous: null);
+            var linkedManyBuilderB = GetBuilderFor<Song>(count: 2, previous: linkedManyBuilderA);
+            var linkedManyBuilderC = GetBuilderFor<Song>(count: 2, previous: linkedManyBuilderB);
         
             var songs = linkedManyBuilderC.Build();
         
@@ -240,11 +240,11 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void All_linked_builders_should_share_the_same_building_context()
         {
-            var builder = CreateBuilder<Song>(count: 10,
+            var builder = GetBuilderFor<Song>(count: 10,
                 customConstructor: () => new Song {PublishDate = 20.November(2020)},
                 defaultTransforms: new[]
                 {
-                    BuildTransform<Song, string>(x => x.Name = "Dies Irae")
+                    FuncTransform<Song, string>(x => x.Name = "Dies Irae")
                 }
             );
 
@@ -264,7 +264,7 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void It_should_generate_multiple_sets_of_configurable_instances2()
         {
-            var builder = CreateBuilder<Song>(count: 10,
+            var builder = GetBuilderFor<Song>(count: 10,
                 customConstructor: () => new Song
                 {
                     Artist = "Daft Punk", 
@@ -320,7 +320,7 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void It_should_link_to_a_LinkedManyBuilder_with_method_Plus()
         {
-            var builder = CreateBuilder<Song>(count: 2);
+            var builder = GetBuilderFor<Song>(count: 2);
 
             IManyBuilder<Song> newBuilder = builder.Plus(5);
 
@@ -330,14 +330,14 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void It_should_link_to_a_LinkedOneBuilder_with_method_Plus()
         {
-            var builder = CreateBuilder<Song>(count: 2);
+            var builder = GetBuilderFor<Song>(count: 2);
 
             ILinkedOneBuilder<Song> newBuilder = builder.PlusOne();
 
             newBuilder.Should().BeOfType<LinkedOneBuilder<Song>>();
         }
         
-        private static LinkedManyBuilder<T> CreateBuilder<T>(
+        private static LinkedManyBuilder<T> GetBuilderFor<T>(
             int count,
             IEnumerable<Transform<T>> defaultTransforms = null, 
             Func<T> customConstructor = null,
@@ -350,9 +350,6 @@ namespace ForeverFactory.Tests.Builders
             var sharedContext = new SharedContext<T>(transformList, customConstructor);
             return new LinkedManyBuilder<T>(count, sharedContext, previous);
         }
-
-        private FuncTransform<T, TValue> BuildTransform<T, TValue>(Func<T, TValue> setMember) =>
-            new FuncTransform<T, TValue>(setMember, Conditions.NoConditions());
 
         private class Song
         {

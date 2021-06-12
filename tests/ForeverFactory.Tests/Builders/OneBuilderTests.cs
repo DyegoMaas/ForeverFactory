@@ -6,8 +6,8 @@ using FluentAssertions.Extensions;
 using ForeverFactory.Builders;
 using ForeverFactory.Builders.Common;
 using ForeverFactory.Transforms;
-using ForeverFactory.Transforms.Conditions;
 using Xunit;
+using static ForeverFactory.Tests.Helpers.TestHelpers;
 
 namespace ForeverFactory.Tests.Builders
 {
@@ -16,7 +16,7 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void It_should_apply_all_transforms_configured_through_With_method()
         {
-            var oneBuilder = CreateBuilder<TravelLog>(defaultTransforms: null, customConstructor: null);
+            var oneBuilder = GetBuilderFor<TravelLog>(defaultTransforms: null, customConstructor: null);
 
             var travelLog = oneBuilder
                 .With(x => x.Destination = "Maui")
@@ -34,10 +34,10 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void It_should_apply_all_transforms_configured_through_With_method_using_a_transform()
         {
-            var oneBuilder = CreateBuilder<TravelLog>(defaultTransforms: null, customConstructor: null);
+            var oneBuilder = GetBuilderFor<TravelLog>(defaultTransforms: null, customConstructor: null);
 
             var travelLog = oneBuilder
-                .With(BuildTransform<TravelLog, string>(x => x.Destination = "Texas"))
+                .With(FuncTransform<TravelLog, string>(x => x.Destination = "Texas"))
                 .Build();
 
             travelLog.Destination.Should().Be("Texas");
@@ -46,7 +46,7 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void It_should_apply_no_transforms_if_none_is_set()
         {
-            var oneBuilder = CreateBuilder<TravelLog>(defaultTransforms: null, customConstructor: null);
+            var oneBuilder = GetBuilderFor<TravelLog>(defaultTransforms: null, customConstructor: null);
 
             var travelLog = oneBuilder.Build();
 
@@ -59,7 +59,7 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void It_should_apply_use_constructor_if_set()
         {
-            var oneBuilder = CreateBuilder(
+            var oneBuilder = GetBuilderFor(
                 customConstructor: () => new TravelLog { StartDate = DateTime.Today + 30.Days() }
             );
             
@@ -74,11 +74,11 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void It_should_apply_default_transforms_if_set()
         {
-            var oneBuilder = CreateBuilder(
+            var oneBuilder = GetBuilderFor(
                 defaultTransforms: new Transform<TravelLog>[]
                 {
-                    BuildTransform<TravelLog, string>(x => x.Destination = "Hawaii"),
-                    BuildTransform<TravelLog, DateTime>(x => x.StartDate = DateTime.Today + 30.Days()),
+                    FuncTransform<TravelLog, string>(x => x.Destination = "Hawaii"),
+                    FuncTransform<TravelLog, DateTime>(x => x.StartDate = DateTime.Today + 30.Days()),
                 }
             );
 
@@ -93,10 +93,10 @@ namespace ForeverFactory.Tests.Builders
         [Fact]
         public void It_should_override_default_transforms_with_transforms_set_via_the_With_method()
         {
-            var oneBuilder = CreateBuilder(
+            var oneBuilder = GetBuilderFor(
                 defaultTransforms: new Transform<TravelLog>[]
                 {
-                    BuildTransform<TravelLog, string>(x => x.Destination = "Hawaii"),
+                    FuncTransform<TravelLog, string>(x => x.Destination = "Hawaii"),
                 } 
             );
 
@@ -107,7 +107,7 @@ namespace ForeverFactory.Tests.Builders
             travelLog.Destination.Should().Be("Las Vegas");
         }
 
-        private static OneBuilder<T> CreateBuilder<T>(IEnumerable<Transform<T>> defaultTransforms = null, Func<T> customConstructor = null) 
+        private static OneBuilder<T> GetBuilderFor<T>(IEnumerable<Transform<T>> defaultTransforms = null, Func<T> customConstructor = null) 
             where T : class
         {
             var transformList = new TransformList<T>();
@@ -116,9 +116,6 @@ namespace ForeverFactory.Tests.Builders
             var sharedContext = new SharedContext<T>(transformList, customConstructor);
             return new OneBuilder<T>(sharedContext);
         }
-
-        private FuncTransform<T, TValue> BuildTransform<T, TValue>(Func<T, TValue> setMember) =>
-            new FuncTransform<T, TValue>(setMember, Conditions.NoConditions());
 
         private class TravelLog
         {
