@@ -1,6 +1,4 @@
-﻿using ForeverFactory.Transforms.Conditions.ExecutionContext;
-
-namespace ForeverFactory.ExecutionContext
+﻿namespace ForeverFactory.Transforms.Conditions.ExecutionContext
 {
     internal class InstanceSetExecutionContext : IExecutionContext
     {
