@@ -12,18 +12,6 @@ namespace ForeverFactory.Tests.CoreV2
     public class CoreV2Tests
     {
         [Fact]
-        public void It_should_be_easy_to_share_context_between_links()
-        {
-            throw new NotImplementedException();
-        }
-        
-        [Fact]
-        public void It_should_be_easy_to_test()
-        {
-            throw new NotImplementedException();
-        }
-
-        [Fact]
         public void It_should_build_an_enumerable_if_no_nodes_are_added()
         {
             var factory = new ObjectFactory<Person>();
@@ -81,7 +69,7 @@ namespace ForeverFactory.Tests.CoreV2
 
                 generatorNode.AddTransform(
                     transform: new FuncTransform<Person, string>(x => x.FirstName = "Martha"),
-                    guard: new NoGuardSpecification()
+                    guard: new AlwaysApplyTransformGuardSpecification()
                 );
                 
                 var persons = generatorNode.ProduceInstances();
@@ -100,11 +88,11 @@ namespace ForeverFactory.Tests.CoreV2
                 );
                 generatorNode.AddTransform(
                     transform: new FuncTransform<Person, string>(x => x.FirstName = "Martha"),
-                    guard: new ApplyTransformToFirstInstances(countToApply: 2)
+                    guard: new ApplyTransformToFirstInstancesSpecification(countToApply: 2)
                 );
                 generatorNode.AddTransform(
                     transform: new FuncTransform<Person, string>(x => x.FirstName = "Mirage"),
-                    guard: new ApplyTransformToLastInstances(countToApply: 2, targetCount: 5)
+                    guard: new ApplyTransformToLastInstancesSpecification(countToApply: 2, targetCount: 5)
                 );
                 
                 var persons = generatorNode.ProduceInstances().ToArray();
@@ -112,9 +100,43 @@ namespace ForeverFactory.Tests.CoreV2
                 var firstNames = persons.Select(x => x.FirstName);
                 firstNames.Should().BeEquivalentTo("Martha", "Martha", "Anne", "Mirage", "Mirage");
             }
+            
+            [Fact]
+            public void It_should_apply_default_transforms()
+            {
+                var generatorNode = new GeneratorNode<Person>(targetCount: 3);
+
+                var transform1 = new NotGuardedTransform<Person>(new FuncTransform<Person, string>(x => x.FirstName = "Martha"));
+                var transform2 = new NotGuardedTransform<Person>(new FuncTransform<Person, string>(x => x.LastName = "Kane"));
+                var persons = generatorNode.ProduceInstances(defaultTransforms: new[] {transform1, transform2});
+
+                foreach (var person in persons)
+                {
+                    person.FirstName.Should().Be("Martha");
+                    person.LastName.Should().Be("Kane");
+                }
+            }
+
+            [Fact]
+            public void It_should_apply_default_transforms_before_normal_transforms()
+            {
+                var generatorNode = new GeneratorNode<Person>(targetCount: 3);
+                generatorNode.AddTransform(
+                    transform: new FuncTransform<Person, string>(x => x.FirstName = "Jonathan"),
+                    guard: new AlwaysApplyTransformGuardSpecification()
+                );
+                
+                var transform1 = new NotGuardedTransform<Person>(new FuncTransform<Person, string>(x => x.FirstName = "Martha"));
+                var transform2 = new NotGuardedTransform<Person>(new FuncTransform<Person, string>(x => x.LastName = "Kane"));
+                var persons = generatorNode.ProduceInstances(defaultTransforms: new[] {transform1, transform2});
+
+                foreach (var person in persons)
+                {
+                    person.FirstName.Should().Be("Jonathan");
+                    person.LastName.Should().Be("Kane");
+                }
+            }
         }
-        
-        
 
         public class FuncTransformTests
         {
@@ -135,7 +157,7 @@ namespace ForeverFactory.Tests.CoreV2
             [Fact]
             public void It_should_apply_if_no_conditions_were_set()
             {
-                var guardSpecification = new NoGuardSpecification();
+                var guardSpecification = new AlwaysApplyTransformGuardSpecification();
                 
                 var canApply = guardSpecification.CanApply(currentIndex: 0);
                 
@@ -148,7 +170,7 @@ namespace ForeverFactory.Tests.CoreV2
             [InlineData(2, 2, false)]
             public void It_should_apply_only_to_the_first_n_instances(int currentIndex, int countToApply, bool expected)
             {
-                var guardSpecification = new ApplyTransformToFirstInstances(countToApply);
+                var guardSpecification = new ApplyTransformToFirstInstancesSpecification(countToApply);
                 
                 var canApply = guardSpecification.CanApply(currentIndex);
                 
@@ -162,7 +184,7 @@ namespace ForeverFactory.Tests.CoreV2
             [InlineData(3, 2, 4, true)]
             public void It_should_apply_only_to_the_last_n_instances(int currentIndex, int countToApply, int targetCount, bool expected)
             {
-                var guardSpecification = new ApplyTransformToLastInstances(countToApply, targetCount);
+                var guardSpecification = new ApplyTransformToLastInstancesSpecification(countToApply, targetCount);
                 
                 var canApply = guardSpecification.CanApply(currentIndex);
                 
@@ -182,41 +204,38 @@ namespace ForeverFactory.Tests.CoreV2
             persons.Should().HaveCount(3);
         }
 
-        // [Fact]
-        // public void It_should_add_new_generator_nodes()
-        // {
-        //     var factory = new ObjectFactory<Person>();
-        //
-        //     factory.AddNode(new GeneratorNode<Person>());
-        // }
-
         [Fact]
-        public void It_should_accept_transformations()
+        public void It_should_apply_default_transforms_to_all_generator_nodes()
         {
             var factory = new ObjectFactory<Person>();
+            factory.AddNode(new GeneratorNode<Person>(targetCount: 1));
+            factory.AddNode(new GeneratorNode<Person>(targetCount: 2));
+            factory.AddDefaultTransform(new FuncTransform<Person, string>(x => x.FirstName = "Clark"));
 
-            factory.AddDefaultTransform(new DummyTransform<Person>());
+            var persons = factory.Build();
 
-            IEnumerable<Person> persons = factory.Build();
-            throw new NotImplementedException("first, add nodes");
+            foreach (var person in persons)
+            {
+                person.FirstName.Should().Be("Clark");
+            }
         }
     }
 
-    internal abstract class TransformGuardSpecification
+    internal abstract class ApplyTransformGuardSpecification
     {
         public abstract bool CanApply(int currentIndex);
     }
     
-    internal class NoGuardSpecification : TransformGuardSpecification
+    internal class AlwaysApplyTransformGuardSpecification : ApplyTransformGuardSpecification
     {
         public override bool CanApply(int currentIndex) => true;
     }
 
-    internal class ApplyTransformToFirstInstances : TransformGuardSpecification
+    internal class ApplyTransformToFirstInstancesSpecification : ApplyTransformGuardSpecification
     {
         private readonly int _countToApply;
 
-        public ApplyTransformToFirstInstances(int countToApply)
+        public ApplyTransformToFirstInstancesSpecification(int countToApply)
         {
             _countToApply = countToApply;
         }
@@ -227,34 +246,12 @@ namespace ForeverFactory.Tests.CoreV2
         }
     }
 
-    internal class GuardedTransform<T> 
-        where T : class
-    {
-        public Transform<T> Transform { get; }
-        public TransformGuardSpecification Guard { get; }
-
-        public GuardedTransform(Transform<T> transform, TransformGuardSpecification guard)
-        {
-            Transform = transform;
-            Guard = guard;
-        }
-    }
-
-    internal class NotGuardedTransform<T> : GuardedTransform<T>
-        where T : class
-    {
-        public NotGuardedTransform(Transform<T> transform) 
-            : base(transform, new NoGuardSpecification())
-        {
-        }
-    }
-    
-    internal class ApplyTransformToLastInstances : TransformGuardSpecification
+    internal class ApplyTransformToLastInstancesSpecification : ApplyTransformGuardSpecification
     {
         private readonly int _countToApply;
         private readonly int _targetCount;
 
-        public ApplyTransformToLastInstances(int countToApply, int targetCount)
+        public ApplyTransformToLastInstancesSpecification(int countToApply, int targetCount)
         {
             _countToApply = countToApply;
             _targetCount = targetCount;
@@ -264,6 +261,28 @@ namespace ForeverFactory.Tests.CoreV2
         {
             var firstToApply = _targetCount - _countToApply;
             return currentIndex >= firstToApply;
+        }
+    }
+
+    internal record GuardedTransform<T> 
+        where T : class
+    {
+        public Transform<T> Transform { get; }
+        public ApplyTransformGuardSpecification Guard { get; }
+
+        public GuardedTransform(Transform<T> transform, ApplyTransformGuardSpecification guard)
+        {
+            Transform = transform;
+            Guard = guard;
+        }
+    }
+
+    internal record NotGuardedTransform<T> : GuardedTransform<T>
+        where T : class
+    {
+        public NotGuardedTransform(Transform<T> transform) 
+            : base(transform, new AlwaysApplyTransformGuardSpecification())
+        {
         }
     }
 
@@ -304,18 +323,21 @@ namespace ForeverFactory.Tests.CoreV2
             _customConstructor = customConstructor;
         }
 
-        public void AddTransform(Transform<T> transform, TransformGuardSpecification guard = null)
+        public void AddTransform(Transform<T> transform, ApplyTransformGuardSpecification guard = null)
         {
-            guard ??= new NoGuardSpecification();
+            guard ??= new AlwaysApplyTransformGuardSpecification();
             _transformsToApply.Add(new GuardedTransform<T>(transform, guard));
         }
 
-        public IEnumerable<T> ProduceInstances()
+        public IEnumerable<T> ProduceInstances(IEnumerable<NotGuardedTransform<T>> defaultTransforms = null)
         {
             for (var index = 0; index < _targetCount; index++)
             {
                 var instance = CreateInstance();
-                ApplyTranforms(instance, index);
+
+                var defaultTransformsToApply = defaultTransforms ?? Enumerable.Empty<GuardedTransform<T>>();
+                var transformsToApply = defaultTransformsToApply.Union(_transformsToApply);
+                ApplyTransformsToInstance(transformsToApply, instance, index);
                 
                 yield return instance;
             }
@@ -328,15 +350,37 @@ namespace ForeverFactory.Tests.CoreV2
                 : Activator.CreateInstance<T>();
         }
 
-        private void ApplyTranforms(T instance, int index)
+        private void ApplyTransformsToInstance(IEnumerable<GuardedTransform<T>> guardedTransforms, T instance, int instanceIndex)
         {
-            foreach (var guardedTransform in _transformsToApply)
+            foreach (var guardedTransform in guardedTransforms)
             {
-                if (guardedTransform.Guard.CanApply(index))
+                if (guardedTransform.Guard.CanApply(instanceIndex))
                 {
                     guardedTransform.Transform.ApplyTo(instance);
                 }
             }
+        }
+    }
+
+    internal class ObjectFactory<T> : IBuilder<T> 
+        where T : class
+    {
+        private readonly LinkedList<GeneratorNode<T>> _nodes = new LinkedList<GeneratorNode<T>>();
+        private readonly List<NotGuardedTransform<T>> _defaultTransforms = new List<NotGuardedTransform<T>>();
+        
+        public void AddDefaultTransform(Transform<T> transform)
+        {
+            _defaultTransforms.Add(new NotGuardedTransform<T>(transform));
+        }
+
+        public void AddNode(GeneratorNode<T> generatorNode)
+        {
+            _nodes.AddLast(generatorNode);
+        }
+
+        public IEnumerable<T> Build()
+        {
+            return _nodes.SelectMany(generatorNode => generatorNode.ProduceInstances(_defaultTransforms));
         }
     }
 
@@ -347,27 +391,4 @@ namespace ForeverFactory.Tests.CoreV2
         {
         }
     }
-
-    internal class ObjectFactory<T> : IBuilder<T> 
-        where T : class
-    {
-        private readonly LinkedList<GeneratorNode<T>> _nodes = new LinkedList<GeneratorNode<T>>();
-
-        public void AddDefaultTransform(Transform<T> transform)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AddNode(GeneratorNode<T> generatorNode)
-        {
-            _nodes.AddLast(generatorNode);
-        }
-
-        public IEnumerable<T> Build()
-        {
-            return _nodes.SelectMany(generatorNode => generatorNode.ProduceInstances());
-        }
-    }
-    
-    
 }
