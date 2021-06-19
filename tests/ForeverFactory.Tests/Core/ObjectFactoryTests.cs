@@ -1,0 +1,49 @@
+﻿using FluentAssertions;
+using ForeverFactory.Core;
+using ForeverFactory.Core.Transforms;
+using ForeverFactory.Tests.ExampleFactories;
+using Xunit;
+
+namespace ForeverFactory.Tests.Core
+{
+    public class ObjectFactoryTests
+    {
+        [Fact]
+        public void It_should_build_an_enumerable_if_no_nodes_are_added()
+        {
+            var factory = new ObjectFactory<Person>();
+
+            var persons = factory.Build();
+
+            persons.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void It_should_build_upon_the_added_generator_nodes()
+        {
+            var factory = new ObjectFactory<Person>();
+
+            factory.AddNode(new GeneratorNode<Person>(targetCount: 1));
+            factory.AddNode(new GeneratorNode<Person>(targetCount: 2));
+            var persons = factory.Build();
+
+            persons.Should().HaveCount(3);
+        }
+
+        [Fact]
+        public void It_should_apply_default_transforms_to_all_generator_nodes()
+        {
+            var factory = new ObjectFactory<Person>();
+            factory.AddNode(new GeneratorNode<Person>(targetCount: 1));
+            factory.AddNode(new GeneratorNode<Person>(targetCount: 2));
+            factory.AddDefaultTransform(new FuncTransform<Person, string>(x => x.FirstName = "Clark"));
+
+            var persons = factory.Build();
+
+            foreach (var person in persons)
+            {
+                person.FirstName.Should().Be("Clark");
+            }
+        }
+    }
+}
