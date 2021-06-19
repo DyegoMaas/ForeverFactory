@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-
-namespace ForeverFactory.Builders
+﻿namespace ForeverFactory.Builders
 {
-    public interface ILinkedBuilder<out T>
+    public interface ILinkedBuilder<out T> : IBuilder<T>
     {
         /// <summary>
         /// Creates a new builder of "T". It will build a new object, in addition to the previous configurations. 
@@ -15,11 +13,5 @@ namespace ForeverFactory.Builders
         /// </summary>
         /// <param name="count">The number of objects to be created.</param>
         IManyBuilder<T> Plus(int count);
-        
-        /// <summary>
-        /// Builds all the objects configured, including all sets created used the "Many" or "Plus" methods. 
-        /// </summary>
-        /// <returns>A collection of instances of "T", with all configurations applied.</returns>
-        IEnumerable<T> Build();
     }
 }
