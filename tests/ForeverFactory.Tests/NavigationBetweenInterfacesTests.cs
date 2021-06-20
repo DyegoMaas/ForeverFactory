@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ForeverFactory.Tests.ExampleFactories;
 using FluentAssertions;
 using ForeverFactory.Builders;
+using ForeverFactory.Tests.CustomizedFactories.ExampleFactories;
 using Xunit;
 
 namespace ForeverFactory.Tests

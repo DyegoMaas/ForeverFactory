@@ -1,5 +1,5 @@
-﻿using ForeverFactory.Tests.ExampleFactories;
-using FluentAssertions;
+﻿using FluentAssertions;
+using ForeverFactory.Tests.CustomizedFactories.ExampleFactories;
 using Xunit;
 
 namespace ForeverFactory.Tests

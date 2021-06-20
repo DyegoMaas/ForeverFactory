@@ -23,6 +23,12 @@ namespace ForeverFactory.Core
             _customConstructor = customConstructor;
         }
 
+        public void AddTransformFirst(Transform<T> transform, CanApplyTransformSpecification guard = null)
+        {
+            guard = guard ?? new AlwaysApplyTransformSpecification();
+            _transformsToApply.Insert(0, new GuardedTransform<T>(transform, guard));
+        }
+
         public void AddTransform(Transform<T> transform, CanApplyTransformSpecification guard = null)
         {
             guard = guard ?? new AlwaysApplyTransformSpecification();

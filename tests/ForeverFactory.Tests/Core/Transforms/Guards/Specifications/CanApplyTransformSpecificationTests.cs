@@ -2,7 +2,7 @@
 using ForeverFactory.Core.Transforms.Guards.Specifications;
 using Xunit;
 
-namespace ForeverFactory.Tests.Core.Transforms.Guards
+namespace ForeverFactory.Tests.Core.Transforms.Guards.Specifications
 {
     public class GuardedTransformsTests
     {

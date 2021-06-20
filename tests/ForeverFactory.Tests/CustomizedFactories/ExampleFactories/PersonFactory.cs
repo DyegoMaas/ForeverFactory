@@ -1,12 +1,13 @@
-﻿namespace ForeverFactory.Tests.ExampleFactories
+﻿namespace ForeverFactory.Tests.CustomizedFactories.ExampleFactories
 {
     public class PersonFactory : MagicFactory<Person>
     {
-        public PersonFactory()
+        protected override void Customize(ICustomizeFactoryOptions<Person> customization)
         {
-            Set(x => x.FirstName = "Albert");
-            Set(x => x.LastName = "Einstein");
-            Set(x => x.Age = 56);
+            customization
+                .Set(x => x.FirstName = "Albert")
+                .Set(x => x.LastName = "Einstein")
+                .Set(x => x.Age = 56);
         }
     }
     

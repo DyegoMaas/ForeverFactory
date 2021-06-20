@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using ForeverFactory.Core.Transforms;
-using ForeverFactory.Tests.ExampleFactories;
+using ForeverFactory.Tests.CustomizedFactories.ExampleFactories;
 using Xunit;
 
 namespace ForeverFactory.Tests.Core.Transforms

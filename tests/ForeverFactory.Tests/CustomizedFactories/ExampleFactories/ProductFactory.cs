@@ -1,11 +1,12 @@
-﻿namespace ForeverFactory.Tests.ExampleFactories
+﻿namespace ForeverFactory.Tests.CustomizedFactories.ExampleFactories
 {
     public class ProductFactory : MagicFactory<Product>
     {
-        public ProductFactory()
+        protected override void Customize(ICustomizeFactoryOptions<Product> customization)
         {
-            UseConstructor(() => new Product("Nimbus 2000", "Brooms"));
-            Set(x => x.Description = "The best flight await you!");
+            customization
+                .UseConstructor(() => new Product("Nimbus 2000", "Brooms"))
+                .Set(x => x.Description = "The best flight await you!");
         }
     }
 
