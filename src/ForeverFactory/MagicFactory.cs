@@ -50,7 +50,8 @@ namespace ForeverFactory
 
         protected void UseConstructor(Func<T> customConstructor)
         {
-            _rootNode.CustomConstructor = _customConstructor = customConstructor;
+            _customConstructor = customConstructor;
+            _rootNode.OverrideCustomConstructor(newCustomConstructor: customConstructor);
         }
 
         public ICustomizableFactory<T> UsingConstructor(Func<T> customConstructor)

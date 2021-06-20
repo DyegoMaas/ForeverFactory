@@ -134,5 +134,16 @@ namespace ForeverFactory.Tests.Core
 
             targetCount.Should().Be(3);
         }
+
+        [Fact]
+        public void It_should_override_the_custom_constructor()
+        {
+            var generatorNode = new GeneratorNode<Person>(targetCount: 1, customConstructor: () => new Person {Age = 10});
+            
+            generatorNode.OverrideCustomConstructor(() => new Person {Age = 11});
+
+            var person = generatorNode.ProduceInstances().First();
+            person.Age.Should().Be(11);
+        }
     }
 }

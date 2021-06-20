@@ -11,22 +11,27 @@ namespace ForeverFactory.Core
         where T : class
     {
         private readonly List<GuardedTransform<T>> _transformsToApply = new List<GuardedTransform<T>>();
+        private Func<T> _customConstructor;
+        
+        public int TargetCount { get; }
 
         public GeneratorNode(
             int targetCount = 1, 
             Func<T> customConstructor = null)
         {
             TargetCount = targetCount;
-            CustomConstructor = customConstructor;
+            _customConstructor = customConstructor;
         }
-
-        public int TargetCount { get; }
-        public Func<T> CustomConstructor { get; set; }
 
         public void AddTransform(Transform<T> transform, CanApplyTransformSpecification guard = null)
         {
             guard = guard ?? new AlwaysApplyTransformSpecification();
             _transformsToApply.Add(new GuardedTransform<T>(transform, guard));
+        }
+
+        public void OverrideCustomConstructor(Func<T> newCustomConstructor)
+        {
+            _customConstructor = newCustomConstructor;
         }
 
         public IEnumerable<T> ProduceInstances(IEnumerable<NotGuardedTransform<T>> defaultTransforms = null)
@@ -45,8 +50,8 @@ namespace ForeverFactory.Core
 
         private T CreateInstance()
         {
-            return CustomConstructor != null 
-                ? CustomConstructor.Invoke() 
+            return _customConstructor != null 
+                ? _customConstructor.Invoke() 
                 : Activator.CreateInstance<T>();
         }
 
