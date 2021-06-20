@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Reflection;
 
-namespace ForeverFactory.Core.Transforms.Specialized
+namespace ForeverFactory.Core.Transforms.Factories
 {
-    public static class TransformFactory
+    internal static class TransformFactory
     {
         public static Transform<T> FillWithEmptyValues<T>()
             where T : class

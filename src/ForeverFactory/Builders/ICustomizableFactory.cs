@@ -12,9 +12,11 @@ namespace ForeverFactory.Builders
         /// <param name="customConstructor">Constructor used to build "T" objects</param>
         ICustomizableFactory<T> UsingConstructor(Func<T> customConstructor);
 
-        // ICustomizableFactory<T> WithBehavior(Behaviors chosenBehavior);
-
-        // TODO document
+        /// <summary>
+        ///     Defines the behavior used to fill the properties of a class.
+        ///     DoNotFillBehavior is used by default, but you can selected other behaviors tool. 
+        /// </summary>
+        /// <param name="behavior">The type of the behavior to be used</param>
         ICustomizableFactory<T> WithBehavior(Behavior behavior);
 
         /// <summary>
