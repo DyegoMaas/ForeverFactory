@@ -2,6 +2,7 @@
 using FluentAssertions;
 using ForeverFactory.Builders;
 using ForeverFactory.Core.FactoryBehaviors;
+using ForeverFactory.Customizations;
 using Xunit;
 
 namespace ForeverFactory.Tests.BehaviorsSelection

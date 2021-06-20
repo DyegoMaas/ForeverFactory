@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
 using ForeverFactory.Builders;
+using ForeverFactory.Customizations;
 using ForeverFactory.Tests.CustomizedFactories.ExampleFactories;
 using Xunit;
 
