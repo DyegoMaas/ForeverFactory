@@ -1,5 +1,5 @@
 ﻿using System;
-using ForeverFactory.Core;
+using ForeverFactory.Behaviors;
 
 namespace ForeverFactory
 {
@@ -8,6 +8,6 @@ namespace ForeverFactory
     {
         ICustomizeFactoryOptions<T> UseConstructor(Func<T> customConstructor);
         ICustomizeFactoryOptions<T> Set<TValue>(Func<T, TValue> setMember);
-        ICustomizeFactoryOptions<T> SetPropertyFillBehavior(Behaviors behavior);
+        ICustomizeFactoryOptions<T> SetDefaultBehavior(Behavior behavior);
     }
 }

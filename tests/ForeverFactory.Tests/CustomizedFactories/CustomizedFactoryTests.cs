@@ -10,7 +10,7 @@ namespace ForeverFactory.Tests.CustomizedFactories
         public void Custom_factories_should_produce_instances_using_custom_constructor()
         {
             var customizedFactory = new ProductFactory();
-            
+
             var product = customizedFactory.Build();
 
             product.Name.Should().Be("Nimbus 2000");

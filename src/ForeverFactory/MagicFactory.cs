@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ForeverFactory.Behaviors;
 using ForeverFactory.Builders;
 using ForeverFactory.Core;
 using ForeverFactory.Core.Transforms;
 using ForeverFactory.Core.Transforms.Guards.Specifications;
-using ForeverFactory.Core.Transforms.Specialized;
 using ForeverFactory.Customizations;
 
 namespace ForeverFactory
@@ -20,8 +20,11 @@ namespace ForeverFactory
         /// </summary>
         /// <typeparam name="T">The factory will build instances of this type</typeparam>
         /// <returns>Factory of T</returns>
-        public static ICustomizableFactory<T> For<T>() where T : class => new DynamicFactory<T>();
-        
+        public static ICustomizableFactory<T> For<T>() where T : class
+        {
+            return new DynamicFactory<T>();
+        }
+
         private sealed class DynamicFactory<T> : MagicFactory<T>
             where T : class
         {
@@ -30,7 +33,7 @@ namespace ForeverFactory
             }
         }
     }
-    
+
     /// <summary>
     /// A customizable factory of objects of type "T". It can be extended with predefined configurations.
     /// </summary>
@@ -41,41 +44,24 @@ namespace ForeverFactory
         private readonly ObjectFactory<T> _objectFactory = new ObjectFactory<T>();
         private Func<T> _customConstructor;
         private GeneratorNode<T> _rootNode;
-        private Behaviors _chosenBehavior = Behaviors.DotNotFill;
 
         protected MagicFactory()
         {
-            SetRootNode(targetCount: 1);
+            SetRootNode(1);
             Customize(new CustomizeFactoryOptions<T>(this));
         }
-        
-        // TODO add test to ensure default transforms are not lost in the process
-        private void SetRootNode(int targetCount)
-        {
-            _rootNode = new GeneratorNode<T>(targetCount, _customConstructor);
-            _objectFactory.AddRootNode(_rootNode);
-        }
-        
-        protected abstract void Customize(ICustomizeFactoryOptions<T> customization);
 
         public ICustomizableFactory<T> UsingConstructor(Func<T> customConstructor)
         {
             _customConstructor = customConstructor;
-            _rootNode.OverrideCustomConstructor(newCustomConstructor: customConstructor);
+            _rootNode.OverrideCustomConstructor(customConstructor);
             return this;
         }
 
-        public ICustomizableFactory<T> WithBehavior(Behaviors chosenBehavior)
+        public ICustomizableFactory<T> WithBehavior(Behavior behavior)
         {
-            _chosenBehavior = chosenBehavior;
-
-            switch (chosenBehavior)
-            {
-                case Behaviors.FillWithEmpty:
-                    var transform = TransformFactory.GetFillWithEmptyFor<T>();
-                    _objectFactory.AddDefaultTransform(transform);
-                    break;
-            }
+            var transforms = behavior.GetTransforms<T>();
+            foreach (var transform in transforms) _objectFactory.AddDefaultTransform(transform);
             return this;
         }
 
@@ -85,13 +71,40 @@ namespace ForeverFactory
             return this;
         }
 
-        IManyBuilder<T> IManyBuilder<T>.With<TValue>(Func<T, TValue> setMember)
+        public IManyBuilder<T> Many(int count)
+        {
+            SetRootNode(count);
+            return this;
+        }
+
+        public ILinkedOneBuilder<T> PlusOne()
+        {
+            var newNode = new GeneratorNode<T>(1, _customConstructor);
+            _objectFactory.AddNode(newNode);
+
+            return this;
+        }
+
+        public IManyBuilder<T> Plus(int count)
+        {
+            var newNode = new GeneratorNode<T>(count, _customConstructor);
+            _objectFactory.AddNode(newNode);
+
+            return this;
+        }
+
+        public T Build()
+        {
+            return _objectFactory.Build().First();
+        }
+
+        ILinkedOneBuilder<T> ILinkedOneBuilder<T>.With<TValue>(Func<T, TValue> setMember)
         {
             AddTransformThatAlwaysApply(setMember);
             return this;
         }
 
-        ILinkedOneBuilder<T> ILinkedOneBuilder<T>.With<TValue>(Func<T, TValue> setMember)
+        IManyBuilder<T> IManyBuilder<T>.With<TValue>(Func<T, TValue> setMember)
         {
             AddTransformThatAlwaysApply(setMember);
             return this;
@@ -109,60 +122,42 @@ namespace ForeverFactory
             return this;
         }
 
+        IEnumerable<T> IBuilder<T>.Build()
+        {
+            return _objectFactory.Build();
+        }
+
+        // TODO add test to ensure default transforms are not lost in the process
+        private void SetRootNode(int targetCount)
+        {
+            _rootNode = new GeneratorNode<T>(targetCount, _customConstructor);
+            _objectFactory.AddRootNode(_rootNode);
+        }
+
+        protected abstract void Customize(ICustomizeFactoryOptions<T> customization);
+
         private void AddTransformThatAlwaysApply<TValue>(Func<T, TValue> setMember)
         {
             _objectFactory.AddTransform(
-                transform: new FuncTransform<T, TValue>(setMember.Invoke),
-                guard: node => new AlwaysApplyTransformSpecification()
+                new FuncTransform<T, TValue>(setMember.Invoke),
+                node => new AlwaysApplyTransformSpecification()
             );
         }
 
         private void AddTransformThatAppliesToFirstNInstances<TValue>(int count, Func<T, TValue> setMember)
         {
             _objectFactory.AddTransform(
-                transform: new FuncTransform<T, TValue>(setMember.Invoke),
-                guard: node => new ApplyTransformToFirstInstancesSpecification(count)
+                new FuncTransform<T, TValue>(setMember.Invoke),
+                node => new ApplyTransformToFirstInstancesSpecification(count)
             );
         }
 
         private void AddTransformThatAppliesToLastNInstances<TValue>(int count, Func<T, TValue> setMember)
         {
             _objectFactory.AddTransform(
-                transform: new FuncTransform<T, TValue>(setMember.Invoke),
-                guard: node => new ApplyTransformToLastInstancesSpecification(count, node.TargetCount)
+                new FuncTransform<T, TValue>(setMember.Invoke),
+                node => new ApplyTransformToLastInstancesSpecification(count, node.TargetCount)
             );
-        }
-
-        public IManyBuilder<T> Many(int count)
-        {
-            SetRootNode(targetCount: count);
-            return this;
-        }
-        
-        public ILinkedOneBuilder<T> PlusOne()
-        {
-            var newNode = new GeneratorNode<T>(targetCount: 1, _customConstructor);
-            _objectFactory.AddNode(newNode);
-            
-            return this;
-        }
-
-        public IManyBuilder<T> Plus(int count)
-        {
-            var newNode = new GeneratorNode<T>(targetCount: count, _customConstructor);
-            _objectFactory.AddNode(newNode);
-
-            return this;
-        }
-        
-        public T Build()
-        {
-            return _objectFactory.Build().First();
-        }
-
-        IEnumerable<T> IBuilder<T>.Build()
-        {
-            return _objectFactory.Build();
         }
     }
 }

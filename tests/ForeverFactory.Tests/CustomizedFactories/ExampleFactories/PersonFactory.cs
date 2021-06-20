@@ -10,7 +10,7 @@
                 .Set(x => x.Age = 56);
         }
     }
-    
+
     public class Person
     {
         public string FirstName { get; set; }

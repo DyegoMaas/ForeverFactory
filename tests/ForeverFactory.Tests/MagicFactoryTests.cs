@@ -10,19 +10,19 @@ namespace ForeverFactory.Tests
         public void Should_create_instance_with_default_values()
         {
             var factory = MagicFactory.For<Person>();
-            
+
             var person = factory.Build();
 
             person.FirstName.Should().BeNull();
             person.LastName.Should().BeNull();
             person.Age.Should().Be(0);
         }
-        
+
         [Fact]
         public void Should_allow_customization()
         {
             var factory = MagicFactory.For<Person>();
-            
+
             var person = factory
                 .With(x => x.FirstName = "Martha")
                 .With(x => x.LastName = "Kent")
@@ -33,7 +33,7 @@ namespace ForeverFactory.Tests
             person.LastName.Should().Be("Kent");
             person.Age.Should().Be(60);
         }
-        
+
         [Fact]
         public void Should_produce_instances_using_custom_constructor()
         {
@@ -46,7 +46,7 @@ namespace ForeverFactory.Tests
             product.Category.Should().Be("Shotgun");
             product.Description.Should().Be("South Africa, 1995");
         }
-        
+
         [Fact]
         public void Should_produce_instances_using_custom_constructor2()
         {

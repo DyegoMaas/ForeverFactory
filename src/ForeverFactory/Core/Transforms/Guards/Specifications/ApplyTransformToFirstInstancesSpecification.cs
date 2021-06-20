@@ -8,7 +8,7 @@
         {
             _countToApply = countToApply;
         }
-        
+
         public override bool CanApply(int currentIndex)
         {
             return currentIndex < _countToApply;

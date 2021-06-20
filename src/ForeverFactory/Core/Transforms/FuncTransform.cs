@@ -18,7 +18,7 @@ namespace ForeverFactory.Core.Transforms
             _setMember.Invoke(instance);
         }
     }
-    
+
     // TODO test
     internal class ReflectedFuncTransform<T> : Transform<T>
     {

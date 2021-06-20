@@ -8,18 +8,23 @@ using ForeverFactory.Core.Transforms.Guards.Specifications;
 
 namespace ForeverFactory.Core
 {
-    internal class ObjectFactory<T> : IBuilder<T> 
+    internal class ObjectFactory<T> : IBuilder<T>
         where T : class
     {
-        private readonly List<GeneratorNode<T>> _nodes = new List<GeneratorNode<T>>();
         private readonly List<NotGuardedTransform<T>> _defaultTransforms = new List<NotGuardedTransform<T>>();
-        
+        private readonly List<GeneratorNode<T>> _nodes = new List<GeneratorNode<T>>();
+
+        public IEnumerable<T> Build()
+        {
+            return _nodes.SelectMany(generatorNode => generatorNode.ProduceInstances(_defaultTransforms));
+        }
+
         public void AddDefaultTransform(Transform<T> transform)
         {
             _defaultTransforms.Add(new NotGuardedTransform<T>(transform));
         }
 
-        public void AddTransform(Transform<T> transform, Func<GeneratorNode<T>, CanApplyTransformSpecification> guard) 
+        public void AddTransform(Transform<T> transform, Func<GeneratorNode<T>, CanApplyTransformSpecification> guard)
         {
             var node = GetCurrentGeneratorNode();
             node.AddTransform(transform, guard(node));
@@ -41,11 +46,6 @@ namespace ForeverFactory.Core
         public void AddNode(GeneratorNode<T> generatorNode)
         {
             _nodes.Add(generatorNode);
-        }
-
-        public IEnumerable<T> Build()
-        {
-            return _nodes.SelectMany(generatorNode => generatorNode.ProduceInstances(_defaultTransforms));
         }
     }
 }

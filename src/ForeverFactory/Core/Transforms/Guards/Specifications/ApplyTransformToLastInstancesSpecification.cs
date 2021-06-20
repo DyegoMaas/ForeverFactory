@@ -10,7 +10,7 @@
             _countToApply = countToApply;
             _targetCount = targetCount;
         }
-        
+
         public override bool CanApply(int currentIndex)
         {
             var firstToApply = _targetCount - _countToApply;

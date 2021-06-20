@@ -12,14 +12,14 @@
 
     public class Product
     {
-        public string Name { get; }
-        public string Category { get; }
-        public string Description { get; set; }
-
         public Product(string name, string category)
         {
             Name = name;
             Category = category;
         }
+
+        public string Name { get; }
+        public string Category { get; }
+        public string Description { get; set; }
     }
 }

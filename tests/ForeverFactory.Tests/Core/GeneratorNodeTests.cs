@@ -20,7 +20,7 @@ namespace ForeverFactory.Tests.Core
 
             instances.Should().HaveCount(1);
         }
-            
+
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
@@ -53,50 +53,49 @@ namespace ForeverFactory.Tests.Core
         [Fact]
         public void It_should_apply_transforms()
         {
-            var generatorNode = new GeneratorNode<Person>(targetCount: 3);
+            var generatorNode = new GeneratorNode<Person>(3);
 
             generatorNode.AddTransform(
-                transform: new FuncTransform<Person, string>(x => x.FirstName = "Martha"),
-                guard: new AlwaysApplyTransformSpecification()
+                new FuncTransform<Person, string>(x => x.FirstName = "Martha"),
+                new AlwaysApplyTransformSpecification()
             );
-                
+
             var persons = generatorNode.ProduceInstances();
 
-            foreach (var person in persons)
-            {
-                person.FirstName.Should().Be("Martha");
-            }
+            foreach (var person in persons) person.FirstName.Should().Be("Martha");
         }
-            
+
         [Fact]
         public void It_should_apply_transforms_with_guards()
         {
-            var generatorNode = new GeneratorNode<Person>(targetCount: 5, 
-                customConstructor: () => new Person {FirstName = "Anne"}
+            var generatorNode = new GeneratorNode<Person>(5,
+                () => new Person {FirstName = "Anne"}
             );
             generatorNode.AddTransform(
-                transform: new FuncTransform<Person, string>(x => x.FirstName = "Martha"),
-                guard: new ApplyTransformToFirstInstancesSpecification(countToApply: 2)
+                new FuncTransform<Person, string>(x => x.FirstName = "Martha"),
+                new ApplyTransformToFirstInstancesSpecification(2)
             );
             generatorNode.AddTransform(
-                transform: new FuncTransform<Person, string>(x => x.FirstName = "Mirage"),
-                guard: new ApplyTransformToLastInstancesSpecification(countToApply: 2, targetCount: 5)
+                new FuncTransform<Person, string>(x => x.FirstName = "Mirage"),
+                new ApplyTransformToLastInstancesSpecification(2, 5)
             );
-                
+
             var persons = generatorNode.ProduceInstances().ToArray();
 
             var firstNames = persons.Select(x => x.FirstName);
             firstNames.Should().BeEquivalentTo("Martha", "Martha", "Anne", "Mirage", "Mirage");
         }
-            
+
         [Fact]
         public void It_should_apply_default_transforms()
         {
-            var generatorNode = new GeneratorNode<Person>(targetCount: 3);
+            var generatorNode = new GeneratorNode<Person>(3);
 
-            var transform1 = new NotGuardedTransform<Person>(new FuncTransform<Person, string>(x => x.FirstName = "Martha"));
-            var transform2 = new NotGuardedTransform<Person>(new FuncTransform<Person, string>(x => x.LastName = "Kane"));
-            var persons = generatorNode.ProduceInstances(defaultTransforms: new[] {transform1, transform2});
+            var transform1 =
+                new NotGuardedTransform<Person>(new FuncTransform<Person, string>(x => x.FirstName = "Martha"));
+            var transform2 =
+                new NotGuardedTransform<Person>(new FuncTransform<Person, string>(x => x.LastName = "Kane"));
+            var persons = generatorNode.ProduceInstances(new[] {transform1, transform2});
 
             foreach (var person in persons)
             {
@@ -108,15 +107,17 @@ namespace ForeverFactory.Tests.Core
         [Fact]
         public void It_should_apply_default_transforms_before_normal_transforms()
         {
-            var generatorNode = new GeneratorNode<Person>(targetCount: 3);
+            var generatorNode = new GeneratorNode<Person>(3);
             generatorNode.AddTransform(
-                transform: new FuncTransform<Person, string>(x => x.FirstName = "Jonathan"),
-                guard: new AlwaysApplyTransformSpecification()
+                new FuncTransform<Person, string>(x => x.FirstName = "Jonathan"),
+                new AlwaysApplyTransformSpecification()
             );
-                
-            var transform1 = new NotGuardedTransform<Person>(new FuncTransform<Person, string>(x => x.FirstName = "Martha"));
-            var transform2 = new NotGuardedTransform<Person>(new FuncTransform<Person, string>(x => x.LastName = "Kane"));
-            var persons = generatorNode.ProduceInstances(defaultTransforms: new[] {transform1, transform2});
+
+            var transform1 =
+                new NotGuardedTransform<Person>(new FuncTransform<Person, string>(x => x.FirstName = "Martha"));
+            var transform2 =
+                new NotGuardedTransform<Person>(new FuncTransform<Person, string>(x => x.LastName = "Kane"));
+            var persons = generatorNode.ProduceInstances(new[] {transform1, transform2});
 
             foreach (var person in persons)
             {
@@ -128,7 +129,7 @@ namespace ForeverFactory.Tests.Core
         [Fact]
         public void It_should_return_the_target_count()
         {
-            var generatorNode = new GeneratorNode<Person>(targetCount: 3);
+            var generatorNode = new GeneratorNode<Person>(3);
 
             var targetCount = generatorNode.TargetCount;
 
@@ -138,8 +139,8 @@ namespace ForeverFactory.Tests.Core
         [Fact]
         public void It_should_override_the_custom_constructor()
         {
-            var generatorNode = new GeneratorNode<Person>(targetCount: 1, customConstructor: () => new Person {Age = 10});
-            
+            var generatorNode = new GeneratorNode<Person>(1, () => new Person {Age = 10});
+
             generatorNode.OverrideCustomConstructor(() => new Person {Age = 11});
 
             var person = generatorNode.ProduceInstances().First();

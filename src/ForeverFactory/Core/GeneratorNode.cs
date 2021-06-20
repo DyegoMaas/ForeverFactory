@@ -12,16 +12,16 @@ namespace ForeverFactory.Core
     {
         private readonly List<GuardedTransform<T>> _transformsToApply = new List<GuardedTransform<T>>();
         private Func<T> _customConstructor;
-        
-        public int TargetCount { get; }
 
         public GeneratorNode(
-            int targetCount = 1, 
+            int targetCount = 1,
             Func<T> customConstructor = null)
         {
             TargetCount = targetCount;
             _customConstructor = customConstructor;
         }
+
+        public int TargetCount { get; }
 
         public void AddTransform(Transform<T> transform, CanApplyTransformSpecification guard = null)
         {
@@ -43,27 +43,24 @@ namespace ForeverFactory.Core
                 var defaultTransformsToApply = defaultTransforms ?? Enumerable.Empty<GuardedTransform<T>>();
                 var transformsToApply = defaultTransformsToApply.Union(_transformsToApply);
                 ApplyTransformsToInstance(transformsToApply, instance, index);
-                
+
                 yield return instance;
             }
         }
 
         private T CreateInstance()
         {
-            return _customConstructor != null 
-                ? _customConstructor.Invoke() 
+            return _customConstructor != null
+                ? _customConstructor.Invoke()
                 : Activator.CreateInstance<T>();
         }
 
-        private void ApplyTransformsToInstance(IEnumerable<GuardedTransform<T>> guardedTransforms, T instance, int instanceIndex)
+        private void ApplyTransformsToInstance(IEnumerable<GuardedTransform<T>> guardedTransforms, T instance,
+            int instanceIndex)
         {
             foreach (var guardedTransform in guardedTransforms)
-            {
                 if (guardedTransform.Guard.CanApply(instanceIndex))
-                {
                     guardedTransform.Transform.ApplyTo(instance);
-                }
-            }
         }
     }
 }

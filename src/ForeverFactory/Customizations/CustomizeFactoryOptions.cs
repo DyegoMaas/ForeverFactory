@@ -1,5 +1,5 @@
 ﻿using System;
-using ForeverFactory.Core;
+using ForeverFactory.Behaviors;
 
 namespace ForeverFactory.Customizations
 {
@@ -25,7 +25,7 @@ namespace ForeverFactory.Customizations
             return this;
         }
 
-        public ICustomizeFactoryOptions<T> SetPropertyFillBehavior(Behaviors behavior)
+        public ICustomizeFactoryOptions<T> SetDefaultBehavior(Behavior behavior)
         {
             _magicFactory.WithBehavior(behavior);
             return this;
