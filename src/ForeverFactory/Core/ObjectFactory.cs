@@ -9,7 +9,7 @@ namespace ForeverFactory.Core
     internal class ObjectFactory<T> : IBuilder<T> 
         where T : class
     {
-        private readonly LinkedList<GeneratorNode<T>> _nodes = new LinkedList<GeneratorNode<T>>();
+        private readonly List<GeneratorNode<T>> _nodes = new List<GeneratorNode<T>>();
         private readonly List<NotGuardedTransform<T>> _defaultTransforms = new List<NotGuardedTransform<T>>();
         
         public void AddDefaultTransform(Transform<T> transform)
@@ -25,7 +25,7 @@ namespace ForeverFactory.Core
 
         public void AddNode(GeneratorNode<T> generatorNode)
         {
-            _nodes.AddLast(generatorNode);
+            _nodes.Add(generatorNode);
         }
 
         public IEnumerable<T> Build()
@@ -36,7 +36,7 @@ namespace ForeverFactory.Core
         public GeneratorNode<T> GetCurrentGeneratorNode()
         {
             return _nodes.Any()
-                ? _nodes.Last.Value
+                ? _nodes.Last()
                 : null;
         }
     }
