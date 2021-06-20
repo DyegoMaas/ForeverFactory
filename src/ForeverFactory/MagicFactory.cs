@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using ForeverFactory.Builders;
 using ForeverFactory.Core;
-using ForeverFactory.Core.FactoryBehaviors;
 using ForeverFactory.Core.Transforms;
 using ForeverFactory.Core.Transforms.Guards.Specifications;
 using ForeverFactory.Core.Transforms.Specialized;

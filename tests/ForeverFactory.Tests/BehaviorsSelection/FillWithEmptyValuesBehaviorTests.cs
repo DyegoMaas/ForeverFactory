@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
 using ForeverFactory.Builders;
-using ForeverFactory.Core.FactoryBehaviors;
-using ForeverFactory.Customizations;
+using ForeverFactory.Core;
 using Xunit;
 
 namespace ForeverFactory.Tests.BehaviorsSelection

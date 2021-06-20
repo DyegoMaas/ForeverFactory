@@ -1,5 +1,5 @@
 ﻿using System;
-using ForeverFactory.Core.FactoryBehaviors;
+using ForeverFactory.Core;
 
 namespace ForeverFactory
 {

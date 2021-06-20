@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
 using ForeverFactory.Builders;
-using ForeverFactory.Customizations;
+using ForeverFactory.Core;
 using ForeverFactory.Tests.CustomizedFactories.ExampleFactories;
 using Xunit;
 
@@ -25,6 +25,7 @@ namespace ForeverFactory.Tests.BehaviorsSelection
         {
             protected override void Customize(ICustomizeFactoryOptions<Person> customization)
             {
+                customization.SetPropertyFillBehavior(Behaviors.DotNotFill);
             }
         }
 
@@ -33,6 +34,7 @@ namespace ForeverFactory.Tests.BehaviorsSelection
             {
                 new object[] {new PersonFactoryWithDefaultBehavior()},
                 new object[] {MagicFactory.For<Person>()},
+                new object[] {MagicFactory.For<Person>().WithBehavior(Behaviors.DotNotFill)},
             };
     }
 }

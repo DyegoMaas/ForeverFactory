@@ -1,4 +1,4 @@
-﻿namespace ForeverFactory.Core.FactoryBehaviors
+﻿namespace ForeverFactory.Core
 {
     public enum Behaviors
     {
