@@ -4,14 +4,14 @@ using Xunit;
 
 namespace ForeverFactory.Tests
 {
-    public class CustomFactoryTests
+    public class CustomizedFactoryTests
     {
         [Fact]
         public void Custom_factories_should_produce_instances_using_custom_constructor()
         {
-            var factoryWithCustomConstructor = new ProductFactory();
+            var customizedFactory = new ProductFactory();
             
-            var product = factoryWithCustomConstructor.Build();
+            var product = customizedFactory.Build();
 
             product.Name.Should().Be("Nimbus 2000");
             product.Category.Should().Be("Brooms");
