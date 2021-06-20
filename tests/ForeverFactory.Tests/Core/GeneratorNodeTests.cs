@@ -124,5 +124,15 @@ namespace ForeverFactory.Tests.Core
                 person.LastName.Should().Be("Kane");
             }
         }
+
+        [Fact]
+        public void It_should_return_the_target_count()
+        {
+            var generatorNode = new GeneratorNode<Person>(targetCount: 3);
+
+            var targetCount = generatorNode.TargetCount;
+
+            targetCount.Should().Be(3);
+        }
     }
 }

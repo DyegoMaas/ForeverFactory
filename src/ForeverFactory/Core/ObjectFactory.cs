@@ -17,6 +17,12 @@ namespace ForeverFactory.Core
             _defaultTransforms.Add(new NotGuardedTransform<T>(transform));
         }
 
+        public void AddRootNode(GeneratorNode<T> generatorNode)
+        {
+            _nodes.Clear();
+            AddNode(generatorNode);
+        }
+
         public void AddNode(GeneratorNode<T> generatorNode)
         {
             _nodes.AddLast(generatorNode);
@@ -25,6 +31,18 @@ namespace ForeverFactory.Core
         public IEnumerable<T> Build()
         {
             return _nodes.SelectMany(generatorNode => generatorNode.ProduceInstances(_defaultTransforms));
+        }
+
+        public GeneratorNode<T> GetCurrentGeneratorNode()
+        {
+            return _nodes.Any()
+                ? _nodes.Last.Value
+                : null;
+        }
+
+        public bool HasNodes()
+        {
+            return GetCurrentGeneratorNode() != null;
         }
     }
 }

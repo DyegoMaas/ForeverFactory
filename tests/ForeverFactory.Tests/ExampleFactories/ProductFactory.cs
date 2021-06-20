@@ -8,6 +8,15 @@
             Set(x => x.Description = "The best flight await you!");
         }
     }
+    
+    public class ProductFactory2 : MagicFactory2<Product>
+    {
+        public ProductFactory2()
+        {
+            UseConstructor(() => new Product("Nimbus 2000", "Brooms"));
+            Set(x => x.Description = "The best flight await you!");
+        }
+    }
 
     public class Product
     {
