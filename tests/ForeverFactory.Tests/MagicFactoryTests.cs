@@ -46,5 +46,22 @@ namespace ForeverFactory.Tests
             product.Category.Should().Be("Shotgun");
             product.Description.Should().Be("South Africa, 1995");
         }
+        
+        [Fact]
+        public void Should_produce_instances_using_custom_constructor2()
+        {
+            var products = MagicFactory.For<Product>()
+                .UsingConstructor(() => new Product("MAG-7", "Shotgun"))
+                .Many(2)
+                .Plus(2)
+                .Build();
+
+            products.Should().HaveCount(4);
+            foreach (var product in products)
+            {
+                product.Name.Should().Be("MAG-7");
+                product.Category.Should().Be("Shotgun");
+            }
+        }
     }
 }

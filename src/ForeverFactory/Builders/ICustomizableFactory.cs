@@ -12,6 +12,12 @@ namespace ForeverFactory.Builders
         ICustomizableFactory<T> UsingConstructor(Func<T> customConstructor);
 
         /// <summary>
+        /// Creates a set of customizable objects
+        /// </summary>
+        /// <param name="count">The number of objects to be created.</param>
+        IManyBuilder<T> Many(int count);
+
+        /// <summary>
         /// Creates a new builder of "T". It will build a new object, in addition to the previous configurations. 
         /// </summary>
         /// <returns>A builder of "T"</returns>

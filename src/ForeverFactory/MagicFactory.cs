@@ -44,13 +44,13 @@ namespace ForeverFactory
 
         private void SetRootNode(int targetCount)
         {
-            _rootNode = new GeneratorNode<T>(targetCount: targetCount, customConstructor: null);
+            _rootNode = new GeneratorNode<T>(targetCount, _customConstructor);
             _objectFactory.AddRootNode(_rootNode);
         }
 
         protected void UseConstructor(Func<T> customConstructor)
         {
-            _rootNode.CustomConstructor = customConstructor;
+            _rootNode.CustomConstructor = _customConstructor = customConstructor;
         }
 
         public ICustomizableFactory<T> UsingConstructor(Func<T> customConstructor)
