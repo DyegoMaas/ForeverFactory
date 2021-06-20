@@ -23,9 +23,9 @@ namespace ForeverFactory.Core
         public int TargetCount { get; }
         public Func<T> CustomConstructor { get; set; }
 
-        public void AddTransform(Transform<T> transform, ApplyTransformGuardSpecification guard = null)
+        public void AddTransform(Transform<T> transform, CanApplyTransformSpecification guard = null)
         {
-            guard = guard ?? new AlwaysApplyTransformGuardSpecification();
+            guard = guard ?? new AlwaysApplyTransformSpecification();
             _transformsToApply.Add(new GuardedTransform<T>(transform, guard));
         }
 

@@ -1,7 +1,6 @@
 ﻿using System;
-using ForeverFactory.Builders;
 
-namespace ForeverFactory
+namespace ForeverFactory.Builders
 {
     public interface ICustomizableFactory<T> : IOneBuilder<T>
         where T : class

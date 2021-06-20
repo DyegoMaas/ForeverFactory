@@ -9,7 +9,7 @@ namespace ForeverFactory.Tests.Core.Transforms.Guards
         [Fact]
         public void It_should_apply_if_no_conditions_were_set()
         {
-            var guardSpecification = new AlwaysApplyTransformGuardSpecification();
+            var guardSpecification = new AlwaysApplyTransformSpecification();
                 
             var canApply = guardSpecification.CanApply(currentIndex: 0);
                 

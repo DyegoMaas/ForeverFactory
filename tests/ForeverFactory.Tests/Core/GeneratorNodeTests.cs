@@ -57,7 +57,7 @@ namespace ForeverFactory.Tests.Core
 
             generatorNode.AddTransform(
                 transform: new FuncTransform<Person, string>(x => x.FirstName = "Martha"),
-                guard: new AlwaysApplyTransformGuardSpecification()
+                guard: new AlwaysApplyTransformSpecification()
             );
                 
             var persons = generatorNode.ProduceInstances();
@@ -111,7 +111,7 @@ namespace ForeverFactory.Tests.Core
             var generatorNode = new GeneratorNode<Person>(targetCount: 3);
             generatorNode.AddTransform(
                 transform: new FuncTransform<Person, string>(x => x.FirstName = "Jonathan"),
-                guard: new AlwaysApplyTransformGuardSpecification()
+                guard: new AlwaysApplyTransformSpecification()
             );
                 
             var transform1 = new NotGuardedTransform<Person>(new FuncTransform<Person, string>(x => x.FirstName = "Martha"));

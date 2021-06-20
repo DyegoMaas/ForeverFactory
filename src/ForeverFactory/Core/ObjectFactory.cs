@@ -39,10 +39,5 @@ namespace ForeverFactory.Core
                 ? _nodes.Last.Value
                 : null;
         }
-
-        public bool HasNodes()
-        {
-            return GetCurrentGeneratorNode() != null;
-        }
     }
 }

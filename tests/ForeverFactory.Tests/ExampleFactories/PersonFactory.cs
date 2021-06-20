@@ -10,16 +10,6 @@
         }
     }
     
-    public class PersonFactory2 : MagicFactory2<Person>
-    {
-        public PersonFactory2()
-        {
-            Set(x => x.FirstName = "Albert");
-            Set(x => x.LastName = "Einstein");
-            Set(x => x.Age = 56);
-        }
-    }
-    
     public class Person
     {
         public string FirstName { get; set; }

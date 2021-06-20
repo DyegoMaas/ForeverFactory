@@ -1,6 +1,6 @@
 ﻿namespace ForeverFactory.Core.Transforms.Guards.Specifications
 {
-    internal class ApplyTransformToFirstInstancesSpecification : ApplyTransformGuardSpecification
+    internal class ApplyTransformToFirstInstancesSpecification : CanApplyTransformSpecification
     {
         private readonly int _countToApply;
 

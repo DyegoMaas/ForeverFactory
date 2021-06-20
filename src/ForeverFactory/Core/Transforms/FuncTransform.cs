@@ -1,5 +1,7 @@
 ﻿namespace ForeverFactory.Core.Transforms
 {
+    internal delegate TAffectedProperty SetMember<in T, out TAffectedProperty>(T arg);
+
     internal class FuncTransform<T, TValue> : Transform<T>
     {
         private readonly SetMember<T, TValue> _setMember;

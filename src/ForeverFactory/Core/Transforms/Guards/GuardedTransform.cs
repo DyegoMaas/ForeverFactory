@@ -6,9 +6,9 @@ namespace ForeverFactory.Core.Transforms.Guards
         where T : class
     {
         public Transform<T> Transform { get; }
-        public ApplyTransformGuardSpecification Guard { get; }
+        public CanApplyTransformSpecification Guard { get; }
 
-        public GuardedTransform(Transform<T> transform, ApplyTransformGuardSpecification guard)
+        public GuardedTransform(Transform<T> transform, CanApplyTransformSpecification guard)
         {
             Transform = transform;
             Guard = guard;

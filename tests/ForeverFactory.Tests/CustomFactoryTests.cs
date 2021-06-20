@@ -17,7 +17,5 @@ namespace ForeverFactory.Tests
             product.Category.Should().Be("Brooms");
             product.Description.Should().Be("The best flight await you!");
         }
-        
-       
     }
 }

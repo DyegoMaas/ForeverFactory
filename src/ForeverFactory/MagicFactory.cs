@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ForeverFactory.Builders;
-using ForeverFactory.Builders.Adapters;
-using ForeverFactory.Builders.Common;
-using ForeverFactory.Transforms;
-using ForeverFactory.Transforms.Conditions;
+using ForeverFactory.Core;
+using ForeverFactory.Core.Transforms;
+using ForeverFactory.Core.Transforms.Guards.Specifications;
 
 namespace ForeverFactory
 {
@@ -18,114 +18,129 @@ namespace ForeverFactory
         /// </summary>
         /// <typeparam name="T">The factory will build instances of this type</typeparam>
         /// <returns>Factory of T</returns>
-        public static MagicFactory<T> For<T>() where T : class => new DynamicFactory<T>();
+        public static ICustomizableFactory<T> For<T>() where T : class => new DynamicFactory<T>();
         
         private sealed class DynamicFactory<T> : MagicFactory<T>
             where T : class
         {
         }
     }
-
+    
     /// <summary>
     /// A customizable factory of objects of type "T". It can be extended with predefined configurations.
     /// </summary>
     /// <typeparam name="T">The type of objects that this factory will build.</typeparam>
-    public abstract class MagicFactory<T> : IOneBuilder<T>
+    public abstract class MagicFactory<T> : ICustomizableFactory<T>, IManyBuilder<T>, ILinkedOneBuilder<T>
         where T : class
     {
-        private readonly TransformList<T> _defaultTransforms = new TransformList<T>();
-        private readonly List<Transform<T>> _transforms = new List<Transform<T>>();
+        private readonly ObjectFactory<T> _objectFactory = new ObjectFactory<T>();
         private Func<T> _customConstructor;
+        private GeneratorNode<T> _rootNode;
 
-        /// <summary>
-        /// Configures this factory to instantiate the object of type "T" using this constructor.
-        /// </summary>
-        /// <param name="customConstructor">Constructor used to build "T" objects</param>
-        protected void UseConstructor(Func<T> customConstructor)
+        protected MagicFactory()
         {
-            _customConstructor = customConstructor;
+            SetRootNode(targetCount: 1);
         }
 
-        /// <summary>
-        /// Configures this factory to instantiate the object of type "T" using this constructor.
-        /// </summary>
-        /// <param name="customConstructor">Constructor used to build "T" objects</param>
-        public MagicFactory<T> UsingConstructor(Func<T> customConstructor)
+        private void SetRootNode(int targetCount)
+        {
+            _rootNode = new GeneratorNode<T>(targetCount: targetCount, customConstructor: null);
+            _objectFactory.AddRootNode(_rootNode);
+        }
+
+        protected void UseConstructor(Func<T> customConstructor)
+        {
+            _rootNode.CustomConstructor = customConstructor;
+        }
+
+        public ICustomizableFactory<T> UsingConstructor(Func<T> customConstructor)
         {
             UseConstructor(customConstructor);
             return this;
         }
 
-        /// <summary>
-        /// Defines the default value of a property.
-        /// </summary>
-        /// <param name="setMember">Sets the value of a Property. <example>x => x.Name = "Karen"</example>></param>
         protected void Set<TValue>(Func<T, TValue> setMember)
         {
-            _defaultTransforms.Add(new FuncTransform<T,TValue>(setMember, Conditions.NoConditions()));
+            _objectFactory.AddDefaultTransform(new FuncTransform<T,TValue>(setMember.Invoke));
         }
 
-        # region OneBuilder Wrapper
-        
-        /// <summary>
-        /// Defines the default value of a property.
-        /// </summary>
-        /// <param name="setMember">Sets the value of a Property. <example>x => x.Name = "Karen"</example>></param>
         public IOneBuilder<T> With<TValue>(Func<T, TValue> setMember)
         {
-            _transforms.Add(new FuncTransform<T,TValue>(setMember, Conditions.NoConditions()));
+            AddTransformThatAlwaysApply(setMember);
             return this;
         }
 
-        /// <summary>
-        /// Applies all configurations and builds a new object of type "T". 
-        /// </summary>
-        /// <returns>A new instance of "T", with all configurations applied.</returns>
-        public T Build()
+        IManyBuilder<T> IManyBuilder<T>.With<TValue>(Func<T, TValue> setMember)
         {
-            var oneBuilder = new OneBuilder<T>(new SharedContext<T>(_defaultTransforms, _customConstructor));
-            foreach (var transform in _transforms)
-            {
-                oneBuilder.With(transform);
-            }
-            return oneBuilder.Build();
+            AddTransformThatAlwaysApply(setMember);
+            return this;
         }
 
-        /// <summary>
-        /// Allows to build multiple objects. This method gives access to further group customization.
-        /// </summary>
-        /// <param name="count">The number of objects to be created.</param>
-        /// <returns>A builder for multiple objects.</returns>
+        ILinkedOneBuilder<T> ILinkedOneBuilder<T>.With<TValue>(Func<T, TValue> setMember)
+        {
+            AddTransformThatAlwaysApply(setMember);
+            return this;
+        }
+
+        private void AddTransformThatAlwaysApply<TValue>(Func<T, TValue> setMember)
+        {
+            var node = _objectFactory.GetCurrentGeneratorNode();
+            node.AddTransform(
+                transform: new FuncTransform<T, TValue>(setMember.Invoke),
+                guard: new AlwaysApplyTransformSpecification()
+            );
+        }
+
+        public IManyBuilder<T> WithFirst<TValue>(int count, Func<T, TValue> setMember)
+        {
+            var node = _objectFactory.GetCurrentGeneratorNode();
+            node.AddTransform(
+                transform: new FuncTransform<T,TValue>(setMember.Invoke),
+                guard: new ApplyTransformToFirstInstancesSpecification(count)
+            );
+            return this;
+        }
+
+        public IManyBuilder<T> WithLast<TValue>(int count, Func<T, TValue> setMember)
+        {
+            var node = _objectFactory.GetCurrentGeneratorNode();
+            node.AddTransform(
+                transform: new FuncTransform<T,TValue>(setMember.Invoke),
+                guard: new ApplyTransformToLastInstancesSpecification(count, node.TargetCount)
+            );
+            return this;
+        }
+        
         public IManyBuilder<T> Many(int count)
         {
-            return new LinkedManyBuilder<T>(count, new SharedContext<T>(_defaultTransforms, _customConstructor));
+            SetRootNode(targetCount: count);
+            return this;
         }
-
         
-        /// <summary>
-        /// Creates a new builder of "T". It will build a new object, in addition to the previous configurations. 
-        /// </summary>
-        /// <returns>A builder of "T"</returns>
         public ILinkedOneBuilder<T> PlusOne()
         {
-            return new LinkedOneBuilder<T>(
-                sharedContext: new SharedContext<T>(_defaultTransforms,_customConstructor),
-                previous: new MagicFactoryOneBuilderToLinkedOneBuilderAdapter<T>(this, _defaultTransforms, _customConstructor)
-            );
+            var newNode = new GeneratorNode<T>(targetCount: 1, _customConstructor);
+            _objectFactory.AddNode(newNode);
+            
+            return this;
         }
 
-        /// <summary>
-        /// Creates a new set of customizable objects, following the previous sets created used the "Many" or "Plus" methods.
-        /// </summary>
-        /// <param name="count">The number of objects to be created.</param>
         public IManyBuilder<T> Plus(int count)
         {
-            return new LinkedManyBuilder<T>(count,
-                sharedContext: new SharedContext<T>(_defaultTransforms,_customConstructor                ),
-                previous: new MagicFactoryOneBuilderToLinkedOneBuilderAdapter<T>(this, _defaultTransforms, _customConstructor)
-            );
+            var newNode = new GeneratorNode<T>(targetCount: count, _customConstructor);
+            _objectFactory.AddNode(newNode);
+
+            return this;
+        }
+        
+        public T Build()
+        {
+            return _objectFactory.Build().First();
         }
 
-        #endregion
+        IEnumerable<T> IBuilder<T>.Build()
+        {
+            return _objectFactory.Build();
+        }
     }
 }

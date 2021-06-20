@@ -6,7 +6,7 @@ namespace ForeverFactory.Core.Transforms.Guards
         where T : class
     {
         public NotGuardedTransform(Transform<T> transform) 
-            : base(transform, new AlwaysApplyTransformGuardSpecification())
+            : base(transform, new AlwaysApplyTransformSpecification())
         {
         }
     }
