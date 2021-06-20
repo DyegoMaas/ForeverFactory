@@ -7,7 +7,7 @@ namespace ForeverFactory.Builders
         where T : class
     {
         /// <summary>
-        /// Configures this factory to instantiate the object of type "T" using this constructor.
+        ///     Configures this factory to instantiate the object of type "T" using this constructor.
         /// </summary>
         /// <param name="customConstructor">Constructor used to build "T" objects</param>
         ICustomizableFactory<T> UsingConstructor(Func<T> customConstructor);

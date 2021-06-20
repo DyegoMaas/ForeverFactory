@@ -11,12 +11,12 @@ using ForeverFactory.Customizations;
 namespace ForeverFactory
 {
     /// <summary>
-    /// Allows the creation of a customizable factory.
+    ///     Allows the creation of a customizable factory.
     /// </summary>
     public static class MagicFactory
     {
         /// <summary>
-        /// Creates a factory for building instances of type "T".
+        ///     Creates a factory for building instances of type "T".
         /// </summary>
         /// <typeparam name="T">The factory will build instances of this type</typeparam>
         /// <returns>Factory of T</returns>
@@ -35,7 +35,7 @@ namespace ForeverFactory
     }
 
     /// <summary>
-    /// A customizable factory of objects of type "T". It can be extended with predefined configurations.
+    ///     A customizable factory of objects of type "T". It can be extended with predefined configurations.
     /// </summary>
     /// <typeparam name="T">The type of objects that this factory will build.</typeparam>
     public abstract class MagicFactory<T> : ICustomizableFactory<T>, IManyBuilder<T>, ILinkedOneBuilder<T>
