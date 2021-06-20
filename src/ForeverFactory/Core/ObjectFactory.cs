@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ForeverFactory.Builders;
 using ForeverFactory.Core.Transforms;
 using ForeverFactory.Core.Transforms.Guards;
+using ForeverFactory.Core.Transforms.Guards.Specifications;
 
 namespace ForeverFactory.Core
 {
@@ -15,6 +17,19 @@ namespace ForeverFactory.Core
         public void AddDefaultTransform(Transform<T> transform)
         {
             _defaultTransforms.Add(new NotGuardedTransform<T>(transform));
+        }
+
+        public void AddTransform(Transform<T> transform, Func<GeneratorNode<T>, CanApplyTransformSpecification> guard) 
+        {
+            var node = GetCurrentGeneratorNode();
+            node.AddTransform(transform, guard(node));
+        }
+
+        private GeneratorNode<T> GetCurrentGeneratorNode()
+        {
+            return _nodes.Any()
+                ? _nodes.Last()
+                : null;
         }
 
         public void AddRootNode(GeneratorNode<T> generatorNode)
@@ -31,13 +46,6 @@ namespace ForeverFactory.Core
         public IEnumerable<T> Build()
         {
             return _nodes.SelectMany(generatorNode => generatorNode.ProduceInstances(_defaultTransforms));
-        }
-
-        public GeneratorNode<T> GetCurrentGeneratorNode()
-        {
-            return _nodes.Any()
-                ? _nodes.Last()
-                : null;
         }
     }
 }

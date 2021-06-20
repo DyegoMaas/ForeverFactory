@@ -73,11 +73,7 @@ namespace ForeverFactory
             {
                 case Behaviors.FillWithEmpty:
                     var transform = TransformFactory.GetFillWithEmptyFor<T>();
-                    var node = _objectFactory.GetCurrentGeneratorNode();
-                    node.AddTransformFirst(
-                        transform: transform,
-                        guard: new AlwaysApplyTransformSpecification()
-                    );
+                    _objectFactory.AddDefaultTransform(transform);
                     break;
             }
             return this;
@@ -115,28 +111,25 @@ namespace ForeverFactory
 
         private void AddTransformThatAlwaysApply<TValue>(Func<T, TValue> setMember)
         {
-            var node = _objectFactory.GetCurrentGeneratorNode();
-            node.AddTransform(
+            _objectFactory.AddTransform(
                 transform: new FuncTransform<T, TValue>(setMember.Invoke),
-                guard: new AlwaysApplyTransformSpecification()
+                guard: node => new AlwaysApplyTransformSpecification()
             );
         }
 
         private void AddTransformThatAppliesToFirstNInstances<TValue>(int count, Func<T, TValue> setMember)
         {
-            var node = _objectFactory.GetCurrentGeneratorNode();
-            node.AddTransform(
+            _objectFactory.AddTransform(
                 transform: new FuncTransform<T, TValue>(setMember.Invoke),
-                guard: new ApplyTransformToFirstInstancesSpecification(count)
+                guard: node => new ApplyTransformToFirstInstancesSpecification(count)
             );
         }
 
         private void AddTransformThatAppliesToLastNInstances<TValue>(int count, Func<T, TValue> setMember)
         {
-            var node = _objectFactory.GetCurrentGeneratorNode();
-            node.AddTransform(
+            _objectFactory.AddTransform(
                 transform: new FuncTransform<T, TValue>(setMember.Invoke),
-                guard: new ApplyTransformToLastInstancesSpecification(count, node.TargetCount)
+                guard: node => new ApplyTransformToLastInstancesSpecification(count, node.TargetCount)
             );
         }
 

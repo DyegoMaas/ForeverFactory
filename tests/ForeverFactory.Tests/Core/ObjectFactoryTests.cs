@@ -45,20 +45,6 @@ namespace ForeverFactory.Tests.Core
                 person.FirstName.Should().Be("Clark");
             }
         }
-
-        [Fact]
-        public void It_should_return_the_current_generator_node()
-        {
-            var factory = new ObjectFactory<Person>();
-            var generatorNode1 = new GeneratorNode<Person>(targetCount: 1);
-            var generatorNode2 = new GeneratorNode<Person>(targetCount: 2);
-            
-            factory.AddNode(generatorNode1);
-            factory.GetCurrentGeneratorNode().Should().Be(generatorNode1);
-            
-            factory.AddNode(generatorNode2);
-            factory.GetCurrentGeneratorNode().Should().Be(generatorNode2);
-        }
         
         [Fact]
         public void It_should_clear_nodes_when_adding_root_node()
