@@ -7,17 +7,10 @@ namespace ForeverFactory.Tests
 {
     public class NavigationBetweenInterfacesTests
     {
-        private readonly PersonFactory _factory;
-
-        public NavigationBetweenInterfacesTests()
-        {
-            _factory = new PersonFactory();
-        }
-
         [Fact]
         public void PlusOne_should_chain_previous_ManyBuilder_to_a_new_LinkedOneBuilder()
         {
-            var persons = _factory
+            var persons = new PersonFactory()
                 .Many(count: 5).With(x => x.Age = 99)
                 .PlusOne().With(x => x.Age = 100)
                 .Plus(count: 5).With(x => x.Age = 97)
