@@ -16,6 +16,8 @@ namespace ForeverFactory.Builders
         ///     Defines the behavior used to fill the properties of a class.
         ///     DoNotFillBehavior is used by default, but you can selected other behaviors tool. 
         /// </summary>
+        /// <see cref="DoNotFillBehavior"/>
+        /// <see cref="FillWithEmptyValuesBehavior"/>
         /// <param name="behavior">The type of the behavior to be used</param>
         ICustomizableFactory<T> WithBehavior(Behavior behavior);
 
