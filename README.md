@@ -83,7 +83,7 @@ var hundredPeople = MagicFactory.For<Person>()
 
 ### Custom Factories
 
-You create your own factory, with predefined rules, like this:
+You can maximize reuse of common customization by creating your own factory, with predefined rules, like this:
 
 ```csharp
 public class PersonFactory : MagicFactory<Person>
