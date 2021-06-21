@@ -88,11 +88,12 @@ You create your own factory, with predefined rules, like this:
 ```csharp
 public class PersonFactory : MagicFactory<Person>
 {
-    public PersonFactory()
+    protected override void Customize(ICustomizeFactoryOptions<Person> customization)
     {
-        Set(x => x.FirstName = "Albert");
-        Set(x => x.LastName = "Einstein");
-        Set(x => x.Age = 56);
+        customization
+            .Set(x => x.FirstName = "Albert")
+            .Set(x => x.LastName = "Einstein")
+            .Set(x => x.Age = 56);
     }
 }
 ```
@@ -131,10 +132,11 @@ If you are using a *custom factory*, you can set the constructor function there:
 ```csharp
 public class ProductFactory : MagicFactory<Product>
 {
-    public ProductFactory()
+    protected override void Customize(ICustomizeFactoryOptions<Product> customization)
     {
-        UseConstructor(() => new Product("Nimbus 2000", "Brooms"));
-        Set(x => x.Description = "Top of the line flying broom");
+        customization
+            .UseConstructor(() => new Product("Nimbus 2000", "Brooms"))
+            .Set(x => x.Description = "Top of the line flying broom");
     }
 }
 ```
@@ -145,6 +147,48 @@ var product = MagicFactory.For<Product>()
     .UsingConstructor(() => new Product("Nimbus 2000", "Brooms"))
     .With(x => x.Description = "Top of the line flying broom")
     .Build();
+```
+
+### Behaviors
+
+You can change how **ForeverFactory** behaves when creating objects for you.
+
+```csharp
+var product = MagicFactory.For<Product>()
+    .WithBehavior(new FillWithEmptyValuesBehavior())
+    .Build();
+
+// or 
+
+private class ProductFactory : MagicFactory<Product>
+{
+    protected override void Customize(ICustomizeFactoryOptions<Product> customization)
+    {
+        customization
+            .SetDefaultBehavior(new FillWithEmptyValuesBehavior());
+    }
+}
+```
+
+#### DoNotFillBehavior
+
+By default, it will not fill any properties, and it is up to you to fill any properties.
+
+#### FillWithEmptyValuesBehavior
+
+With this behavior, ForeverFactory will recursively initialize every property it can. For example, the following class structure will resolve as shown below?
+
+```csharp
+public class Customer
+{
+    public string Name { get; set; } // will be set to ""
+    public Address Address { get; set; } // will be set to 'new Address()' 
+}
+
+public class Address
+{
+    public string ZipCode { get; set; } // will be set to ""
+}
 ```
 
 ## How to contribute

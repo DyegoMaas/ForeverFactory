@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using ForeverFactory.Behaviors;
 using ForeverFactory.Tests.CustomizedFactories.ExampleFactories;
 using Xunit;
 
@@ -21,7 +22,7 @@ namespace ForeverFactory.Tests.CustomizedFactories
         [Fact]
         public void It_should_apply_properties_set_in_the_customization()
         {
-            var products = new SuperFactory()
+            var products = new AnotherProductFactory()
                 .Many(2)
                 .Build();
 
@@ -31,7 +32,7 @@ namespace ForeverFactory.Tests.CustomizedFactories
             }
         }
 
-        private class SuperFactory : MagicFactory<Product>
+        private class AnotherProductFactory : MagicFactory<Product>
         {
             protected override void Customize(ICustomizeFactoryOptions<Product> customization)
             {
