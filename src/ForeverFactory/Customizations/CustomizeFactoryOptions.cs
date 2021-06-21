@@ -21,7 +21,7 @@ namespace ForeverFactory.Customizations
 
         public ICustomizeFactoryOptions<T> Set<TValue>(Func<T, TValue> setMember)
         {
-            _magicFactory.With(setMember);
+            _magicFactory.WithDefault(setMember);
             return this;
         }
 

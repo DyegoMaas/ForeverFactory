@@ -61,13 +61,22 @@ namespace ForeverFactory
         public ICustomizableFactory<T> WithBehavior(Behavior behavior)
         {
             var transforms = behavior.GetTransforms<T>();
-            foreach (var transform in transforms) _objectFactory.AddDefaultTransform(transform);
+            foreach (var transform in transforms)
+            {
+                _objectFactory.AddDefaultTransform(transform);
+            }
             return this;
         }
 
         public IOneBuilder<T> With<TValue>(Func<T, TValue> setMember)
         {
             AddTransformThatAlwaysApply(setMember);
+            return this;
+        }
+        
+        public IOneBuilder<T> WithDefault<TValue>(Func<T, TValue> setMember)
+        {
+            _objectFactory.AddDefaultTransform(new FuncTransform<T,TValue>(setMember.Invoke));
             return this;
         }
 
@@ -81,7 +90,6 @@ namespace ForeverFactory
         {
             var newNode = new GeneratorNode<T>(1, _customConstructor);
             _objectFactory.AddNode(newNode);
-
             return this;
         }
 
@@ -127,7 +135,6 @@ namespace ForeverFactory
             return _objectFactory.Build();
         }
 
-        // TODO add test to ensure default transforms are not lost in the process
         private void SetRootNode(int targetCount)
         {
             _rootNode = new GeneratorNode<T>(targetCount, _customConstructor);
