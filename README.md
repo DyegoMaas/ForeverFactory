@@ -219,3 +219,4 @@ dotnet stryker
 - Support custom constructor scoped by builder (for now, custom constructors are shared along the linked builders)
 - Allow configuration by rules
 - Allow sequences in numbers properties and things like email, etc
+- Support "smart" behavior, which identifies by convention which type of sequences and rules to apply to every property 
