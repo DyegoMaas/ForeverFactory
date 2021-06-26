@@ -73,11 +73,11 @@ namespace ForeverFactory.Tests.Core
             );
             generatorNode.AddTransform(
                 new FuncTransform<Person, string>(x => x.FirstName = "Martha"),
-                new ApplyTransformToFirstInstancesSpecification(2)
+                new ApplyTransformToFirstInstancesSpecification(countToApply: 2, targetCount: 5)
             );
             generatorNode.AddTransform(
                 new FuncTransform<Person, string>(x => x.FirstName = "Mirage"),
-                new ApplyTransformToLastInstancesSpecification(2, 5)
+                new ApplyTransformToLastInstancesSpecification(countToApply: 2, targetCount: 5)
             );
 
             var persons = generatorNode.ProduceInstances().ToArray();
