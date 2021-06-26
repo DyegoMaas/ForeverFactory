@@ -31,6 +31,12 @@ namespace ForeverFactory.Builders
         IOneBuilder<T> With<TValue>(Func<T, TValue> setMember);
         
         /// <summary>
+        ///     Explicitly state that you are building one instance with some configurations.
+        ///     This configuration allows for chaining more objects by chaining with <code>.Plus()</code> and <code>.PlusOne()</code>.
+        /// </summary>
+        INavigationalOneBuilder<T> One();
+        
+        /// <summary>
         ///     Creates a set of customizable objects
         /// </summary>
         /// <param name="count">The number of objects to be created.</param>

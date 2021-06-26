@@ -35,7 +35,7 @@ namespace ForeverFactory.Tests
         }
 
         [Fact]
-        public void Should_produce_instances_using_custom_constructor()
+        public void Should_produce_an_instances_using_custom_constructor()
         {
             var product = MagicFactory.For<Product>()
                 .UsingConstructor(() => new Product("MAG-7", "Shotgun"))
@@ -48,7 +48,7 @@ namespace ForeverFactory.Tests
         }
 
         [Fact]
-        public void Should_produce_instances_using_custom_constructor2()
+        public void Should_produce_multiple_instances_using_custom_constructor()
         {
             var products = MagicFactory.For<Product>()
                 .UsingConstructor(() => new Product("MAG-7", "Shotgun"))
@@ -62,6 +62,17 @@ namespace ForeverFactory.Tests
                 product.Name.Should().Be("MAG-7");
                 product.Category.Should().Be("Shotgun");
             }
+        }
+        
+        [Fact]
+        public void It_should_be_possible_to_explicitly_say_you_are_building_one_instance()
+        {
+            var product = new ProductFactory()
+                .One()
+                .With(x => x.Description = "Nimbus 2000")
+                .Build();
+
+            product.Description.Should().Be("Nimbus 2000");
         }
     }
 }

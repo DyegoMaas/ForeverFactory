@@ -38,7 +38,7 @@ namespace ForeverFactory
     ///     A customizable factory of objects of type "T". It can be extended with predefined configurations.
     /// </summary>
     /// <typeparam name="T">The type of objects that this factory will build.</typeparam>
-    public abstract class MagicFactory<T> : ISimpleFactory<T>, IOneBuilder<T>, IManyBuilder<T>, ILinkedOneBuilder<T>
+    public abstract class MagicFactory<T> : ISimpleFactory<T>, IOneBuilder<T>, INavigationalOneBuilder<T>, IManyBuilder<T>, ILinkedOneBuilder<T>
         where T : class
     {
         private readonly ObjectFactory<T> _objectFactory = new ObjectFactory<T>();
@@ -76,6 +76,17 @@ namespace ForeverFactory
         public IOneBuilder<T> With<TValue>(Func<T, TValue> setMember)
         {
             AddTransformThatAlwaysApply(setMember);
+            return this;
+        }
+
+        INavigationalOneBuilder<T> INavigationalOneBuilder<T>.With<TValue>(Func<T, TValue> setMember)
+        {
+            AddTransformThatAlwaysApply(setMember);
+            return this;
+        }
+
+        public INavigationalOneBuilder<T> One()
+        {
             return this;
         }
 
