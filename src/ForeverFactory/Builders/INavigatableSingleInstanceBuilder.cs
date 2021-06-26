@@ -2,7 +2,7 @@
 
 namespace ForeverFactory.Builders
 {
-    public interface INavigationalOneBuilder<out T> : ISingleInstanceBuilder<T>
+    public interface INavigatableSingleInstanceBuilder<out T> : ISingleInstanceBuilder<T>
     {
         /// <summary>
         ///     Defines the default value of a property.
@@ -11,7 +11,7 @@ namespace ForeverFactory.Builders
         ///     <example>x => x.Name = "Karen"</example>
         ///     >
         /// </param>
-        INavigationalOneBuilder<T> With<TValue>(Func<T, TValue> setMember);
+        INavigatableSingleInstanceBuilder<T> With<TValue>(Func<T, TValue> setMember);
         
         /// <summary>
         ///     Creates a new builder of "T". It will build a new object, in addition to the previous configurations.
@@ -23,6 +23,6 @@ namespace ForeverFactory.Builders
         ///     Creates a new set of customizable objects, following the previous sets created used the "Many" or "Plus" methods.
         /// </summary>
         /// <param name="count">The number of objects to be created.</param>
-        IManyBuilder<T> Plus(int count);
+        ICustomizableMultipleInstanceBuilder<T> Plus(int count);
     }
 }

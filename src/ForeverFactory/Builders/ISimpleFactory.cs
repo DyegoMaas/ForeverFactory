@@ -28,18 +28,18 @@ namespace ForeverFactory.Builders
         ///     <example>x => x.Name = "Karen"</example>
         ///     >
         /// </param>
-        IOneBuilder<T> With<TValue>(Func<T, TValue> setMember);
+        ICustomizableSingleInstanceBuilder<T> With<TValue>(Func<T, TValue> setMember);
         
         /// <summary>
         ///     Explicitly state that you are building one instance with some configurations.
         ///     This configuration allows for chaining more objects by chaining with <code>.Plus()</code> and <code>.PlusOne()</code>.
         /// </summary>
-        INavigationalOneBuilder<T> One();
+        INavigatableSingleInstanceBuilder<T> One();
         
         /// <summary>
         ///     Creates a set of customizable objects
         /// </summary>
         /// <param name="count">The number of objects to be created.</param>
-        IManyBuilder<T> Many(int count);
+        ICustomizableMultipleInstanceBuilder<T> Many(int count);
     }
 }

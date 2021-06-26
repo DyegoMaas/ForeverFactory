@@ -1,4 +1,8 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using FluentAssertions;
+using FluentAssertions.Extensions;
+using ForeverFactory.Builders;
+using ForeverFactory.Core.Transforms;
 using ForeverFactory.Tests.CustomizedFactories.ExampleFactories;
 using Xunit;
 
@@ -35,7 +39,7 @@ namespace ForeverFactory.Tests
         }
 
         [Fact]
-        public void Should_produce_an_instances_using_custom_constructor()
+        public void Should_produce_an_instance_using_custom_constructor()
         {
             var product = MagicFactory.For<Product>()
                 .UsingConstructor(() => new Product("MAG-7", "Shotgun"))
@@ -73,6 +77,17 @@ namespace ForeverFactory.Tests
                 .Build();
 
             product.Description.Should().Be("Nimbus 2000");
+        }
+
+        [Fact]
+        public void Transforms_are_applied_in_order_overriding_previous_ones()
+        {
+            var product = new ProductFactory()
+                .With(x => x.Description = "Description 1")
+                .With(x => x.Description = "Description 2")
+                .Build();
+
+            product.Description.Should().Be("Description 2");
         }
     }
 }

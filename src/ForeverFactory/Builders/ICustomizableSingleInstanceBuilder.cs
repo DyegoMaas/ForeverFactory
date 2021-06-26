@@ -6,7 +6,7 @@ namespace ForeverFactory.Builders
     ///     This interface allows building one customized object of type "T".
     /// </summary>
     /// <typeparam name="T">The type of object that will be built.</typeparam>
-    public interface IOneBuilder<out T> : ISingleInstanceBuilder<T>
+    public interface ICustomizableSingleInstanceBuilder<out T> : ISingleInstanceBuilder<T>
     {
         /// <summary>
         ///     Defines the default value of a property.
@@ -15,6 +15,6 @@ namespace ForeverFactory.Builders
         ///     <example>x => x.Name = "Karen"</example>
         ///     >
         /// </param>
-        IOneBuilder<T> With<TValue>(Func<T, TValue> setMember);
+        ICustomizableSingleInstanceBuilder<T> With<TValue>(Func<T, TValue> setMember);
     }
 }

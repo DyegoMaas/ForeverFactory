@@ -6,7 +6,7 @@ namespace ForeverFactory.Builders
     ///     This interface allows building many customized objects of type "T".
     /// </summary>
     /// <typeparam name="T">The type of objects that will be built.</typeparam>
-    public interface IManyBuilder<out T> : IEnumerableBuilder<T>, IDeepNavigation<T>
+    public interface ICustomizableMultipleInstanceBuilder<out T> : IMultipleInstanceBuilder<T>, INavigatable<T>
     {
         /// <summary>
         ///     Defines the default value of a property for all instances.
@@ -14,7 +14,7 @@ namespace ForeverFactory.Builders
         /// <param name="setMember">Sets the value of a Property.
         ///     <example>x => x.Name = "Karen"</example>
         /// </param>
-        IManyBuilder<T> With<TValue>(Func<T, TValue> setMember);
+        ICustomizableMultipleInstanceBuilder<T> With<TValue>(Func<T, TValue> setMember);
 
         /// <summary>
         ///     Defines the default value of a property for the first N instances.
@@ -23,7 +23,7 @@ namespace ForeverFactory.Builders
         /// <param name="setMember">Sets the value of a Property.
         ///     <example>x => x.Name = "Karen"</example>
         /// </param>
-        IManyBuilder<T> WithFirst<TValue>(int count, Func<T, TValue> setMember);
+        ICustomizableMultipleInstanceBuilder<T> WithFirst<TValue>(int count, Func<T, TValue> setMember);
 
         /// <summary>
         ///     Defines the default value of a property for the last N instances.
@@ -32,6 +32,6 @@ namespace ForeverFactory.Builders
         /// <param name="setMember">Sets the value of a Property.
         ///     <example>x => x.Name = "Karen"</example>
         /// </param>
-        IManyBuilder<T> WithLast<TValue>(int count, Func<T, TValue> setMember);
+        ICustomizableMultipleInstanceBuilder<T> WithLast<TValue>(int count, Func<T, TValue> setMember);
     }
 }
