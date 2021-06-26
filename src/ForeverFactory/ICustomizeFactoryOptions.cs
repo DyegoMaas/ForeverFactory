@@ -7,7 +7,7 @@ namespace ForeverFactory
         where T : class
     {
         ICustomizeFactoryOptions<T> UseConstructor(Func<T> customConstructor);
-        ICustomizeFactoryOptions<T> Set<TValue>(Func<T, TValue> setMember);
         ICustomizeFactoryOptions<T> SetDefaultBehavior(Behavior behavior);
+        ICustomizeFactoryOptions<T> Set<TValue>(Func<T, TValue> setMember);
     }
 }

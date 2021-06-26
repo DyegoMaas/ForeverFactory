@@ -8,7 +8,7 @@ using ForeverFactory.Core.Transforms.Guards.Specifications;
 
 namespace ForeverFactory.Core
 {
-    internal class ObjectFactory<T> : IBuilder<T>
+    internal class ObjectFactory<T> : IEnumerableBuilder<T>
         where T : class
     {
         private readonly List<NotGuardedTransform<T>> _defaultTransforms = new List<NotGuardedTransform<T>>();

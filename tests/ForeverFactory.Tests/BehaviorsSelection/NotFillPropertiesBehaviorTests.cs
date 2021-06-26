@@ -19,8 +19,7 @@ namespace ForeverFactory.Tests.BehaviorsSelection
 
         [Theory]
         [MemberData(nameof(PersonFactoryWithDefaultBehaviorVariants))]
-        public void Default_filling_behavior_should_be_not_filling_properties_values(
-            ICustomizableFactory<Person> factory)
+        public void Default_filling_behavior_should_be_not_filling_properties_values(ISimpleFactory<Person> factory)
         {
             var person = factory.Build();
 

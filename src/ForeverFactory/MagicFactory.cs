@@ -20,7 +20,7 @@ namespace ForeverFactory
         /// </summary>
         /// <typeparam name="T">The factory will build instances of this type</typeparam>
         /// <returns>Factory of T</returns>
-        public static ICustomizableFactory<T> For<T>() where T : class
+        public static ISimpleFactory<T> For<T>() where T : class
         {
             return new DynamicFactory<T>();
         }
@@ -38,7 +38,7 @@ namespace ForeverFactory
     ///     A customizable factory of objects of type "T". It can be extended with predefined configurations.
     /// </summary>
     /// <typeparam name="T">The type of objects that this factory will build.</typeparam>
-    public abstract class MagicFactory<T> : ICustomizableFactory<T>, IManyBuilder<T>, ILinkedOneBuilder<T>
+    public abstract class MagicFactory<T> : ISimpleFactory<T>, IOneBuilder<T>, IManyBuilder<T>, ILinkedOneBuilder<T>
         where T : class
     {
         private readonly ObjectFactory<T> _objectFactory = new ObjectFactory<T>();
@@ -51,14 +51,19 @@ namespace ForeverFactory
             Customize(new CustomizeFactoryOptions<T>(this));
         }
 
-        public ICustomizableFactory<T> UsingConstructor(Func<T> customConstructor)
+        public ISimpleFactory<T> UsingConstructor(Func<T> customConstructor)
         {
             _customConstructor = customConstructor;
             _rootNode.OverrideCustomConstructor(customConstructor);
             return this;
         }
 
-        public ICustomizableFactory<T> WithBehavior(Behavior behavior)
+        internal void AddDefaultTransform<TValue>(Func<T, TValue> setMember)
+        {
+            _objectFactory.AddDefaultTransform(new FuncTransform<T,TValue>(setMember.Invoke));
+        }
+
+        public ISimpleFactory<T> WithBehavior(Behavior behavior)
         {
             var transforms = behavior.GetTransforms<T>();
             foreach (var transform in transforms)
@@ -71,12 +76,6 @@ namespace ForeverFactory
         public IOneBuilder<T> With<TValue>(Func<T, TValue> setMember)
         {
             AddTransformThatAlwaysApply(setMember);
-            return this;
-        }
-        
-        public IOneBuilder<T> WithDefault<TValue>(Func<T, TValue> setMember)
-        {
-            _objectFactory.AddDefaultTransform(new FuncTransform<T,TValue>(setMember.Invoke));
             return this;
         }
 
@@ -130,7 +129,7 @@ namespace ForeverFactory
             return this;
         }
 
-        IEnumerable<T> IBuilder<T>.Build()
+        IEnumerable<T> IEnumerableBuilder<T>.Build()
         {
             return _objectFactory.Build();
         }

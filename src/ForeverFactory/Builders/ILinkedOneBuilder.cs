@@ -2,7 +2,7 @@
 
 namespace ForeverFactory.Builders
 {
-    public interface ILinkedOneBuilder<out T> : ILinkedBuilder<T>
+    public interface ILinkedOneBuilder<out T> : IEnumerableBuilder<T>, IDeepNavigation<T>
     {
         /// <summary>
         ///     Defines the default value of a property.

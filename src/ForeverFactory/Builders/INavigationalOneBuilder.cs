@@ -1,12 +1,12 @@
 ﻿namespace ForeverFactory.Builders
 {
-    public interface ILinkedBuilder<out T> : IBuilder<T>
+    public interface INavigationalOneBuilder<out T> : IOneBuilder<T>
     {
         /// <summary>
         ///     Creates a new builder of "T". It will build a new object, in addition to the previous configurations.
         /// </summary>
         /// <returns>A builder of "T"</returns>
-        ILinkedOneBuilder<T> PlusOne();
+        ILinkedOneBuilder<T> PlusOne(); // TODO test
 
         /// <summary>
         ///     Creates a new set of customizable objects, following the previous sets created used the "Many" or "Plus" methods.

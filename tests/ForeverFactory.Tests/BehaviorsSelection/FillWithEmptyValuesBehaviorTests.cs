@@ -17,8 +17,7 @@ namespace ForeverFactory.Tests.BehaviorsSelection
 
         [Theory]
         [MemberData(nameof(PersonFactoriesWithFillPropertiesWithEmptyValuesBehavior))]
-        public void It_should_fill_all_properties_with_empty_values(
-            ICustomizableFactory<Customer> factory)
+        public void It_should_fill_all_properties_with_empty_values(ISimpleFactory<Customer> factory)
         {
             var customer = factory.Build();
 

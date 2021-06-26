@@ -19,7 +19,7 @@ namespace ForeverFactory.Tests
         [Theory]
         [MemberData(nameof(FactoryInitializationVariants))]
         public void PlusOne_should_chain_previous_ManyBuilder_to_a_new_LinkedOneBuilder(
-            ICustomizableFactory<Person> factory)
+            ISimpleFactory<Person> factory)
         {
             var persons = factory
                 .Many(5).With(x => x.Age = 99)
