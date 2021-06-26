@@ -1,9 +1,8 @@
 ﻿using FluentAssertions;
-using ForeverFactory.Behaviors;
-using ForeverFactory.Tests.CustomizedFactories.ExampleFactories;
+using ForeverFactory.Tests.Factories.CustomizedFactories.ExampleFactories;
 using Xunit;
 
-namespace ForeverFactory.Tests.CustomizedFactories
+namespace ForeverFactory.Tests.Factories.CustomizedFactories
 {
     public class CustomizedFactoryTests
     {

@@ -1,4 +1,4 @@
-﻿namespace ForeverFactory.Tests.CustomizedFactories.ExampleFactories
+﻿namespace ForeverFactory.Tests.Factories.CustomizedFactories.ExampleFactories
 {
     public class PersonFactory : MagicFactory<Person>
     {

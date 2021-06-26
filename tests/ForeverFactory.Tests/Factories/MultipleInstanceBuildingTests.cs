@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using ForeverFactory.Tests.CustomizedFactories.ExampleFactories;
+using ForeverFactory.Tests.Factories.CustomizedFactories.ExampleFactories;
 using Xunit;
 
-namespace ForeverFactory.Tests
+namespace ForeverFactory.Tests.Factories
 {
     public class MultipleInstanceBuildingTests
     {

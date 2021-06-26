@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using FluentAssertions;
-using FluentAssertions.Extensions;
-using ForeverFactory.Builders;
-using ForeverFactory.Core.Transforms;
-using ForeverFactory.Tests.CustomizedFactories.ExampleFactories;
+﻿using FluentAssertions;
+using ForeverFactory.Tests.Factories.CustomizedFactories.ExampleFactories;
 using Xunit;
 
-namespace ForeverFactory.Tests
+namespace ForeverFactory.Tests.Factories
 {
     public class MagicFactoryTests
     {

@@ -4,7 +4,7 @@ using ForeverFactory.Core;
 using ForeverFactory.Core.Transforms;
 using ForeverFactory.Core.Transforms.Guards;
 using ForeverFactory.Core.Transforms.Guards.Specifications;
-using ForeverFactory.Tests.CustomizedFactories.ExampleFactories;
+using ForeverFactory.Tests.Factories.CustomizedFactories.ExampleFactories;
 using Xunit;
 
 namespace ForeverFactory.Tests.Core
