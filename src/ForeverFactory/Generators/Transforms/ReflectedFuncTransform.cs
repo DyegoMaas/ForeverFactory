@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ForeverFactory.Core.Transforms
+namespace ForeverFactory.Generators.Transforms
 {
     internal class ReflectedFuncTransform<T> : Transform<T>
     {

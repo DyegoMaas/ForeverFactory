@@ -1,4 +1,4 @@
-﻿namespace ForeverFactory.Core.Transforms
+﻿namespace ForeverFactory.Generators.Transforms
 {
     internal delegate TAffectedProperty SetMember<in T, out TAffectedProperty>(T arg);
 

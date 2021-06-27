@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
-using ForeverFactory.Core;
-using ForeverFactory.Core.Transforms;
+using ForeverFactory.Generators;
+using ForeverFactory.Generators.Transforms;
 using ForeverFactory.Tests.Factories.CustomizedFactories.ExampleFactories;
 using Xunit;
 
-namespace ForeverFactory.Tests.Core
+namespace ForeverFactory.Tests.Generators
 {
     public class ObjectFactoryTests
     {

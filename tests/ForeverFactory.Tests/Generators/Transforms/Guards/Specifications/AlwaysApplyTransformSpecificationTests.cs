@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
-using ForeverFactory.Core.Transforms.Guards.Specifications;
+using ForeverFactory.Generators.Transforms.Guards.Specifications;
 using Xunit;
 
-namespace ForeverFactory.Tests.Core.Transforms.Guards.Specifications
+namespace ForeverFactory.Tests.Generators.Transforms.Guards.Specifications
 {
     public class AlwaysApplyTransformSpecificationTests
     {

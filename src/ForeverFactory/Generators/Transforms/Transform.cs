@@ -1,4 +1,4 @@
-﻿namespace ForeverFactory.Core.Transforms
+﻿namespace ForeverFactory.Generators.Transforms
 {
     public abstract class Transform<T>
     {

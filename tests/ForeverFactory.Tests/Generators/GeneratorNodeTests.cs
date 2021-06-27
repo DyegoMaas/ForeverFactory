@@ -1,13 +1,13 @@
 ﻿using System.Linq;
 using FluentAssertions;
-using ForeverFactory.Core;
-using ForeverFactory.Core.Transforms;
-using ForeverFactory.Core.Transforms.Guards;
-using ForeverFactory.Core.Transforms.Guards.Specifications;
+using ForeverFactory.Generators;
+using ForeverFactory.Generators.Transforms;
+using ForeverFactory.Generators.Transforms.Guards;
+using ForeverFactory.Generators.Transforms.Guards.Specifications;
 using ForeverFactory.Tests.Factories.CustomizedFactories.ExampleFactories;
 using Xunit;
 
-namespace ForeverFactory.Tests.Core
+namespace ForeverFactory.Tests.Generators
 {
     public class GeneratorNodeTests
     {

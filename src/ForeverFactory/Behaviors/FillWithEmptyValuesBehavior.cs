@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using ForeverFactory.Core.Transforms;
-using ForeverFactory.Core.Transforms.Factories;
+using ForeverFactory.Generators.Transforms;
+using ForeverFactory.Generators.Transforms.Factories;
 
 namespace ForeverFactory.Behaviors
 {

@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
-using ForeverFactory.Core.Transforms.Factories;
+using ForeverFactory.Generators.Transforms.Factories;
 using Xunit;
 
-namespace ForeverFactory.Tests.Core.Transforms.Factories
+namespace ForeverFactory.Tests.Generators.Transforms.Factories
 {
     public class TransformFactoryTests
     {

@@ -1,6 +1,6 @@
-﻿using ForeverFactory.Core.Transforms.Guards.Specifications;
+﻿using ForeverFactory.Generators.Transforms.Guards.Specifications;
 
-namespace ForeverFactory.Core.Transforms.Guards
+namespace ForeverFactory.Generators.Transforms.Guards
 {
     internal class GuardedTransform<T>
         where T : class

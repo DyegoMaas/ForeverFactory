@@ -1,4 +1,4 @@
-﻿namespace ForeverFactory.Core.Transforms.Guards.Specifications
+﻿namespace ForeverFactory.Generators.Transforms.Guards.Specifications
 {
     internal class AlwaysApplyTransformSpecification : CanApplyTransformSpecification
     {

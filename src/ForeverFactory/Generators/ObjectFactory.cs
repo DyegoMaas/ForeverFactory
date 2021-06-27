@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ForeverFactory.Core.Transforms;
-using ForeverFactory.Core.Transforms.Guards;
-using ForeverFactory.Core.Transforms.Guards.Specifications;
 using ForeverFactory.FluentInterfaces;
+using ForeverFactory.Generators.Transforms;
+using ForeverFactory.Generators.Transforms.Guards;
+using ForeverFactory.Generators.Transforms.Guards.Specifications;
 
-namespace ForeverFactory.Core
+namespace ForeverFactory.Generators
 {
     internal class ObjectFactory<T> : IBuildMany<T>
         where T : class

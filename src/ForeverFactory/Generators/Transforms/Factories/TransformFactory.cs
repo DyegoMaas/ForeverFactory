@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace ForeverFactory.Core.Transforms.Factories
+namespace ForeverFactory.Generators.Transforms.Factories
 {
     internal static class TransformFactory
     {
