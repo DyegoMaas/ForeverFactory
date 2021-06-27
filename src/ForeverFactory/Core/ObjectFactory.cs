@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ForeverFactory.Builders;
 using ForeverFactory.Core.Transforms;
 using ForeverFactory.Core.Transforms.Guards;
 using ForeverFactory.Core.Transforms.Guards.Specifications;
+using ForeverFactory.FluentInterfaces;
 
 namespace ForeverFactory.Core
 {

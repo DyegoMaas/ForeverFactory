@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ForeverFactory.Builders
+namespace ForeverFactory.FluentInterfaces
 {
     public interface ICustomizeOneBuildOneWithNavigation<out T> : IBuildOne<T>, INavigable<T>
     {

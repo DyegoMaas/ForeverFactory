@@ -1,7 +1,7 @@
 ﻿using System;
 using ForeverFactory.Behaviors;
 
-namespace ForeverFactory.Builders
+namespace ForeverFactory.FluentInterfaces
 {
     public interface ISimpleFactory<T> : ICustomizeOneBuildOne<T>
         where T : class

@@ -1,4 +1,4 @@
-﻿namespace ForeverFactory.Builders
+﻿namespace ForeverFactory.FluentInterfaces
 {
     public interface INavigable<out T>
     {

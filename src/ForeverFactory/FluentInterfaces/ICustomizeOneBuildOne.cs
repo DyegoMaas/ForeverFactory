@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ForeverFactory.Builders
+namespace ForeverFactory.FluentInterfaces
 {
     /// <summary>
     ///     This interface allows building one customized object of type "T".

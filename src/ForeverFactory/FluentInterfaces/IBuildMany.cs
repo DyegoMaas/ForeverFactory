@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ForeverFactory.Builders
+namespace ForeverFactory.FluentInterfaces
 {
     public interface IBuildMany<out T>
     {
