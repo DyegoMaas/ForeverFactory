@@ -17,6 +17,20 @@ namespace ForeverFactory.Generators.Transforms.Factories
             return new ReflectedFuncTransform<T>(setMember);
         }
 
+
+        private static Func<object> GetBuildFunction(PropertyInfo propertyInfo)
+        {
+            if (propertyInfo.PropertyType == typeof(string)) return () => string.Empty;
+
+            var parameterlessConstructor = propertyInfo.PropertyType
+                .GetConstructors()
+                .FirstOrDefault(x => x.GetParameters().Length == 0);
+            if (parameterlessConstructor != null) return () => parameterlessConstructor.Invoke(Array.Empty<object>());
+
+            return null;
+        }
+
+        
         private static void FillPropertiesRecursively(object instance, IReflect type)
         {
             var propertyInfos = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
@@ -31,18 +45,6 @@ namespace ForeverFactory.Generators.Transforms.Factories
 
                 FillPropertiesRecursively(propertyValue, propertyInfo.PropertyType);
             }
-        }
-
-        private static Func<object> GetBuildFunction(PropertyInfo propertyInfo)
-        {
-            if (propertyInfo.PropertyType == typeof(string)) return () => string.Empty;
-
-            var parameterlessConstructor = propertyInfo.PropertyType
-                .GetConstructors()
-                .FirstOrDefault(x => x.GetParameters().Length == 0);
-            if (parameterlessConstructor != null) return () => parameterlessConstructor.Invoke(Array.Empty<object>());
-
-            return null;
         }
     }
 }

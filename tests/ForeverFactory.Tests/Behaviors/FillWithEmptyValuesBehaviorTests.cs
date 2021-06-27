@@ -26,15 +26,15 @@ namespace ForeverFactory.Tests.Behaviors
             customer.Address.ZipCode.Should().Be(string.Empty);
         }
 
+        public class Address
+        {
+            public string ZipCode { get; set; }
+        }
+
         public class Customer
         {
             public string Name { get; set; }
             public Address Address { get; set; }
-        }
-
-        public class Address
-        {
-            public string ZipCode { get; set; }
         }
 
         private class CustomerFactoryWithEmptyFillingBehavior : MagicFactory<Customer>
