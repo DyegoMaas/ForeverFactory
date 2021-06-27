@@ -4,7 +4,7 @@ using ForeverFactory.Behaviors;
 using ForeverFactory.FluentInterfaces;
 using Xunit;
 
-namespace ForeverFactory.Tests.BehaviorsSelection
+namespace ForeverFactory.Tests.Behaviors
 {
     public class FillWithEmptyValuesBehaviorTests
     {

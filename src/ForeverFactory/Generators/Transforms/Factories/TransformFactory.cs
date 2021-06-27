@@ -40,7 +40,7 @@ namespace ForeverFactory.Generators.Transforms.Factories
             var parameterlessConstructor = propertyInfo.PropertyType
                 .GetConstructors()
                 .FirstOrDefault(x => x.GetParameters().Length == 0);
-            if (parameterlessConstructor != null) return () => parameterlessConstructor.Invoke(new object[0]);
+            if (parameterlessConstructor != null) return () => parameterlessConstructor.Invoke(Array.Empty<object>());
 
             return null;
         }

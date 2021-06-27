@@ -5,7 +5,7 @@ using ForeverFactory.FluentInterfaces;
 using ForeverFactory.Tests.Factories.CustomizedFactories.ExampleFactories;
 using Xunit;
 
-namespace ForeverFactory.Tests.BehaviorsSelection
+namespace ForeverFactory.Tests.Behaviors
 {
     public class NotFillPropertiesBehaviorTests
     {
