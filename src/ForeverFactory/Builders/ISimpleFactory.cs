@@ -3,7 +3,7 @@ using ForeverFactory.Behaviors;
 
 namespace ForeverFactory.Builders
 {
-    public interface ISimpleFactory<T> : ICustomBuildOne<T>
+    public interface ISimpleFactory<T> : ICustomizeOneBuildOne<T>
         where T : class
     {
         /// <summary>
@@ -25,12 +25,12 @@ namespace ForeverFactory.Builders
         ///     Explicitly state that you are building one instance with some configurations.
         ///     This configuration allows for chaining more objects by chaining with <code>.Plus()</code> and <code>.PlusOne()</code>.
         /// </summary>
-        INavigableBuildOne<T> One();
+        ICustomizeOneBuildOneWithNavigation<T> One();
         
         /// <summary>
         ///     Creates a set of customizable objects
         /// </summary>
         /// <param name="count">The number of objects to be created.</param>
-        ICustomBuildMany<T> Many(int count);
+        ICustomizeManyBuildMany<T> Many(int count);
     }
 }
