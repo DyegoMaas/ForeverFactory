@@ -1,6 +1,6 @@
 ﻿namespace ForeverFactory.Builders
 {
-    public interface ISingleInstanceBuilder<out T>
+    public interface IBuildOne<out T>
     {
         /// <summary>
         ///     Applies all configurations and builds a new object of type "T".

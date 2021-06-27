@@ -38,7 +38,7 @@ namespace ForeverFactory
     ///     A customizable factory of objects of type "T". It can be extended with predefined configurations.
     /// </summary>
     /// <typeparam name="T">The type of objects that this factory will build.</typeparam>
-    public abstract class MagicFactory<T> : ISimpleFactory<T>, ICustomizableSingleInstanceBuilder<T>, INavigatableSingleInstanceBuilder<T>, ICustomizableMultipleInstanceBuilder<T>, ILinkedOneBuilder<T>
+    public abstract class MagicFactory<T> : ISimpleFactory<T>, ICustomBuildOne<T>, INavigableBuildOne<T>, ICustomBuildMany<T>, INavigableBuildMany<T>
         where T : class
     {
         private readonly ObjectFactory<T> _objectFactory = new ObjectFactory<T>();
@@ -73,37 +73,37 @@ namespace ForeverFactory
             return this;
         }
 
-        public ICustomizableSingleInstanceBuilder<T> With<TValue>(Func<T, TValue> setMember)
+        public ICustomBuildOne<T> With<TValue>(Func<T, TValue> setMember)
         {
             AddTransformThatAlwaysApply(setMember);
             return this;
         }
 
-        INavigatableSingleInstanceBuilder<T> INavigatableSingleInstanceBuilder<T>.With<TValue>(Func<T, TValue> setMember)
+        INavigableBuildOne<T> INavigableBuildOne<T>.With<TValue>(Func<T, TValue> setMember)
         {
             AddTransformThatAlwaysApply(setMember);
             return this;
         }
 
-        public INavigatableSingleInstanceBuilder<T> One()
+        public INavigableBuildOne<T> One()
         {
             return this;
         }
 
-        public ICustomizableMultipleInstanceBuilder<T> Many(int count)
+        public ICustomBuildMany<T> Many(int count)
         {
             SetRootNode(count);
             return this;
         }
 
-        public ILinkedOneBuilder<T> PlusOne()
+        public INavigableBuildMany<T> PlusOne()
         {
             var newNode = new GeneratorNode<T>(1, _customConstructor);
             _objectFactory.AddNode(newNode);
             return this;
         }
 
-        public ICustomizableMultipleInstanceBuilder<T> Plus(int count)
+        public ICustomBuildMany<T> Plus(int count)
         {
             var newNode = new GeneratorNode<T>(count, _customConstructor);
             _objectFactory.AddNode(newNode);
@@ -116,31 +116,31 @@ namespace ForeverFactory
             return _objectFactory.Build().First();
         }
 
-        ILinkedOneBuilder<T> ILinkedOneBuilder<T>.With<TValue>(Func<T, TValue> setMember)
+        INavigableBuildMany<T> INavigableBuildMany<T>.With<TValue>(Func<T, TValue> setMember)
         {
             AddTransformThatAlwaysApply(setMember);
             return this;
         }
 
-        ICustomizableMultipleInstanceBuilder<T> ICustomizableMultipleInstanceBuilder<T>.With<TValue>(Func<T, TValue> setMember)
+        ICustomBuildMany<T> ICustomBuildMany<T>.With<TValue>(Func<T, TValue> setMember)
         {
             AddTransformThatAlwaysApply(setMember);
             return this;
         }
 
-        public ICustomizableMultipleInstanceBuilder<T> WithFirst<TValue>(int count, Func<T, TValue> setMember)
+        public ICustomBuildMany<T> WithFirst<TValue>(int count, Func<T, TValue> setMember)
         {
             AddTransformThatAppliesToFirstNInstances(count, setMember);
             return this;
         }
 
-        public ICustomizableMultipleInstanceBuilder<T> WithLast<TValue>(int count, Func<T, TValue> setMember)
+        public ICustomBuildMany<T> WithLast<TValue>(int count, Func<T, TValue> setMember)
         {
             AddTransformThatAppliesToLastNInstances(count, setMember);
             return this;
         }
 
-        IEnumerable<T> IMultipleInstanceBuilder<T>.Build()
+        IEnumerable<T> IBuildMany<T>.Build()
         {
             return _objectFactory.Build();
         }

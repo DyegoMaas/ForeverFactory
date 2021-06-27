@@ -2,7 +2,7 @@
 
 namespace ForeverFactory.Builders
 {
-    public interface IMultipleInstanceBuilder<out T>
+    public interface IBuildMany<out T>
     {
         /// <summary>
         ///     Builds all the objects configured, including all sets created used the "Many" or "Plus" methods.

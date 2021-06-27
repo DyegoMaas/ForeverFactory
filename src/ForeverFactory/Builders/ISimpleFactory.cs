@@ -3,7 +3,7 @@ using ForeverFactory.Behaviors;
 
 namespace ForeverFactory.Builders
 {
-    public interface ISimpleFactory<T> : ISingleInstanceBuilder<T>
+    public interface ISimpleFactory<T> : ICustomBuildOne<T>
         where T : class
     {
         /// <summary>
@@ -22,24 +22,15 @@ namespace ForeverFactory.Builders
         ISimpleFactory<T> WithBehavior(Behavior behavior);
         
         /// <summary>
-        ///     Defines the default value of a property.
-        /// </summary>
-        /// <param name="setMember">Sets the value of a Property.
-        ///     <example>x => x.Name = "Karen"</example>
-        ///     >
-        /// </param>
-        ICustomizableSingleInstanceBuilder<T> With<TValue>(Func<T, TValue> setMember);
-        
-        /// <summary>
         ///     Explicitly state that you are building one instance with some configurations.
         ///     This configuration allows for chaining more objects by chaining with <code>.Plus()</code> and <code>.PlusOne()</code>.
         /// </summary>
-        INavigatableSingleInstanceBuilder<T> One();
+        INavigableBuildOne<T> One();
         
         /// <summary>
         ///     Creates a set of customizable objects
         /// </summary>
         /// <param name="count">The number of objects to be created.</param>
-        ICustomizableMultipleInstanceBuilder<T> Many(int count);
+        ICustomBuildMany<T> Many(int count);
     }
 }
