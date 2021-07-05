@@ -220,3 +220,4 @@ dotnet stryker
 - Allow configuration by rules
 - Allow sequences in numbers properties and things like email, etc
 - Support "smart" behavior, which identifies by convention which type of sequences and rules to apply to every property 
+- Add the concept of "Localization Extensions", which could contain localized versions of the fluent API, translated for other languages, like, portuguese, spanish, etc
