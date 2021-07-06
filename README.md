@@ -216,6 +216,7 @@ dotnet stryker
 
 ## Roadmap
 
+- Allow to configure custom builder per builder (single builder and many builder)
 - Support custom constructor scoped by builder (for now, custom constructors are shared along the linked builders)
 - Allow configuration by rules
 - Allow sequences in numbers properties and things like email, etc
