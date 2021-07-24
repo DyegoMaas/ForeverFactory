@@ -16,10 +16,14 @@
         <PackageIcon>icon_128x128.png</PackageIcon>
         <DebugType>full</DebugType>
         <PackageVersion>1.0.10</PackageVersion>
+
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        
+        <Deterministic>true</Deterministic>
+        <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

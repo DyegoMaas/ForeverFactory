@@ -37,7 +37,7 @@ jobs:
         run: dotnet test -c Release -r nuget-package --no-build -l trx --verbosity=normal
 
       - name: Pack
-        run: dotnet pack src/ForeverFactory/ForeverFactory.csproj -c Release --no-build /p:ContinuousIntegrationBuild=true -o nuget-package
+        run: dotnet pack src/ForeverFactory/ForeverFactory.csproj -c Release --no-build -o nuget-package
 
       - name: Publish to Nuget.org
         run: dotnet nuget push nuget-package/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
