@@ -14,12 +14,12 @@
         <MinVerTagPrefix>v</MinVerTagPrefix>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <PackageIcon>icon_128x128.png</PackageIcon>
+        <DebugType>full</DebugType>
+        <PackageVersion>1.0.10</PackageVersion>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-        <DebugType>full</DebugType>
-        <PackageVersion>1.0.10</PackageVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
