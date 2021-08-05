@@ -16,7 +16,7 @@ With Forever Factory, building a new object can be as simple as `MagicFactory.Fo
 
 You may install ForeverFactory with NuGet:
 
-`Install-Package ForeverFactory`
+`Install-Package ForeverFactory` Teste
 
 Or via the .NET Core command line interface:
 
