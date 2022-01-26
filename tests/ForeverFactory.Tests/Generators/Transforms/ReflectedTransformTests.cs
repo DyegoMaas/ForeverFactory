@@ -10,12 +10,12 @@ namespace ForeverFactory.Tests.Generators.Transforms
         [Fact]
         public void It_should_apply_the_transform()
         {
-            var funcTransform = new ReflectedFuncTransform<Person>(x =>
+            var funcTransform = new ReflectedFuncTransform<Person>((person, index) =>
             {
-                x.FirstName = "Maria";
-                x.LastName = "Valentina";
-                x.Age = 10;
-                return x;
+                person.FirstName = "Maria";
+                person.LastName = "Valentina";
+                person.Age = 10;
+                return person;
             });
             var person = new Person();
 

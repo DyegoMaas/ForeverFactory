@@ -2,7 +2,7 @@
 {
     internal interface ITranformFactory
     {
-        Transform<T> GetTransformers<T>() 
+        Transform<T> GetTransform<T>() 
             where T : class;
     }
 }

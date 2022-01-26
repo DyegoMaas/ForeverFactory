@@ -6,10 +6,10 @@ namespace ForeverFactory.Generators.Transforms.Factories
 {
     internal class FillWithEmptyStringTransformFactory : ITranformFactory
     {
-        public Transform<T> GetTransformers<T>()
+        public Transform<T> GetTransform<T>()
             where T : class
         {
-            var setMember = new Func<T, object>(instance =>
+            var setMember = new Func<T, int, object>((instance, index) =>
             {
                 FillPropertiesRecursively(instance, typeof(T));
                 return instance;

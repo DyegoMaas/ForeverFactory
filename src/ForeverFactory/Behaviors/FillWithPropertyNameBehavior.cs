@@ -9,7 +9,7 @@ namespace ForeverFactory.Behaviors
     {
         public override IEnumerable<Transform<T>> GetTransforms<T>()
         {
-            yield return new FillWithPropertyNameTransformFactory().GetTransformers<T>();
+            yield return new FillWithPropertyNameTransformFactory().GetTransform<T>();
         }
     }
 }

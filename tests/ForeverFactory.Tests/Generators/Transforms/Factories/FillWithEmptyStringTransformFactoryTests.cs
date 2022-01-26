@@ -9,7 +9,7 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
         [Fact]
         public void It_should_build_a_function_that_recursively_sets_all_properties_to_an_empty_value()
         {
-            var transform = new FillWithEmptyStringTransformFactory().GetTransformers<ClassA>();
+            var transform = new FillWithEmptyStringTransformFactory().GetTransform<ClassA>();
 
             var instanceOfA = new ClassA();
             transform.ApplyTo(instanceOfA);
