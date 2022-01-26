@@ -4,6 +4,7 @@ using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using FizzWare.NBuilder;
 using ForeverFactory;
+using ForeverFactory.Behaviors;
 
 var classAs = Builder<ClassA>.CreateListOfSize(10).Build();
 
@@ -14,7 +15,6 @@ public class ClassA
     public string PropertyX { get; set; }
     public int intValue { get; set; }
     public float FloatValue { get; set; }
-    public ClassB B { get; set; }
 }
 
 public class ClassB
@@ -55,6 +55,20 @@ public class BuildersBenchmark
     public void BuildThousandObjectsNBuilder()
     {
         Builder<Person>.CreateListOfSize(1000).All().With(x => x.Name = PersonName).Build();
+    }
+    
+    [Benchmark]
+    public void BuildThousandObjectsForeverFactoryFillingSequentialValues()
+    {
+        MagicFactory.For<Person>()
+            .WithBehavior(new FillWithSequentialValuesBehavior())
+            .Many(1000).Build().ToList();
+    }
+    
+    [Benchmark]
+    public void BuildThousandObjectsNBuilderFillingSequentialValues()
+    {
+        Builder<Person>.CreateListOfSize(1000).All().Build();
     }
 }
 
