@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 
 namespace ForeverFactory.Generators.Transforms.Factories
 {
@@ -10,9 +9,9 @@ namespace ForeverFactory.Generators.Transforms.Factories
         {
         }
 
-        protected override Func<object> GetBuildFunctionForSpecializedProperty(PropertyInfo propertyInfo, int index)
+        protected override Func<object> GetBuildFunctionForSpecializedProperty(TargetInfo targetInfo, int index)
         {
-            if (propertyInfo.PropertyType == typeof(string)) 
+            if (targetInfo.TargetType == typeof(string)) 
                 return () => string.Empty;
 
             return null;

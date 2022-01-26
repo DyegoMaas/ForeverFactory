@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 
 namespace ForeverFactory.Generators.Transforms.Factories
 {
@@ -10,14 +9,14 @@ namespace ForeverFactory.Generators.Transforms.Factories
         {
         }
 
-        protected override Func<object> GetBuildFunctionForSpecializedProperty(PropertyInfo propertyInfo, int index)
+        protected override Func<object> GetBuildFunctionForSpecializedProperty(TargetInfo targetInfo, int index)
         {
             var sequentialNumber = index + 1;
             
-            if (propertyInfo.PropertyType == typeof(string)) 
-                return () => propertyInfo.Name + sequentialNumber;
+            if (targetInfo.TargetType == typeof(string)) 
+                return () => targetInfo.Name + sequentialNumber;
             
-            if (propertyInfo.PropertyType == typeof(byte))
+            if (targetInfo.TargetType == typeof(byte))
                 return () =>
                 {
                     if (sequentialNumber > byte.MaxValue)
@@ -25,7 +24,7 @@ namespace ForeverFactory.Generators.Transforms.Factories
                     return (byte)sequentialNumber;
                 };
             
-            if (propertyInfo.PropertyType == typeof(short))
+            if (targetInfo.TargetType == typeof(short))
                 return () =>
                 {
                     if (sequentialNumber > short.MaxValue)
@@ -33,7 +32,7 @@ namespace ForeverFactory.Generators.Transforms.Factories
                     return (short)sequentialNumber;
                 };
             
-            if (propertyInfo.PropertyType == typeof(ushort))
+            if (targetInfo.TargetType == typeof(ushort))
                 return () =>
                 {
                     if (sequentialNumber > ushort.MaxValue)
@@ -41,25 +40,25 @@ namespace ForeverFactory.Generators.Transforms.Factories
                     return (ushort)sequentialNumber;
                 };
             
-            if (propertyInfo.PropertyType == typeof(int))
+            if (targetInfo.TargetType == typeof(int))
                 return () => sequentialNumber;
             
-            if (propertyInfo.PropertyType == typeof(uint))
+            if (targetInfo.TargetType == typeof(uint))
                 return () => (uint)sequentialNumber;
             
-            if (propertyInfo.PropertyType == typeof(long))
+            if (targetInfo.TargetType == typeof(long))
                 return () => sequentialNumber;
             
-            if (propertyInfo.PropertyType == typeof(ulong))
+            if (targetInfo.TargetType == typeof(ulong))
                 return () => (ulong)sequentialNumber;
             
-            if (propertyInfo.PropertyType == typeof(float))
+            if (targetInfo.TargetType == typeof(float))
                 return () => sequentialNumber;
             
-            if (propertyInfo.PropertyType == typeof(double))
+            if (targetInfo.TargetType == typeof(double))
                 return () => sequentialNumber;
             
-            if (propertyInfo.PropertyType == typeof(decimal))
+            if (targetInfo.TargetType == typeof(decimal))
                 return () => Convert.ToDecimal(sequentialNumber);
 
             return null;
