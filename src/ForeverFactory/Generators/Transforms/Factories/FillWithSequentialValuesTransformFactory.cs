@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace ForeverFactory.Generators.Transforms.Factories
 {
-    internal class FillWithPropertyNameTransformFactory : ITranformFactory
+    internal class FillWithSequentialValuesTransformFactory : ITranformFactory
     {
         public Transform<T> GetTransform<T>()
             where T : class

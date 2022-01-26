@@ -12,7 +12,7 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
         [InlineData(2, 3)]
         public void It_should_fill_properties_with_sequential_values(int index, int sequentialNumberExpected)
         {
-            var transform = new FillWithPropertyNameTransformFactory().GetTransform<ClassWithManyDifferentTypesOfProperties>();
+            var transform = new FillWithSequentialValuesTransformFactory().GetTransform<ClassWithManyDifferentTypesOfProperties>();
 
             var instance = new ClassWithManyDifferentTypesOfProperties();
             transform.ApplyTo(instance, index);
@@ -48,7 +48,7 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
         [Fact]
         public void Bytes_should_reset_to_1_when_overflowing()
         {
-            var transform = new FillWithPropertyNameTransformFactory().GetTransform<ClassWithManyDifferentTypesOfProperties>();
+            var transform = new FillWithSequentialValuesTransformFactory().GetTransform<ClassWithManyDifferentTypesOfProperties>();
 
             var instance = new ClassWithManyDifferentTypesOfProperties();
             
@@ -68,7 +68,7 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
         [Fact]
         public void Short_should_reset_to_1_when_overflowing()
         {
-            var transform = new FillWithPropertyNameTransformFactory().GetTransform<ClassWithManyDifferentTypesOfProperties>();
+            var transform = new FillWithSequentialValuesTransformFactory().GetTransform<ClassWithManyDifferentTypesOfProperties>();
 
             var instance = new ClassWithManyDifferentTypesOfProperties();
             
@@ -88,7 +88,7 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
         [Fact]
         public void UShort_should_reset_to_1_when_overflowing()
         {
-            var transform = new FillWithPropertyNameTransformFactory().GetTransform<ClassWithManyDifferentTypesOfProperties>();
+            var transform = new FillWithSequentialValuesTransformFactory().GetTransform<ClassWithManyDifferentTypesOfProperties>();
 
             var instance = new ClassWithManyDifferentTypesOfProperties();
             
@@ -111,7 +111,7 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
         [InlineData(2, 3)]
         public void It_should_build_a_function_that_recursively_sets_all_properties_to_the_name_of_the_property(int index, int sequentialNumberExpected)
         {
-            var transform = new FillWithPropertyNameTransformFactory().GetTransform<ClassA>();
+            var transform = new FillWithSequentialValuesTransformFactory().GetTransform<ClassA>();
 
             var instanceOfA = new ClassA();
             transform.ApplyTo(instanceOfA, index);

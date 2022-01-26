@@ -13,7 +13,7 @@ namespace ForeverFactory.Tests.Behaviors
             new List<object[]>
             {
                 new object[] {new CustomerFactoryWithPropertyNameFillingBehavior()},
-                new object[] {MagicFactory.For<Customer>().WithBehavior(new FillWithProperyNameBehavior())}
+                new object[] {MagicFactory.For<Customer>().WithBehavior(new FillWithSequentialValuesBehavior())}
             };
 
         [Theory]
@@ -64,7 +64,7 @@ namespace ForeverFactory.Tests.Behaviors
         {
             protected override void Customize(ICustomizeFactoryOptions<Customer> customization)
             {
-                customization.SetDefaultBehavior(new FillWithProperyNameBehavior());
+                customization.SetDefaultBehavior(new FillWithSequentialValuesBehavior());
             }
         }
     }

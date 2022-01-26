@@ -5,11 +5,11 @@ using ForeverFactory.Generators.Transforms.Factories;
 
 namespace ForeverFactory.Behaviors
 {
-    internal class FillWithProperyNameBehavior : Behavior
+    internal class FillWithSequentialValuesBehavior : Behavior
     {
         public override IEnumerable<Transform<T>> GetTransforms<T>()
         {
-            yield return new FillWithPropertyNameTransformFactory().GetTransform<T>();
+            yield return new FillWithSequentialValuesTransformFactory().GetTransform<T>();
         }
     }
 }
