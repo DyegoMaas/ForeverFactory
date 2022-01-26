@@ -6,13 +6,20 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
 {
     public class FillWithPropertyNameTransformFactoryTests
     {
+        private readonly FillWithSequentialValuesTransformFactory _factory;
+
+        public FillWithPropertyNameTransformFactoryTests()
+        {
+            _factory = new FillWithSequentialValuesTransformFactory();
+        }
+
         [Theory]
         [InlineData(0, 1)]
         [InlineData(1, 2)]
         [InlineData(2, 3)]
         public void It_should_fill_properties_with_sequential_values(int index, int sequentialNumberExpected)
         {
-            var transform = new FillWithSequentialValuesTransformFactory().GetTransform<ClassWithManyDifferentTypesOfProperties>();
+            var transform = _factory.GetTransform<ClassWithManyDifferentTypesOfProperties>();
 
             var instance = new ClassWithManyDifferentTypesOfProperties();
             transform.ApplyTo(instance, index);
@@ -48,7 +55,7 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
         [Fact]
         public void Bytes_should_reset_to_1_when_overflowing()
         {
-            var transform = new FillWithSequentialValuesTransformFactory().GetTransform<ClassWithManyDifferentTypesOfProperties>();
+            var transform = _factory.GetTransform<ClassWithManyDifferentTypesOfProperties>();
             var instance = new ClassWithManyDifferentTypesOfProperties();
 
             transform.ApplyTo(instance, index: byte.MaxValue - 1);
@@ -67,7 +74,7 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
         [Fact]
         public void Short_should_reset_to_1_when_overflowing()
         {
-            var transform = new FillWithSequentialValuesTransformFactory().GetTransform<ClassWithManyDifferentTypesOfProperties>();
+            var transform = _factory.GetTransform<ClassWithManyDifferentTypesOfProperties>();
             var instance = new ClassWithManyDifferentTypesOfProperties();
 
             transform.ApplyTo(instance, index: short.MaxValue - 1);
@@ -86,7 +93,7 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
         [Fact]
         public void UShort_should_reset_to_1_when_overflowing()
         {
-            var transform = new FillWithSequentialValuesTransformFactory().GetTransform<ClassWithManyDifferentTypesOfProperties>();
+            var transform = _factory.GetTransform<ClassWithManyDifferentTypesOfProperties>();
             var instance = new ClassWithManyDifferentTypesOfProperties();
             
             transform.ApplyTo(instance, index: ushort.MaxValue - 1);
@@ -108,7 +115,7 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
         [InlineData(2, 3)]
         public void It_should_build_a_function_that_recursively_sets_all_properties_to_the_name_of_the_property(int index, int sequentialNumberExpected)
         {
-            var transform = new FillWithSequentialValuesTransformFactory().GetTransform<ClassA>();
+            var transform = _factory.GetTransform<ClassA>();
 
             var instanceOfA = new ClassA();
             transform.ApplyTo(instanceOfA, index);
@@ -139,6 +146,23 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
         private class ClassC
         {
             public string PropertyZ { get; set; }
+        }
+
+        [Fact]
+        public void Should_disable_recursive_fill()
+        {
+            var factoryWithRecursionDisabled = new FillWithSequentialValuesTransformFactory(
+                new RecursiveTransformFactoryOptions {
+                    EnableRecursiveInstantiation = false
+                }
+            );
+
+            var transform = factoryWithRecursionDisabled.GetTransform<ClassA>();
+            var instance = new ClassA();
+            transform.ApplyTo(instance);
+
+            instance.PropertyX.Should().Be("PropertyX1");
+            instance.B.Should().Be(null, "should not recursively fill when it is disable via options");
         }
     }
 }

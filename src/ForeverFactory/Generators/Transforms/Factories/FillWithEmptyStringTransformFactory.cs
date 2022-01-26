@@ -5,7 +5,12 @@ namespace ForeverFactory.Generators.Transforms.Factories
 {
     internal class FillWithEmptyStringTransformFactory : BaseRecursiveTransformFactory
     {
-        protected override Func<object> GetBuildFunctionForProperty(PropertyInfo propertyInfo, int index)
+        public FillWithEmptyStringTransformFactory(RecursiveTransformFactoryOptions options = null) 
+            : base(options)
+        {
+        }
+
+        protected override Func<object> GetBuildFunctionForSpecializedProperty(PropertyInfo propertyInfo, int index)
         {
             if (propertyInfo.PropertyType == typeof(string)) 
                 return () => string.Empty;

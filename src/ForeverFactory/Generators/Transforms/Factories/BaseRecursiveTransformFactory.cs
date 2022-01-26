@@ -6,6 +6,15 @@ namespace ForeverFactory.Generators.Transforms.Factories
 {
     internal abstract class BaseRecursiveTransformFactory : ITranformFactory
     {
+        private readonly RecursiveTransformFactoryOptions _options;
+
+        protected BaseRecursiveTransformFactory(RecursiveTransformFactoryOptions options = null)
+        {
+            _options = options ?? new RecursiveTransformFactoryOptions();
+            // _options = new RecursiveTransformFactoryOptions();
+            // options?.Invoke(_options);
+        }
+
         public Transform<T> GetTransform<T>()
             where T : class
         {
@@ -29,16 +38,19 @@ namespace ForeverFactory.Generators.Transforms.Factories
                 var propertyValue = buildFunction.Invoke();
                 propertyInfo.SetValue(instance, propertyValue);
 
-                if (propertyInfo.PropertyType != typeof(string))
+                if (_options.EnableRecursiveInstantiation && propertyInfo.PropertyType != typeof(string))
                     FillPropertiesRecursively(propertyValue, propertyInfo.PropertyType, index);
             }
         }
 
         private Func<object> GetBuildFunction(PropertyInfo propertyInfo, int index)
         {
-            var buildFunction = GetBuildFunctionForProperty(propertyInfo, index);
+            var buildFunction = GetBuildFunctionForSpecializedProperty(propertyInfo, index);
             if (buildFunction != null)
                 return buildFunction;
+
+            if (_options.EnableRecursiveInstantiation is false)
+                return null;
 
             var parameterlessConstructor = propertyInfo.PropertyType
                 .GetConstructors()
@@ -49,6 +61,6 @@ namespace ForeverFactory.Generators.Transforms.Factories
             return null;
         }
 
-        protected abstract Func<object> GetBuildFunctionForProperty(PropertyInfo propertyInfo, int index);
+        protected abstract Func<object> GetBuildFunctionForSpecializedProperty(PropertyInfo propertyInfo, int index);
     }
 }

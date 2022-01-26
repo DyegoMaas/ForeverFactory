@@ -5,7 +5,12 @@ namespace ForeverFactory.Generators.Transforms.Factories
 {
     internal class FillWithSequentialValuesTransformFactory : BaseRecursiveTransformFactory
     {
-        protected override Func<object> GetBuildFunctionForProperty(PropertyInfo propertyInfo, int index)
+        public FillWithSequentialValuesTransformFactory(RecursiveTransformFactoryOptions options = null) 
+            : base(options)
+        {
+        }
+
+        protected override Func<object> GetBuildFunctionForSpecializedProperty(PropertyInfo propertyInfo, int index)
         {
             var sequentialNumber = index + 1;
             

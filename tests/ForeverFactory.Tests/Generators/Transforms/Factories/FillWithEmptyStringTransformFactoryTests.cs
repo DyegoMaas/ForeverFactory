@@ -41,5 +41,22 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
         {
             public string PropertyZ { get; set; }
         }
+        
+        [Fact]
+        public void Should_disable_recursive_fill()
+        {
+            var factoryWithRecursionDisabled = new FillWithEmptyStringTransformFactory(
+                new RecursiveTransformFactoryOptions {
+                    EnableRecursiveInstantiation = false
+                }
+            );
+
+            var transform = factoryWithRecursionDisabled.GetTransform<ClassA>();
+            var instance = new ClassA();
+            transform.ApplyTo(instance);
+
+            instance.PropertyX.Should().Be(string.Empty);
+            instance.B.Should().Be(null, "should not recursively fill when it is disable via options");
+        }
     }
 }
