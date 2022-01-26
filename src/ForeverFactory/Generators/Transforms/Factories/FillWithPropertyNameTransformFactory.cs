@@ -29,7 +29,10 @@ namespace ForeverFactory.Generators.Transforms.Factories
                 var propertyValue = buildFunction.Invoke();
                 propertyInfo.SetValue(instance, propertyValue);
 
-                FillPropertiesRecursively(propertyValue, propertyInfo.PropertyType, index);
+                if (propertyInfo.PropertyType != typeof(string))
+                {
+                    FillPropertiesRecursively(propertyValue, propertyInfo.PropertyType, index);
+                }
             }
         }
 
@@ -38,7 +41,41 @@ namespace ForeverFactory.Generators.Transforms.Factories
             var sequentialNumber = index + 1;
             if (propertyInfo.PropertyType == typeof(string)) 
                 return () => propertyInfo.Name + sequentialNumber;
-            // TODO set numerical types
+            if (propertyInfo.PropertyType == typeof(byte))
+                return () =>
+                {
+                    if (sequentialNumber > byte.MaxValue)
+                        return (byte)(sequentialNumber % byte.MaxValue);
+                    return (byte)sequentialNumber;
+                };
+            if (propertyInfo.PropertyType == typeof(short))
+                return () =>
+                {
+                    if (sequentialNumber > short.MaxValue)
+                        return (short)(sequentialNumber % short.MaxValue);
+                    return (short)sequentialNumber;
+                };
+            if (propertyInfo.PropertyType == typeof(ushort))
+                return () =>
+                {
+                    if (sequentialNumber > ushort.MaxValue)
+                        return (ushort)(sequentialNumber % ushort.MaxValue);
+                    return (ushort)sequentialNumber;
+                };
+            if (propertyInfo.PropertyType == typeof(int))
+                return () => sequentialNumber;
+            if (propertyInfo.PropertyType == typeof(uint))
+                return () => (uint)sequentialNumber;
+            if (propertyInfo.PropertyType == typeof(long))
+                return () => sequentialNumber;
+            if (propertyInfo.PropertyType == typeof(ulong))
+                return () => (ulong)sequentialNumber;
+            if (propertyInfo.PropertyType == typeof(float))
+                return () => sequentialNumber;
+            if (propertyInfo.PropertyType == typeof(double))
+                return () => sequentialNumber;
+            if (propertyInfo.PropertyType == typeof(decimal))
+                return () => Convert.ToDecimal(sequentialNumber);
 
             var parameterlessConstructor = propertyInfo.PropertyType
                 .GetConstructors()
