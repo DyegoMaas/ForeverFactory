@@ -1,32 +1,13 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using System.Linq;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using FizzWare.NBuilder;
 using ForeverFactory;
 using ForeverFactory.Behaviors;
 
-var classAs = Builder<ClassA>.CreateListOfSize(10).Build();
-
 var summary = BenchmarkRunner.Run(typeof(BuildersBenchmark));
-
-public class ClassA
-{
-    public string PropertyX { get; set; }
-    public int intValue { get; set; }
-    public float FloatValue { get; set; }
-}
-
-public class ClassB
-{
-    public string PropertyY { get; set; }
-    public ClassC C { get; set; }
-}
-        
-public class ClassC
-{
-    public string PropertyZ { get; set; }
-}
 
 [MemoryDiagnoser]
 public class BuildersBenchmark
