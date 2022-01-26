@@ -191,6 +191,21 @@ public class Address
 }
 ```
 
+## How fast is it?
+
+The table below shows test done with Benchmark Dotnet tool comparing equivalent scenarios in both `Forever Factory` and `NBuilder`:
+
+```csv
+|                               Method |           Mean |        Error |       StdDev |   Gen 0 |   Gen 1 | Allocated |
+|------------------------------------- |---------------:|-------------:|-------------:|--------:|--------:|----------:|
+|      BuildSingleObjectForeverFactory |       683.6 ns |      7.34 ns |      6.86 ns |  0.1373 |       - |   1,152 B |
+|            BuildSingleObjectNBuilder |     1,939.7 ns |     20.81 ns |     19.47 ns |  0.0935 |       - |     784 B |
+|   BuildThousandObjectsForeverFactory |   243,524.0 ns |  3,502.33 ns |  2,924.61 ns | 53.7109 |  5.8594 | 449,403 B |
+|         BuildThousandObjectsNBuilder | 1,555,241.7 ns | 17,075.19 ns | 14,258.56 ns | 76.1719 | 15.6250 | 653,402 B |
+```
+
+The code to the tests is found [here](/tests/Benchmarks/Program.cs).
+
 ## How to contribute
 
 You can help this project in many ways. Here are some ideas:
