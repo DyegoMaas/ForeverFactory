@@ -29,13 +29,24 @@ namespace ForeverFactory.Tests.Behaviors
         
         [Theory]
         [MemberData(nameof(PersonFactoriesWithFillPropertiesWithEmptyValuesBehavior))]
-        public void It_should_fill_all_properties_with_property_names_with_sequential_numbers(ISimpleFactory<Customer> factory)
+        public void It_should_fill_all_properties_with_property_names_and_sequential_numbers(ISimpleFactory<Customer> factory)
         {
             var customer = factory.Many(3).Build().ToArray();
 
             customer[0].Name.Should().Be("Name1");
             customer[1].Name.Should().Be("Name2");
             customer[2].Name.Should().Be("Name3");
+        }
+        
+        [Theory]
+        [MemberData(nameof(PersonFactoriesWithFillPropertiesWithEmptyValuesBehavior))]
+        public void It_should_fill_all_properties_recursively_with_property_names_and_sequential_numbers(ISimpleFactory<Customer> factory)
+        {
+            var customer = factory.Many(3).Build().ToArray();
+
+            customer[0].Address.ZipCode.Should().Be("ZipCode1");
+            customer[1].Address.ZipCode.Should().Be("ZipCode2");
+            customer[2].Address.ZipCode.Should().Be("ZipCode3");
         }
 
         public class Customer

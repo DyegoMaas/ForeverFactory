@@ -29,14 +29,15 @@ namespace ForeverFactory.Generators.Transforms.Factories
                 var propertyValue = buildFunction.Invoke();
                 propertyInfo.SetValue(instance, propertyValue);
 
-                FillPropertiesRecursively(propertyValue, propertyInfo.PropertyType, index: 0); // TODO test recursive behavior
+                FillPropertiesRecursively(propertyValue, propertyInfo.PropertyType, index);
             }
         }
 
         private static Func<object> GetBuildFunction(PropertyInfo propertyInfo, int index)
         {
+            var sequentialNumber = index + 1;
             if (propertyInfo.PropertyType == typeof(string)) 
-                return () => propertyInfo.Name + (index + 1);
+                return () => propertyInfo.Name + sequentialNumber;
             // TODO set numerical types
 
             var parameterlessConstructor = propertyInfo.PropertyType
