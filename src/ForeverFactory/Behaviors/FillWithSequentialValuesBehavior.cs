@@ -10,12 +10,14 @@ namespace ForeverFactory.Behaviors
     /// Nested objects will also be recursively initialized.  
     /// </summary>
     /// <example>
+    /// <![CDATA[
     /// var persons = MagicFactory.For<ClassWithInteger>().Many(100).Build();
     /// person[0].Name == "Name1"
     /// person[0].Age == "1"
     /// person[1].Name == "Name2"
     /// person[1].Age == "2"
     /// ...
+    /// ]]> 
     /// </example>
     public class FillWithSequentialValuesBehavior : Behavior
     {
