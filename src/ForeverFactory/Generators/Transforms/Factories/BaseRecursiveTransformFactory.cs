@@ -36,7 +36,7 @@ namespace ForeverFactory.Generators.Transforms.Factories
                 var propertyValue = buildFunction.Invoke();
                 propertyInfo.SetValue(instance, propertyValue);
 
-                if (_options.EnableRecursiveInstantiation && propertyInfo.PropertyType != typeof(string))
+                if (CanApplyRecursion(propertyInfo))
                     FillPropertiesRecursively(propertyValue, propertyInfo.PropertyType, index);
             }
         }
@@ -60,5 +60,10 @@ namespace ForeverFactory.Generators.Transforms.Factories
         }
 
         protected abstract Func<object> GetBuildFunctionForSpecializedProperty(PropertyInfo propertyInfo, int index);
+
+        private bool CanApplyRecursion(PropertyInfo propertyInfo)
+        {
+            return _options.EnableRecursiveInstantiation && propertyInfo.PropertyType != typeof(string);
+        }
     }
 }
