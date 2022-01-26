@@ -58,7 +58,7 @@ public class BuildersBenchmark
     }
     
     [Benchmark]
-    public void BuildThousandObjectsForeverFactoryFillingSequentialValues()
+    public void BuildThousandObjectsFillingSequentialValuesForeverFactory()
     {
         MagicFactory.For<Person>()
             .WithBehavior(new FillWithSequentialValuesBehavior())
@@ -66,7 +66,7 @@ public class BuildersBenchmark
     }
     
     [Benchmark]
-    public void BuildThousandObjectsNBuilderFillingSequentialValues()
+    public void BuildThousandObjectsFillingSequentialValuesNBuilder()
     {
         Builder<Person>.CreateListOfSize(1000).All().Build();
     }
