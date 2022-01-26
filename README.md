@@ -233,7 +233,7 @@ The table below shows test done with Benchmark Dotnet tool comparing equivalent 
 |       BuildThousandObjectsFillingSequentialValuesNBuilder | 1,017,233.2 ns | 8,782.64 ns | 7,785.58 ns | 70.3125 | 13.6719 | 589,285 B |
 ```
 
-The code to the tests is found [here](/tests/Benchmarks/Program.cs).
+The code to the tests is found [here](tests/Benchmarks/Program.cs).
 
 ## How to contribute
 
