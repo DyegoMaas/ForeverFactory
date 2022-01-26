@@ -49,9 +49,8 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
         public void Bytes_should_reset_to_1_when_overflowing()
         {
             var transform = new FillWithSequentialValuesTransformFactory().GetTransform<ClassWithManyDifferentTypesOfProperties>();
-
             var instance = new ClassWithManyDifferentTypesOfProperties();
-            
+
             transform.ApplyTo(instance, index: byte.MaxValue - 1);
             instance.ByteProperty.Should().Be(byte.MaxValue);
             
@@ -69,9 +68,8 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
         public void Short_should_reset_to_1_when_overflowing()
         {
             var transform = new FillWithSequentialValuesTransformFactory().GetTransform<ClassWithManyDifferentTypesOfProperties>();
-
             var instance = new ClassWithManyDifferentTypesOfProperties();
-            
+
             transform.ApplyTo(instance, index: short.MaxValue - 1);
             instance.ShortProperty.Should().Be(short.MaxValue);
             
@@ -89,7 +87,6 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
         public void UShort_should_reset_to_1_when_overflowing()
         {
             var transform = new FillWithSequentialValuesTransformFactory().GetTransform<ClassWithManyDifferentTypesOfProperties>();
-
             var instance = new ClassWithManyDifferentTypesOfProperties();
             
             transform.ApplyTo(instance, index: ushort.MaxValue - 1);
