@@ -174,23 +174,6 @@ private class ProductFactory : MagicFactory<Product>
 
 By default, it will not fill any properties, and it is up to you to fill any properties.
 
-#### FillWithEmptyValuesBehavior
-
-With this behavior, ForeverFactory will recursively initialize every property it can with empty values. For example, the following class structure will resolve as shown below?
-
-```csharp
-public class Customer
-{
-    public string Name { get; set; } // will be set to ""
-    public Address Address { get; set; } // will be set to 'new Address()' 
-}
-
-public class Address
-{
-    public string ZipCode { get; set; } // will be set to ""
-}
-```
-
 #### FillWithSequentialValuesBehavior
 
 With this behavior, ForeverFactory will recursively initialize every property it can with sequential values. This is similar to the default behavior of NBuilder:
@@ -217,6 +200,22 @@ public class Address
 }
 ```
 
+#### FillWithEmptyValuesBehavior
+
+With this behavior, ForeverFactory will recursively initialize every property it can with empty values. For example, the following class structure will resolve as shown below?
+
+```csharp
+public class Customer
+{
+    public string Name { get; set; } // will be set to ""
+    public Address Address { get; set; } // will be set to 'new Address()' 
+}
+
+public class Address
+{
+    public string ZipCode { get; set; } // will be set to ""
+}
+```
 
 ## How fast is it?
 
