@@ -21,6 +21,8 @@ ProjectSection(SolutionItems) = preProject
 	.github\workflows\release.yaml = .github\workflows\release.yaml
 EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmarks", "tests\Benchmarks\Benchmarks.csproj", "{60E3AE8B-04FD-41D8-82A5-CD9179CD02F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,10 +37,15 @@ Global
 		{021F2B8B-F7D5-490E-8476-F335A9DA04E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{021F2B8B-F7D5-490E-8476-F335A9DA04E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{021F2B8B-F7D5-490E-8476-F335A9DA04E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60E3AE8B-04FD-41D8-82A5-CD9179CD02F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60E3AE8B-04FD-41D8-82A5-CD9179CD02F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60E3AE8B-04FD-41D8-82A5-CD9179CD02F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60E3AE8B-04FD-41D8-82A5-CD9179CD02F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{021F2B8B-F7D5-490E-8476-F335A9DA04E5} = {55B70AE4-3D76-4C93-8C34-3F5B12DEF747}
 		{60DE81F1-F665-4930-A9A3-2FE61A35179D} = {FADD649E-F407-4358-A7CE-877FEE970BF1}
 		{A07DA249-B4CB-4112-9A3E-BB9FB5879D68} = {A5DED662-E03F-4B5C-8474-8EFABC2A9854}
+		{60E3AE8B-04FD-41D8-82A5-CD9179CD02F9} = {55B70AE4-3D76-4C93-8C34-3F5B12DEF747}
 	EndGlobalSection
 EndGlobal
