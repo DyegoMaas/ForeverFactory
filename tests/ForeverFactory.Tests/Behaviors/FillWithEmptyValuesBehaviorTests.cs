@@ -8,7 +8,7 @@ namespace ForeverFactory.Tests.Behaviors
 {
     public class FillWithEmptyValuesBehaviorTests
     {
-        public static IEnumerable<object[]> PersonFactoriesWithFillPropertiesWithEmptyValuesBehavior =>
+        public static IEnumerable<object[]> FactoriesWithDefaultBehavior =>
             new List<object[]>
             {
                 new object[] {new CustomerFactoryWithEmptyFillingBehavior()},
@@ -16,7 +16,7 @@ namespace ForeverFactory.Tests.Behaviors
             };
 
         [Theory]
-        [MemberData(nameof(PersonFactoriesWithFillPropertiesWithEmptyValuesBehavior))]
+        [MemberData(nameof(FactoriesWithDefaultBehavior))]
         public void It_should_fill_all_properties_with_empty_values(ISimpleFactory<Customer> factory)
         {
             var customer = factory.Build();
@@ -24,6 +24,26 @@ namespace ForeverFactory.Tests.Behaviors
             customer.Name.Should().Be(string.Empty);
             customer.Address.Should().NotBeNull();
             customer.Address.ZipCode.Should().Be(string.Empty);
+        }
+        
+        public static IEnumerable<object[]> FactoriesWithRecursionDisabled =>
+            new List<object[]>
+            {
+                new object[] {new CustomerFactoryWithEmptyFillingBehaviorWithRecursionDisabled()},
+                new object[] {
+                    MagicFactory.For<Customer>()
+                        .WithBehavior(new FillWithEmptyValuesBehavior(options => options.Recursive = false))
+                }
+            };
+        
+        [Theory]
+        [MemberData(nameof(FactoriesWithRecursionDisabled))]
+        public void It_should_fill_all_properties_with_empty_values_without_recursion(ISimpleFactory<Customer> factory)
+        {
+            var customer = factory.Build();
+
+            customer.Name.Should().Be(string.Empty);
+            customer.Address.Should().BeNull();
         }
 
         public class Customer
@@ -42,6 +62,17 @@ namespace ForeverFactory.Tests.Behaviors
             protected override void Customize(ICustomizeFactoryOptions<Customer> customization)
             {
                 customization.SetDefaultBehavior(new FillWithEmptyValuesBehavior());
+            }
+        }
+        
+        private class CustomerFactoryWithEmptyFillingBehaviorWithRecursionDisabled : MagicFactory<Customer>
+        {
+            protected override void Customize(ICustomizeFactoryOptions<Customer> customization)
+            {
+                customization.SetDefaultBehavior(new FillWithEmptyValuesBehavior(options =>
+                {
+                    options.Recursive = false;
+                }));
             }
         }
     }

@@ -8,8 +8,11 @@
 
     <ItemGroup>
       <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
-      <PackageReference Include="ForeverFactory" Version="4.0.2" />
       <PackageReference Include="NBuilder" Version="6.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\ForeverFactory\ForeverFactory.csproj" />
     </ItemGroup>
 
 </Project>

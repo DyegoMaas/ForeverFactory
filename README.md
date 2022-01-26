@@ -174,9 +174,40 @@ private class ProductFactory : MagicFactory<Product>
 
 By default, it will not fill any properties, and it is up to you to fill any properties.
 
+#### FillWithSequentialValuesBehavior
+
+With this behavior, ForeverFactory will recursively initialize every property it can with sequential values. This is similar to the default behavior of NBuilder:
+
+```csharp
+var people = MagicFactory
+    .For<ClassWithInteger>()
+    .WithBehavior(new FillWithSequentialValuesBehavior())
+    .Many(100)
+    .Build();
+   
+people[0].Name.Should().Be("Name1");
+people[0].Age.Should().Be(1);
+people[0].Address.ZipCode.Should().Be("ZipCode1");
+people[1].Name.Should().Be("Name2");
+people[1].Age.Should().Be(2);
+people[1].Address.ZipCode.Should().Be("ZipCode2");
+
+public class Customer
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+    public Address Address { get; set; } 
+}
+
+public class Address
+{
+    public string ZipCode { get; set; }
+}
+```
+
 #### FillWithEmptyValuesBehavior
 
-With this behavior, ForeverFactory will recursively initialize every property it can. For example, the following class structure will resolve as shown below?
+With this behavior, ForeverFactory will recursively initialize every property it can with empty values. For example, the following class structure will resolve as shown below?
 
 ```csharp
 public class Customer
@@ -196,15 +227,17 @@ public class Address
 The table below shows test done with Benchmark Dotnet tool comparing equivalent scenarios in both `Forever Factory` and `NBuilder`:
 
 ```csv
-|                               Method |           Mean |        Error |       StdDev |   Gen 0 |   Gen 1 | Allocated |
-|------------------------------------- |---------------:|-------------:|-------------:|--------:|--------:|----------:|
-|      BuildSingleObjectForeverFactory |       683.6 ns |      7.34 ns |      6.86 ns |  0.1373 |       - |   1,152 B |
-|            BuildSingleObjectNBuilder |     1,939.7 ns |     20.81 ns |     19.47 ns |  0.0935 |       - |     784 B |
-|   BuildThousandObjectsForeverFactory |   243,524.0 ns |  3,502.33 ns |  2,924.61 ns | 53.7109 |  5.8594 | 449,403 B |
-|         BuildThousandObjectsNBuilder | 1,555,241.7 ns | 17,075.19 ns | 14,258.56 ns | 76.1719 | 15.6250 | 653,402 B |
+|                                                    Method |           Mean |        Error |       StdDev |   Gen 0 |   Gen 1 | Allocated |
+|---------------------------------------------------------- |---------------:|-------------:|-------------:|--------:|--------:|----------:|
+|                           BuildSingleObjectForeverFactory |       658.8 ns |      8.06 ns |      6.73 ns |  0.1373 |       - |   1,152 B |
+|                                 BuildSingleObjectNBuilder |     1,764.0 ns |      8.72 ns |      8.16 ns |  0.0935 |       - |     784 B |
+|                        BuildThousandObjectsForeverFactory |   255,085.5 ns |  1,757.46 ns |  1,643.93 ns | 53.7109 |  5.8594 | 449,403 B |
+|                              BuildThousandObjectsNBuilder | 1,447,481.4 ns | 20,004.55 ns | 18,712.27 ns | 76.1719 | 15.6250 | 653,390 B |
+| BuildThousandObjectsFillingSequentialValuesForeverFactory |   524,209.5 ns |  3,039.96 ns |  2,538.51 ns | 80.0781 | 15.6250 | 673,170 B |
+|       BuildThousandObjectsFillingSequentialValuesNBuilder |   984,430.7 ns |  7,177.55 ns |  6,362.71 ns | 70.3125 | 13.6719 | 589,282 B |
 ```
 
-The code to the tests is found [here](/tests/Benchmarks/Program.cs).
+The code to the tests is found [here](tests/Benchmarks/Program.cs).
 
 ## How to contribute
 
@@ -233,7 +266,5 @@ dotnet stryker
 
 - Allow to configure custom builder per builder (single builder and many builder)
 - Support custom constructor scoped by builder (for now, custom constructors are shared along the linked builders)
-- Allow configuration by rules
-- Allow sequences in numbers properties and things like email, etc
 - Support "smart" behavior, which identifies by convention which type of sequences and rules to apply to every property 
 - Add the concept of "Localization Extensions", which could contain localized versions of the fluent API, translated for other languages, like, portuguese, spanish, etc

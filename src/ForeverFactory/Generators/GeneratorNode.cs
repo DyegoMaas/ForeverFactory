@@ -60,7 +60,7 @@ namespace ForeverFactory.Generators
         {
             foreach (var guardedTransform in guardedTransforms)
                 if (guardedTransform.Guard.CanApply(instanceIndex))
-                    guardedTransform.Transform.ApplyTo(instance);
+                    guardedTransform.Transform.ApplyTo(instance, instanceIndex);
         }
     }
 }

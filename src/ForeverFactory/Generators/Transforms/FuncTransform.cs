@@ -11,7 +11,7 @@
             _setMember = setMember;
         }
 
-        public override void ApplyTo(T instance)
+        public override void ApplyTo(T instance, int index = 0)
         {
             _setMember.Invoke(instance);
         }

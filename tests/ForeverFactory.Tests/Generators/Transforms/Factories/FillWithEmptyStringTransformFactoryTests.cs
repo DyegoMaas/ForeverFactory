@@ -9,7 +9,7 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
         [Fact]
         public void It_should_build_a_function_that_recursively_sets_all_properties_to_an_empty_value()
         {
-            var transform = TransformFactory.FillWithEmptyValues<ClassA>();
+            var transform = new FillWithEmptyStringTransformFactory().GetTransform<ClassA>();
 
             var instanceOfA = new ClassA();
             transform.ApplyTo(instanceOfA);
@@ -40,6 +40,23 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
         private class ClassC
         {
             public string PropertyZ { get; set; }
+        }
+        
+        [Fact]
+        public void Should_disable_recursive_fill()
+        {
+            var factoryWithRecursionDisabled = new FillWithEmptyStringTransformFactory(
+                new RecursiveTransformFactoryOptions {
+                    EnableRecursiveInstantiation = false
+                }
+            );
+
+            var transform = factoryWithRecursionDisabled.GetTransform<ClassA>();
+            var instance = new ClassA();
+            transform.ApplyTo(instance);
+
+            instance.PropertyX.Should().Be(string.Empty);
+            instance.B.Should().Be(null, "should not recursively fill when it is disable via options");
         }
     }
 }

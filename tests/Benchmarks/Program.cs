@@ -5,13 +5,14 @@ using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using FizzWare.NBuilder;
 using ForeverFactory;
+using ForeverFactory.Behaviors;
 
 var summary = BenchmarkRunner.Run(typeof(BuildersBenchmark));
 
 [MemoryDiagnoser]
 public class BuildersBenchmark
 {
-    private const string PersonName = "Arnold";
+    public const string PersonName = "Arnold";
 
     [Benchmark]
     public void BuildSingleObjectForeverFactory()
@@ -35,6 +36,20 @@ public class BuildersBenchmark
     public void BuildThousandObjectsNBuilder()
     {
         Builder<Person>.CreateListOfSize(1000).All().With(x => x.Name = PersonName).Build();
+    }
+    
+    [Benchmark]
+    public void BuildThousandObjectsFillingSequentialValuesForeverFactory()
+    {
+        MagicFactory.For<Person>()
+            .WithBehavior(new FillWithSequentialValuesBehavior(options => options.Recursive = false))
+            .Many(1000).Build().ToList();
+    }
+    
+    [Benchmark]
+    public void BuildThousandObjectsFillingSequentialValuesNBuilder()
+    {
+        Builder<Person>.CreateListOfSize(1000).All().Build();
     }
 }
 
