@@ -6,10 +6,10 @@
         <Authors>Dyego Alekssander Maas</Authors>
         <Copyright>Copyright Dyego Alekssander Maas</Copyright>
         <PackageId>ForeverFactory</PackageId>
-        <Description>Forever Factory makes it super easy to build many customized objects.</Description>
+        <Description>Forever Factory makes it super easy to build many customized objects. You can define factories for your objects, with all the default values you'll need, or create one on the fly. In each test, you can further customize the objects usings lambdas to override public properties and fields like strings, ints, floats, etc.</Description>
         <PackageProjectUrl>https://github.com/DyegoMaas/ForeverFactory</PackageProjectUrl>
         <RepositoryUrl>https://github.com/DyegoMaas/ForeverFactory</RepositoryUrl>
-        <PackageTags>ForeverFactory factory builder</PackageTags>
+        <PackageTags>ForeverFactory factory builder TDD unit-testing unittesting unitesting testing fluent</PackageTags>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <MinVerTagPrefix>v</MinVerTagPrefix>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>

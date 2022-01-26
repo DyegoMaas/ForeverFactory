@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using ForeverFactory.Generators.Transforms.Factories.ReflectionTargets;
 
 namespace ForeverFactory.Generators.Transforms.Factories
 {
@@ -26,31 +27,37 @@ namespace ForeverFactory.Generators.Transforms.Factories
         
         private void FillPropertiesRecursively(object instance, IReflect type, int index)
         {
-            var propertyInfos = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            foreach (var propertyInfo in propertyInfos)
+            var propertyInfos = type
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Select(propertyInfo => new PropertyTargetInfo(propertyInfo));
+            var fieldInfos = type
+                .GetFields(BindingFlags.Public | BindingFlags.Instance)
+                .Select(fieldInfo => new FieldTargetInfo(fieldInfo));
+            var targetInfos = propertyInfos.Cast<TargetInfo>().Union(fieldInfos);
+            foreach (var targetInfo in targetInfos)
             {
-                var buildFunction = GetBuildFunction(propertyInfo, index);
+                var buildFunction = GetBuildFunction(targetInfo, index);
                 if (buildFunction == null)
                     continue;
 
                 var propertyValue = buildFunction.Invoke();
-                propertyInfo.SetValue(instance, propertyValue);
+                targetInfo.SetValue(instance, propertyValue);
 
-                if (CanApplyRecursion(propertyInfo))
-                    FillPropertiesRecursively(propertyValue, propertyInfo.PropertyType, index);
+                if (CanApplyRecursion(targetInfo))
+                    FillPropertiesRecursively(propertyValue, targetInfo.TargetType, index);
             }
         }
 
-        private Func<object> GetBuildFunction(PropertyInfo propertyInfo, int index)
+        private Func<object> GetBuildFunction(TargetInfo targetInfo, int index)
         {
-            var buildFunction = GetBuildFunctionForSpecializedProperty(propertyInfo, index);
+            var buildFunction = GetBuildFunctionForSpecializedProperty(targetInfo, index);
             if (buildFunction != null)
                 return buildFunction;
 
             if (_options.EnableRecursiveInstantiation is false)
                 return null;
 
-            var parameterlessConstructor = propertyInfo.PropertyType
+            var parameterlessConstructor = targetInfo.TargetType
                 .GetConstructors()
                 .FirstOrDefault(x => x.GetParameters().Length == 0);
             if (parameterlessConstructor != null) 
@@ -59,11 +66,11 @@ namespace ForeverFactory.Generators.Transforms.Factories
             return null;
         }
 
-        protected abstract Func<object> GetBuildFunctionForSpecializedProperty(PropertyInfo propertyInfo, int index);
+        protected abstract Func<object> GetBuildFunctionForSpecializedProperty(TargetInfo targetInfo, int index);
 
-        private bool CanApplyRecursion(PropertyInfo propertyInfo)
+        private bool CanApplyRecursion(TargetInfo targetInfo)
         {
-            return _options.EnableRecursiveInstantiation && propertyInfo.PropertyType != typeof(string);
+            return _options.EnableRecursiveInstantiation && targetInfo.TargetType != typeof(string);
         }
     }
 }
