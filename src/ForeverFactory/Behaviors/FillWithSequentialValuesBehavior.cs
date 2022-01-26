@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using ForeverFactory.Generators.Transforms;
 using ForeverFactory.Generators.Transforms.Factories;
 
@@ -19,9 +19,32 @@ namespace ForeverFactory.Behaviors
     /// </example>
     public class FillWithSequentialValuesBehavior : Behavior
     {
+        private readonly RecursiveTransformFactoryOptions _recursiveTransformFactoryOptions;
+
+        public FillWithSequentialValuesBehavior(Action<FillWithSequentialValuesBehaviorOptions> options = null)
+        {
+            var configuration = new FillWithSequentialValuesBehaviorOptions();
+            options?.Invoke(configuration);
+
+            _recursiveTransformFactoryOptions = new RecursiveTransformFactoryOptions
+            {
+                EnableRecursiveInstantiation = configuration.Recursive
+            };
+        }
+        
         public override IEnumerable<Transform<T>> GetTransforms<T>()
         {
-            yield return new FillWithSequentialValuesTransformFactory().GetTransform<T>();
+            var factory = new FillWithSequentialValuesTransformFactory(_recursiveTransformFactoryOptions);
+            yield return factory.GetTransform<T>();
         }
+    }
+    
+    public class FillWithSequentialValuesBehaviorOptions
+    {
+        /// <summary>
+        /// If enabled, nested classes will be instantiated and all its properties will be set with sequential values.
+        /// Default is true.
+        /// </summary>
+        public bool Recursive { get; set; } = true;
     }
 }

@@ -9,7 +9,7 @@ namespace ForeverFactory.Tests.Behaviors
 {
     public class FillWithSequentialValuesBehaviorTests
     {
-        public static IEnumerable<object[]> PersonFactoriesWithFillPropertiesWithEmptyValuesBehavior =>
+        public static IEnumerable<object[]> FactoriesWithDefaultBehavior =>
             new List<object[]>
             {
                 new object[] {new CustomerFactoryWithPropertyNameFillingBehavior()},
@@ -17,7 +17,7 @@ namespace ForeverFactory.Tests.Behaviors
             };
 
         [Theory]
-        [MemberData(nameof(PersonFactoriesWithFillPropertiesWithEmptyValuesBehavior))]
+        [MemberData(nameof(FactoriesWithDefaultBehavior))]
         public void It_should_fill_properties_with_sequential_values(ISimpleFactory<Customer> factory)
         {
             var customer = factory.Build();
@@ -29,7 +29,7 @@ namespace ForeverFactory.Tests.Behaviors
         }
         
         [Theory]
-        [MemberData(nameof(PersonFactoriesWithFillPropertiesWithEmptyValuesBehavior))]
+        [MemberData(nameof(FactoriesWithDefaultBehavior))]
         public void It_should_fill_all_objects_properties_with_sequential_numbers(ISimpleFactory<Customer> factory)
         {
             var customer = factory.Many(3).Build().ToArray();
@@ -43,7 +43,7 @@ namespace ForeverFactory.Tests.Behaviors
         }
         
         [Theory]
-        [MemberData(nameof(PersonFactoriesWithFillPropertiesWithEmptyValuesBehavior))]
+        [MemberData(nameof(FactoriesWithDefaultBehavior))]
         public void It_should_fill_all_properties_recursively(ISimpleFactory<Customer> factory)
         {
             var customer = factory.Many(3).Build().ToArray();
@@ -51,6 +51,27 @@ namespace ForeverFactory.Tests.Behaviors
             customer[0].Address.ZipCode.Should().Be("ZipCode1");
             customer[1].Address.ZipCode.Should().Be("ZipCode2");
             customer[2].Address.ZipCode.Should().Be("ZipCode3");
+        }
+        
+        public static IEnumerable<object[]> FactoriesWithRecursionDisabled =>
+            new List<object[]>
+            {
+                new object[] {new CustomerFactoryWithPropertyNameFillingBehaviorWithRecursionDisabled()},
+                new object[] {
+                    MagicFactory.For<Customer>()
+                        .WithBehavior(new FillWithSequentialValuesBehavior(options => options.Recursive = false))
+                }
+            };
+        
+        [Theory]
+        [MemberData(nameof(FactoriesWithRecursionDisabled))]
+        public void It_should_fill_all_properties_with_empty_values_without_recursion(ISimpleFactory<Customer> factory)
+        {
+            var customer = factory.Build();
+
+            customer.Name.Should().Be("Name1");
+            customer.Age.Should().Be(1);
+            customer.Address.Should().BeNull();
         }
 
         public class Customer
@@ -70,6 +91,17 @@ namespace ForeverFactory.Tests.Behaviors
             protected override void Customize(ICustomizeFactoryOptions<Customer> customization)
             {
                 customization.SetDefaultBehavior(new FillWithSequentialValuesBehavior());
+            }
+        }
+        
+        private class CustomerFactoryWithPropertyNameFillingBehaviorWithRecursionDisabled : MagicFactory<Customer>
+        {
+            protected override void Customize(ICustomizeFactoryOptions<Customer> customization)
+            {
+                customization.SetDefaultBehavior(new FillWithSequentialValuesBehavior(options =>
+                {
+                    options.Recursive = false;
+                }));
             }
         }
     }

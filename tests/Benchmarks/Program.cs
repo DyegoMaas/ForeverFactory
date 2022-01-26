@@ -42,7 +42,7 @@ public class BuildersBenchmark
     public void BuildThousandObjectsFillingSequentialValuesForeverFactory()
     {
         MagicFactory.For<Person>()
-            .WithBehavior(new FillWithSequentialValuesBehavior())
+            .WithBehavior(new FillWithSequentialValuesBehavior(options => options.Recursive = false))
             .Many(1000).Build().ToList();
     }
     

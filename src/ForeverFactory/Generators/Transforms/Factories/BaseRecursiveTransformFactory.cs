@@ -11,8 +11,6 @@ namespace ForeverFactory.Generators.Transforms.Factories
         protected BaseRecursiveTransformFactory(RecursiveTransformFactoryOptions options = null)
         {
             _options = options ?? new RecursiveTransformFactoryOptions();
-            // _options = new RecursiveTransformFactoryOptions();
-            // options?.Invoke(_options);
         }
 
         public Transform<T> GetTransform<T>()

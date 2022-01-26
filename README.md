@@ -223,14 +223,14 @@ public class Address
 The table below shows test done with Benchmark Dotnet tool comparing equivalent scenarios in both `Forever Factory` and `NBuilder`:
 
 ```csv
-|                                                    Method |           Mean |       Error |      StdDev |   Gen 0 |   Gen 1 | Allocated |
-|---------------------------------------------------------- |---------------:|------------:|------------:|--------:|--------:|----------:|
-|                           BuildSingleObjectForeverFactory |       683.7 ns |     7.53 ns |     7.04 ns |  0.1373 |       - |   1,152 B |
-|                                 BuildSingleObjectNBuilder |     1,862.1 ns |    13.56 ns |    12.68 ns |  0.0935 |       - |     784 B |
-|                        BuildThousandObjectsForeverFactory |   248,116.4 ns | 2,383.28 ns | 2,112.72 ns | 53.7109 |  5.8594 | 449,403 B |
-|                              BuildThousandObjectsNBuilder | 1,539,214.8 ns | 8,576.28 ns | 7,602.65 ns | 78.1250 | 15.6250 | 653,403 B |
-| BuildThousandObjectsFillingSequentialValuesForeverFactory |   575,005.3 ns | 4,403.68 ns | 4,119.20 ns | 80.0781 | 15.6250 | 673,114 B |
-|       BuildThousandObjectsFillingSequentialValuesNBuilder | 1,017,233.2 ns | 8,782.64 ns | 7,785.58 ns | 70.3125 | 13.6719 | 589,285 B |
+|                                                    Method |           Mean |        Error |       StdDev |   Gen 0 |   Gen 1 | Allocated |
+|---------------------------------------------------------- |---------------:|-------------:|-------------:|--------:|--------:|----------:|
+|                           BuildSingleObjectForeverFactory |       658.8 ns |      8.06 ns |      6.73 ns |  0.1373 |       - |   1,152 B |
+|                                 BuildSingleObjectNBuilder |     1,764.0 ns |      8.72 ns |      8.16 ns |  0.0935 |       - |     784 B |
+|                        BuildThousandObjectsForeverFactory |   255,085.5 ns |  1,757.46 ns |  1,643.93 ns | 53.7109 |  5.8594 | 449,403 B |
+|                              BuildThousandObjectsNBuilder | 1,447,481.4 ns | 20,004.55 ns | 18,712.27 ns | 76.1719 | 15.6250 | 653,390 B |
+| BuildThousandObjectsFillingSequentialValuesForeverFactory |   524,209.5 ns |  3,039.96 ns |  2,538.51 ns | 80.0781 | 15.6250 | 673,170 B |
+|       BuildThousandObjectsFillingSequentialValuesNBuilder |   984,430.7 ns |  7,177.55 ns |  6,362.71 ns | 70.3125 | 13.6719 | 589,282 B |
 ```
 
 The code to the tests is found [here](tests/Benchmarks/Program.cs).
