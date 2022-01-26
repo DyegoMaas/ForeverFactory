@@ -179,7 +179,12 @@ By default, it will not fill any properties, and it is up to you to fill any pro
 With this behavior, ForeverFactory will recursively initialize every property it can with sequential values. This is similar to the default behavior of NBuilder:
 
 ```csharp
-var people = MagicFactory.For<ClassWithInteger>().Many(100).Build();
+var people = MagicFactory
+    .For<ClassWithInteger>()
+    .WithBehavior(new FillWithSequentialValuesBehavior())
+    .Many(100)
+    .Build();
+   
 people[0].Name.Should().Be("Name1");
 people[0].Age.Should().Be(1);
 people[0].Address.ZipCode.Should().Be("ZipCode1");
