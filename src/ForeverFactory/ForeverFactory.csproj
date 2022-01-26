@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net5.0;netstandard2.0;netstandard2.1</TargetFrameworks>
+        <TargetFrameworks>net5.0;net6.0;netstandard2.0;netstandard2.1</TargetFrameworks>
         <Features>strict</Features>
         <Authors>Dyego Alekssander Maas</Authors>
         <Copyright>Copyright Dyego Alekssander Maas</Copyright>

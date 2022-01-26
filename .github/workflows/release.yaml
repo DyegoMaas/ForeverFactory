@@ -6,16 +6,14 @@ on:
     - '*.*.*'
 jobs:
   release:
-    strategy:
-      fail-fast: false
     runs-on: ubuntu-latest   
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup dotnet 5.0
+      - name: Setup dotnet 6.0
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.x
+          dotnet-version: 6.0.x
 
       - name: Clean
         run: dotnet clean -c Release
