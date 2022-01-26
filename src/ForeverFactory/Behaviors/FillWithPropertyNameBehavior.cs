@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ForeverFactory.Generators.Transforms;
 using ForeverFactory.Generators.Transforms.Factories;
 
 namespace ForeverFactory.Behaviors
 {
-    public class FillWithEmptyValuesBehavior : Behavior
+    internal class FillWithProperyNameBehavior : Behavior
     {
         public override IEnumerable<Transform<T>> GetTransforms<T>()
         {
-            yield return new FillWithEmptyStringTransformFactory().GetTransformers<T>();
+            yield return new FillWithPropertyNameTransformFactory().GetTransformers<T>();
         }
     }
 }

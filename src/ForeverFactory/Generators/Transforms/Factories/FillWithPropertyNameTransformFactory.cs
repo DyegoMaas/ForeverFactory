@@ -4,9 +4,9 @@ using System.Reflection;
 
 namespace ForeverFactory.Generators.Transforms.Factories
 {
-    internal static class TransformFactory
+    internal class FillWithPropertyNameTransformFactory : ITranformFactory
     {
-        public static Transform<T> FillWithEmptyValues<T>()
+        public Transform<T> GetTransformers<T>()
             where T : class
         {
             var setMember = new Func<T, object>(instance =>
@@ -16,7 +16,7 @@ namespace ForeverFactory.Generators.Transforms.Factories
             });
             return new ReflectedFuncTransform<T>(setMember);
         }
-
+        
         private static void FillPropertiesRecursively(object instance, IReflect type)
         {
             var propertyInfos = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
@@ -35,12 +35,14 @@ namespace ForeverFactory.Generators.Transforms.Factories
 
         private static Func<object> GetBuildFunction(PropertyInfo propertyInfo)
         {
-            if (propertyInfo.PropertyType == typeof(string)) return () => string.Empty;
+            if (propertyInfo.PropertyType == typeof(string)) 
+                return () => propertyInfo.Name + "1";
 
             var parameterlessConstructor = propertyInfo.PropertyType
                 .GetConstructors()
                 .FirstOrDefault(x => x.GetParameters().Length == 0);
-            if (parameterlessConstructor != null) return () => parameterlessConstructor.Invoke(Array.Empty<object>());
+            if (parameterlessConstructor != null) 
+                return () => parameterlessConstructor.Invoke(Array.Empty<object>());
 
             return null;
         }

@@ -4,25 +4,25 @@ using Xunit;
 
 namespace ForeverFactory.Tests.Generators.Transforms.Factories
 {
-    public class TransformFactoryTests
+    public class FillWithPropertyNameTransformFactoryTests
     {
         [Fact]
-        public void It_should_build_a_function_that_recursively_sets_all_properties_to_an_empty_value()
+        public void It_should_build_a_function_that_recursively_sets_all_properties_to_the_name_of_the_property()
         {
-            var transform = TransformFactory.FillWithEmptyValues<ClassA>();
+            var transform = new FillWithPropertyNameTransformFactory().GetTransformers<ClassA>();
 
             var instanceOfA = new ClassA();
             transform.ApplyTo(instanceOfA);
 
-            instanceOfA.PropertyX.Should().Be(string.Empty);
+            instanceOfA.PropertyX.Should().Be("PropertyX1");
             instanceOfA.B.Should().NotBeNull();
 
             var instanceOfB = instanceOfA.B;
-            instanceOfB.PropertyY.Should().Be(string.Empty);
+            instanceOfB.PropertyY.Should().Be("PropertyY1");
             instanceOfB.C.Should().NotBeNull();
             
             var instanceOfC = instanceOfB.C;
-            instanceOfC.PropertyZ.Should().Be(string.Empty);
+            instanceOfC.PropertyZ.Should().Be("PropertyZ1");
         }
 
         private class ClassA
