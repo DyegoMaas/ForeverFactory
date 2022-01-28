@@ -38,7 +38,7 @@ namespace ForeverFactory
     ///     A customizable factory of objects of type "T". It can be extended with predefined configurations.
     /// </summary>
     /// <typeparam name="T">The type of objects that this factory will build.</typeparam>
-    public abstract class MagicFactory<T> : ISimpleFactory<T>, ICustomizeOneBuildOne<T>, ICustomizeOneBuildOneWithNavigation<T>, ICustomizeManyBuildMany<T>, ICustomizeOneBuildManyWithNavigation<T>
+    public abstract class MagicFactory<T> : ISimpleFactory<T>, ICustomizeOneBuildOneWithNavigation<T>, ICustomizeManyBuildMany<T>, ICustomizeOneBuildManyWithNavigation<T>
         where T : class
     {
         private readonly ObjectFactory<T> _objectFactory = new ObjectFactory<T>();
@@ -50,6 +50,14 @@ namespace ForeverFactory
             SetRootNode(1);
             Customize(new CustomizeFactoryOptions<T>(this));
         }
+        
+        private void SetRootNode(int targetCount)
+        {
+            _rootNode = new GeneratorNode<T>(targetCount, _customConstructor);
+            _objectFactory.AddRootNode(_rootNode);
+        }
+
+        protected abstract void Customize(ICustomizeFactoryOptions<T> customization);
 
         public ISimpleFactory<T> UsingConstructor(Func<T> customConstructor)
         {
@@ -144,14 +152,6 @@ namespace ForeverFactory
         {
             return _objectFactory.Build();
         }
-
-        private void SetRootNode(int targetCount)
-        {
-            _rootNode = new GeneratorNode<T>(targetCount, _customConstructor);
-            _objectFactory.AddRootNode(_rootNode);
-        }
-
-        protected abstract void Customize(ICustomizeFactoryOptions<T> customization);
 
         private void AddTransformThatAlwaysApply<TValue>(Func<T, TValue> setMember)
         {

@@ -34,7 +34,7 @@ namespace ForeverFactory.Generators
             _customConstructor = newCustomConstructor;
         }
 
-        public IEnumerable<T> ProduceInstances(IEnumerable<NotGuardedTransform<T>> defaultTransforms = null)
+        public IEnumerable<T> GenerateInstances(IEnumerable<NotGuardedTransform<T>> defaultTransforms = null)
         {
             for (var index = 0; index < TargetCount; index++)
             {

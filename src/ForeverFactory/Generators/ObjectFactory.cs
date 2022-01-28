@@ -12,11 +12,11 @@ namespace ForeverFactory.Generators
         where T : class
     {
         private readonly List<NotGuardedTransform<T>> _defaultTransforms = new List<NotGuardedTransform<T>>();
-        private readonly List<GeneratorNode<T>> _nodes = new List<GeneratorNode<T>>();
+        private readonly List<GeneratorNode<T>> _generatorNodes = new List<GeneratorNode<T>>();
 
         public IEnumerable<T> Build()
         {
-            return _nodes.SelectMany(generatorNode => generatorNode.ProduceInstances(_defaultTransforms));
+            return _generatorNodes.SelectMany(node => node.GenerateInstances(_defaultTransforms));
         }
 
         public void AddDefaultTransform(Transform<T> transform)
@@ -32,20 +32,18 @@ namespace ForeverFactory.Generators
 
         private GeneratorNode<T> GetCurrentGeneratorNode()
         {
-            return _nodes.Any()
-                ? _nodes.Last()
-                : null;
+            return _generatorNodes.LastOrDefault();
         }
 
         public void AddRootNode(GeneratorNode<T> generatorNode)
         {
-            _nodes.Clear();
+            _generatorNodes.Clear();
             AddNode(generatorNode);
         }
 
         public void AddNode(GeneratorNode<T> generatorNode)
         {
-            _nodes.Add(generatorNode);
+            _generatorNodes.Add(generatorNode);
         }
     }
 }

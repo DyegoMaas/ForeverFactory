@@ -16,7 +16,7 @@ namespace ForeverFactory.Tests.Generators
         {
             var generatorNode = new GeneratorNode<Person>();
 
-            var instances = generatorNode.ProduceInstances();
+            var instances = generatorNode.GenerateInstances();
 
             instances.Should().HaveCount(1);
         }
@@ -29,7 +29,7 @@ namespace ForeverFactory.Tests.Generators
         {
             var generatorNode = new GeneratorNode<Person>(targetCount);
 
-            var instances = generatorNode.ProduceInstances();
+            var instances = generatorNode.GenerateInstances();
 
             instances.Should().HaveCount(targetCount);
         }
@@ -41,7 +41,7 @@ namespace ForeverFactory.Tests.Generators
                 customConstructor: () => new Person {FirstName = "John", LastName = "Doe"}
             );
 
-            var persons = generatorNode.ProduceInstances();
+            var persons = generatorNode.GenerateInstances();
 
             foreach (var person in persons)
             {
@@ -60,7 +60,7 @@ namespace ForeverFactory.Tests.Generators
                 new AlwaysApplyTransformSpecification()
             );
 
-            var persons = generatorNode.ProduceInstances();
+            var persons = generatorNode.GenerateInstances();
 
             foreach (var person in persons) person.FirstName.Should().Be("Martha");
         }
@@ -80,7 +80,7 @@ namespace ForeverFactory.Tests.Generators
                 new ApplyTransformToLastInstancesSpecification(countToApply: 2, targetCount: 5)
             );
 
-            var persons = generatorNode.ProduceInstances().ToArray();
+            var persons = generatorNode.GenerateInstances().ToArray();
 
             var firstNames = persons.Select(x => x.FirstName);
             firstNames.Should().BeEquivalentTo("Martha", "Martha", "Anne", "Mirage", "Mirage");
@@ -95,7 +95,7 @@ namespace ForeverFactory.Tests.Generators
                 new NotGuardedTransform<Person>(new FuncTransform<Person, string>(x => x.FirstName = "Martha"));
             var transform2 =
                 new NotGuardedTransform<Person>(new FuncTransform<Person, string>(x => x.LastName = "Kane"));
-            var persons = generatorNode.ProduceInstances(new[] {transform1, transform2});
+            var persons = generatorNode.GenerateInstances(new[] {transform1, transform2});
 
             foreach (var person in persons)
             {
@@ -117,7 +117,7 @@ namespace ForeverFactory.Tests.Generators
                 new NotGuardedTransform<Person>(new FuncTransform<Person, string>(x => x.FirstName = "Martha"));
             var transform2 =
                 new NotGuardedTransform<Person>(new FuncTransform<Person, string>(x => x.LastName = "Kane"));
-            var persons = generatorNode.ProduceInstances(new[] {transform1, transform2});
+            var persons = generatorNode.GenerateInstances(new[] {transform1, transform2});
 
             foreach (var person in persons)
             {
@@ -143,7 +143,7 @@ namespace ForeverFactory.Tests.Generators
 
             generatorNode.OverrideCustomConstructor(() => new Person {Age = 11});
 
-            var person = generatorNode.ProduceInstances().First();
+            var person = generatorNode.GenerateInstances().First();
             person.Age.Should().Be(11);
         }
     }

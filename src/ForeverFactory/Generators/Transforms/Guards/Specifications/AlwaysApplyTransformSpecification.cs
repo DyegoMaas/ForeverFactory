@@ -2,7 +2,7 @@
 {
     internal class AlwaysApplyTransformSpecification : CanApplyTransformSpecification
     {
-        public override bool CanApply(int currentIndex)
+        public override bool CanApply(int index)
         {
             return true;
         }
