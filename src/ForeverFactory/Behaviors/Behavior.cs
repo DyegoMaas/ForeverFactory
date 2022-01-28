@@ -8,7 +8,7 @@ namespace ForeverFactory.Behaviors
     /// </summary>
     public abstract class Behavior
     {
-        public abstract IEnumerable<Transform<T>> GetTransforms<T>()
+        internal abstract IEnumerable<Transform<T>> GetTransforms<T>()
             where T : class;
     }
 }

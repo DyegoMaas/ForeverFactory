@@ -10,7 +10,7 @@ namespace ForeverFactory.Behaviors
     /// </summary>
     public class DoNotFillBehavior : Behavior
     {
-        public override IEnumerable<Transform<T>> GetTransforms<T>()
+        internal override IEnumerable<Transform<T>> GetTransforms<T>()
         {
             return Enumerable.Empty<Transform<T>>();
         }

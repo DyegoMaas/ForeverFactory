@@ -5,11 +5,11 @@ using ForeverFactory.Generators.Transforms;
 
 namespace ForeverFactory.Generators
 {
-    public interface IObjectFactoryOptions<T>
+    internal interface IObjectFactoryOptions<T>
         where T : class
     {
         Func<T> CustomConstructor { get; }
-        IReadOnlyCollection<Transform<T>> Transforms { get; }
+        IList<Transform<T>> Transforms { get; }
         Behavior SelectedBehavior { get; }
     }
 }

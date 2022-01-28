@@ -6,22 +6,18 @@ using ForeverFactory.Generators.Transforms;
 
 namespace ForeverFactory.Customizations
 {
-    public class CustomizeFactoryOptions<T> : ICustomizeFactoryOptions<T>, IObjectFactoryOptions<T>
+    internal class CustomizeFactoryOptions<T> : ICustomizeFactoryOptions<T>, IObjectFactoryOptions<T>
         where T : class
     {
-        private readonly List<Transform<T>> _transforms;
-        
         public CustomizeFactoryOptions()
         {
-            _transforms = new List<Transform<T>>();
+            Transforms = new List<Transform<T>>();
             SelectedBehavior = new DoNotFillBehavior();
         }
 
         public Func<T> CustomConstructor { get; private set; }
-
-        public IReadOnlyCollection<Transform<T>> Transforms => _transforms.AsReadOnly();
-
         public Behavior SelectedBehavior { get; private set; }
+        public IList<Transform<T>> Transforms { get; }
 
         public ICustomizeFactoryOptions<T> UseConstructor(Func<T> customConstructor)
         {
@@ -31,7 +27,7 @@ namespace ForeverFactory.Customizations
 
         public ICustomizeFactoryOptions<T> Set<TValue>(Func<T, TValue> setMember)
         {
-            _transforms.Add(new FuncTransform<T, TValue>(setMember.Invoke));
+            Transforms.Add(new FuncTransform<T, TValue>(setMember.Invoke));
             return this;
         }
 
