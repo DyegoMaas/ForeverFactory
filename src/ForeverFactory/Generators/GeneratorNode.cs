@@ -11,17 +11,15 @@ namespace ForeverFactory.Generators
         where T : class
     {
         private readonly List<GuardedTransform<T>> _transformsToApply = new List<GuardedTransform<T>>();
-        private Func<T> _customConstructor;
+        // private Func<T> _customConstructor;
 
-        public GeneratorNode(
-            int targetCount = 1,
-            Func<T> customConstructor = null)
+        public GeneratorNode(int instanceCount = 1)
         {
-            TargetCount = targetCount;
-            _customConstructor = customConstructor;
+            InstanceCount = instanceCount;
+            // _customConstructor = customConstructor;
         }
 
-        public int TargetCount { get; }
+        public int InstanceCount { get; }
 
         public void AddTransform(Transform<T> transform, CanApplyTransformSpecification guard = null)
         {
@@ -29,16 +27,16 @@ namespace ForeverFactory.Generators
             _transformsToApply.Add(new GuardedTransform<T>(transform, guard));
         }
 
-        public void OverrideCustomConstructor(Func<T> newCustomConstructor)
-        {
-            _customConstructor = newCustomConstructor;
-        }
+        // public void OverrideCustomConstructor(Func<T> newCustomConstructor)
+        // {
+        //     _customConstructor = newCustomConstructor;
+        // }
 
-        public IEnumerable<T> GenerateInstances(IEnumerable<NotGuardedTransform<T>> defaultTransforms = null)
+        public IEnumerable<T> GenerateInstances(IEnumerable<NotGuardedTransform<T>> defaultTransforms = null, Func<T> customConstructor = null)
         {
-            for (var index = 0; index < TargetCount; index++)
+            for (var index = 0; index < InstanceCount; index++)
             {
-                var instance = CreateInstance();
+                var instance = CreateInstance(customConstructor);
 
                 var defaultTransformsToApply = defaultTransforms ?? Enumerable.Empty<GuardedTransform<T>>();
                 var transformsToApply = defaultTransformsToApply.Union(_transformsToApply);
@@ -48,10 +46,10 @@ namespace ForeverFactory.Generators
             }
         }
 
-        private T CreateInstance()
+        private T CreateInstance(Func<T> customConstructor = null)
         {
-            return _customConstructor != null
-                ? _customConstructor.Invoke()
+            return customConstructor != null
+                ? customConstructor.Invoke()
                 : Activator.CreateInstance<T>();
         }
 

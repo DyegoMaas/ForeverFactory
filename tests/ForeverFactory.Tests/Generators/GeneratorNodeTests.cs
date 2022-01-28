@@ -38,10 +38,10 @@ namespace ForeverFactory.Tests.Generators
         public void It_should_accept_a_custom_constructor_function()
         {
             var generatorNode = new GeneratorNode<Person>(
-                customConstructor: () => new Person {FirstName = "John", LastName = "Doe"}
+                // customConstructor: () => new Person {FirstName = "John", LastName = "Doe"}
             );
 
-            var persons = generatorNode.GenerateInstances();
+            var persons = generatorNode.GenerateInstances(customConstructor: () => new Person {FirstName = "John", LastName = "Doe"});
 
             foreach (var person in persons)
             {
@@ -68,9 +68,7 @@ namespace ForeverFactory.Tests.Generators
         [Fact]
         public void It_should_apply_transforms_with_guards()
         {
-            var generatorNode = new GeneratorNode<Person>(5,
-                () => new Person {FirstName = "Anne"}
-            );
+            var generatorNode = new GeneratorNode<Person>(5);
             generatorNode.AddTransform(
                 new FuncTransform<Person, string>(x => x.FirstName = "Martha"),
                 new ApplyTransformToFirstInstancesSpecification(countToApply: 2, targetCount: 5)
@@ -80,7 +78,9 @@ namespace ForeverFactory.Tests.Generators
                 new ApplyTransformToLastInstancesSpecification(countToApply: 2, targetCount: 5)
             );
 
-            var persons = generatorNode.GenerateInstances().ToArray();
+            var persons = generatorNode
+                .GenerateInstances(customConstructor: () => new Person {FirstName = "Anne"})
+                .ToArray();
 
             var firstNames = persons.Select(x => x.FirstName);
             firstNames.Should().BeEquivalentTo("Martha", "Martha", "Anne", "Mirage", "Mirage");
@@ -131,20 +131,20 @@ namespace ForeverFactory.Tests.Generators
         {
             var generatorNode = new GeneratorNode<Person>(3);
 
-            var targetCount = generatorNode.TargetCount;
+            var targetCount = generatorNode.InstanceCount;
 
             targetCount.Should().Be(3);
         }
 
-        [Fact]
-        public void It_should_override_the_custom_constructor()
-        {
-            var generatorNode = new GeneratorNode<Person>(1, () => new Person {Age = 10});
-
-            generatorNode.OverrideCustomConstructor(() => new Person {Age = 11});
-
-            var person = generatorNode.GenerateInstances().First();
-            person.Age.Should().Be(11);
-        }
+        // [Fact]
+        // public void It_should_override_the_custom_constructor()
+        // {
+        //     var generatorNode = new GeneratorNode<Person>(1, () => new Person {Age = 10});
+        //
+        //     generatorNode.OverrideCustomConstructor(() => new Person {Age = 11});
+        //
+        //     var person = generatorNode.GenerateInstances().First();
+        //     person.Age.Should().Be(11);
+        // }
     }
 }

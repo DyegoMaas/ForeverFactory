@@ -11,18 +11,33 @@ namespace ForeverFactory.Generators
     internal class ObjectFactory<T> : IBuildMany<T>
         where T : class
     {
-        private readonly List<NotGuardedTransform<T>> _defaultTransforms = new List<NotGuardedTransform<T>>();
+        private readonly IObjectFactoryOptions<T> _options;
+        // private readonly List<NotGuardedTransform<T>> _defaultTransforms = new List<NotGuardedTransform<T>>();
         private readonly List<GeneratorNode<T>> _generatorNodes = new List<GeneratorNode<T>>();
+
+        public ObjectFactory(IObjectFactoryOptions<T> options)
+        {
+            _options = options;
+        }
 
         public IEnumerable<T> Build()
         {
-            return _generatorNodes.SelectMany(node => node.GenerateInstances(_defaultTransforms));
+            var defaultTransforms = _options
+                .SelectedBehavior.GetTransforms<T>()
+                .Union(_options.Transforms)
+                .Select(transform => new NotGuardedTransform<T>(transform));
+            // foreach (var transform in defaultTransforms)
+            // {
+            //     _options.AddDefaultTransform(transform);
+            // }
+            
+            return _generatorNodes.SelectMany(node => node.GenerateInstances(defaultTransforms, _options.CustomConstructor));
         }
 
-        public void AddDefaultTransform(Transform<T> transform)
-        {
-            _defaultTransforms.Add(new NotGuardedTransform<T>(transform));
-        }
+        // public void AddDefaultTransform(Transform<T> transform)
+        // {
+        //     _defaultTransforms.Add(new NotGuardedTransform<T>(transform));
+        // }
 
         public void AddTransform(Transform<T> transform, Func<GeneratorNode<T>, CanApplyTransformSpecification> guard)
         {
