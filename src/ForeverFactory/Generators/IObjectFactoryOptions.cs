@@ -9,7 +9,7 @@ namespace ForeverFactory.Generators
         where T : class
     {
         Func<T> CustomConstructor { get; }
-        IList<Transform<T>> Transforms { get; }
+        IReadOnlyCollection<Transform<T>> Transforms { get; }
         Behavior SelectedBehavior { get; }
     }
 }

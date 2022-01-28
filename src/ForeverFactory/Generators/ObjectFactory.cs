@@ -12,7 +12,6 @@ namespace ForeverFactory.Generators
         where T : class
     {
         private readonly IObjectFactoryOptions<T> _options;
-        // private readonly List<NotGuardedTransform<T>> _defaultTransforms = new List<NotGuardedTransform<T>>();
         private readonly List<GeneratorNode<T>> _generatorNodes = new List<GeneratorNode<T>>();
 
         public ObjectFactory(IObjectFactoryOptions<T> options)
@@ -22,22 +21,14 @@ namespace ForeverFactory.Generators
 
         public IEnumerable<T> Build()
         {
-            var defaultTransforms = _options
-                .SelectedBehavior.GetTransforms<T>()
-                .Union(_options.Transforms)
+            var behaviorTransforms = _options.SelectedBehavior.GetTransforms<T>();
+            var optionsTransforms = _options.Transforms;
+            var notGuardedTransforms = behaviorTransforms
+                .Union(optionsTransforms)
                 .Select(transform => new NotGuardedTransform<T>(transform));
-            // foreach (var transform in defaultTransforms)
-            // {
-            //     _options.AddDefaultTransform(transform);
-            // }
             
-            return _generatorNodes.SelectMany(node => node.GenerateInstances(defaultTransforms, _options.CustomConstructor));
+            return _generatorNodes.SelectMany(node => node.GenerateInstances(notGuardedTransforms, _options.CustomConstructor));
         }
-
-        // public void AddDefaultTransform(Transform<T> transform)
-        // {
-        //     _defaultTransforms.Add(new NotGuardedTransform<T>(transform));
-        // }
 
         public void AddTransform(Transform<T> transform, Func<GeneratorNode<T>, CanApplyTransformSpecification> guard)
         {

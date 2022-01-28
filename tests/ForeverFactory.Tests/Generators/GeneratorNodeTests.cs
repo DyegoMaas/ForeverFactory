@@ -37,9 +37,7 @@ namespace ForeverFactory.Tests.Generators
         [Fact]
         public void It_should_accept_a_custom_constructor_function()
         {
-            var generatorNode = new GeneratorNode<Person>(
-                // customConstructor: () => new Person {FirstName = "John", LastName = "Doe"}
-            );
+            var generatorNode = new GeneratorNode<Person>();
 
             var persons = generatorNode.GenerateInstances(customConstructor: () => new Person {FirstName = "John", LastName = "Doe"});
 
@@ -135,16 +133,5 @@ namespace ForeverFactory.Tests.Generators
 
             targetCount.Should().Be(3);
         }
-
-        // [Fact]
-        // public void It_should_override_the_custom_constructor()
-        // {
-        //     var generatorNode = new GeneratorNode<Person>(1, () => new Person {Age = 10});
-        //
-        //     generatorNode.OverrideCustomConstructor(() => new Person {Age = 11});
-        //
-        //     var person = generatorNode.GenerateInstances().First();
-        //     person.Age.Should().Be(11);
-        // }
     }
 }
