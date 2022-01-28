@@ -180,7 +180,7 @@ With this behavior, ForeverFactory will recursively initialize every property it
 
 ```csharp
 var people = MagicFactory
-    .For<ClassWithInteger>()
+    .For<Customer>()
     .WithBehavior(new FillWithSequentialValuesBehavior())
     .Many(100)
     .Build();
@@ -264,8 +264,6 @@ dotnet stryker
 
 ## Roadmap
 
-- Make build deterministic
-- Enable source link
 - Allow to configure custom builder per builder (single builder and many builder)
 - Support custom constructor scoped by builder (for now, custom constructors are shared along the linked builders)
 - Support "smart" behavior, which identifies by convention which type of sequences and rules to apply to every property 
