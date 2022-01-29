@@ -51,14 +51,14 @@ namespace ForeverFactory
             Customize(_customizeFactoryOptions);
             SetRootNode(instanceCount: 1);
         }
-        
+
+        protected abstract void Customize(ICustomizeFactoryOptions<T> customization);
+
         private void SetRootNode(int instanceCount)
         {
             var rootNode = new GeneratorNode<T>(instanceCount);
             _objectFactory.AddRootNode(rootNode);
         }
-
-        protected abstract void Customize(ICustomizeFactoryOptions<T> customization);
 
         public ISimpleFactory<T> UsingConstructor(Func<T> customConstructor)
         {
