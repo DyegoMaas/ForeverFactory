@@ -34,7 +34,7 @@ namespace ForeverFactory.Behaviors
             };
         }
         
-        public override IEnumerable<Transform<T>> GetTransforms<T>()
+        internal override IEnumerable<Transform<T>> GetTransforms<T>()
         {
             var factory = new FillWithSequentialValuesTransformFactory(_recursiveTransformFactoryOptions);
             yield return factory.GetTransform<T>();

@@ -19,10 +19,10 @@ namespace ForeverFactory.Generators.Transforms.Guards.Specifications
             _targetCount = targetCount;
         }
 
-        public override bool CanApply(int currentIndex)
+        public override bool CanApply(int index)
         {
             var firstToApply = _targetCount - _countToApply;
-            return currentIndex >= firstToApply;
+            return index >= firstToApply;
         }
     }
 }

@@ -11,17 +11,13 @@ namespace ForeverFactory.Generators
         where T : class
     {
         private readonly List<GuardedTransform<T>> _transformsToApply = new List<GuardedTransform<T>>();
-        private Func<T> _customConstructor;
 
-        public GeneratorNode(
-            int targetCount = 1,
-            Func<T> customConstructor = null)
+        public GeneratorNode(int instanceCount = 1)
         {
-            TargetCount = targetCount;
-            _customConstructor = customConstructor;
+            InstanceCount = instanceCount;
         }
 
-        public int TargetCount { get; }
+        public int InstanceCount { get; }
 
         public void AddTransform(Transform<T> transform, CanApplyTransformSpecification guard = null)
         {
@@ -29,16 +25,11 @@ namespace ForeverFactory.Generators
             _transformsToApply.Add(new GuardedTransform<T>(transform, guard));
         }
 
-        public void OverrideCustomConstructor(Func<T> newCustomConstructor)
+        public IEnumerable<T> GenerateInstances(IEnumerable<NotGuardedTransform<T>> defaultTransforms = null, Func<T> customConstructor = null)
         {
-            _customConstructor = newCustomConstructor;
-        }
-
-        public IEnumerable<T> ProduceInstances(IEnumerable<NotGuardedTransform<T>> defaultTransforms = null)
-        {
-            for (var index = 0; index < TargetCount; index++)
+            for (var index = 0; index < InstanceCount; index++)
             {
-                var instance = CreateInstance();
+                var instance = CreateInstance(customConstructor);
 
                 var defaultTransformsToApply = defaultTransforms ?? Enumerable.Empty<GuardedTransform<T>>();
                 var transformsToApply = defaultTransformsToApply.Union(_transformsToApply);
@@ -48,14 +39,14 @@ namespace ForeverFactory.Generators
             }
         }
 
-        private T CreateInstance()
+        private static T CreateInstance(Func<T> customConstructor = null)
         {
-            return _customConstructor != null
-                ? _customConstructor.Invoke()
+            return customConstructor != null
+                ? customConstructor.Invoke()
                 : Activator.CreateInstance<T>();
         }
 
-        private void ApplyTransformsToInstance(IEnumerable<GuardedTransform<T>> guardedTransforms, T instance,
+        private static void ApplyTransformsToInstance(IEnumerable<GuardedTransform<T>> guardedTransforms, T instance,
             int instanceIndex)
         {
             foreach (var guardedTransform in guardedTransforms)

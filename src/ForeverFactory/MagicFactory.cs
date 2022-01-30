@@ -38,38 +38,37 @@ namespace ForeverFactory
     ///     A customizable factory of objects of type "T". It can be extended with predefined configurations.
     /// </summary>
     /// <typeparam name="T">The type of objects that this factory will build.</typeparam>
-    public abstract class MagicFactory<T> : ISimpleFactory<T>, ICustomizeOneBuildOne<T>, ICustomizeOneBuildOneWithNavigation<T>, ICustomizeManyBuildMany<T>, ICustomizeOneBuildManyWithNavigation<T>
+    public abstract class MagicFactory<T> : ISimpleFactory<T>, ICustomizeOneBuildOneWithNavigation<T>, ICustomizeManyBuildMany<T>, ICustomizeOneBuildManyWithNavigation<T>
         where T : class
     {
-        private readonly ObjectFactory<T> _objectFactory = new ObjectFactory<T>();
-        private Func<T> _customConstructor;
-        private GeneratorNode<T> _rootNode;
+        private readonly ObjectFactory<T> _objectFactory;
+        private readonly CustomizeFactoryOptions<T> _customizeFactoryOptions;
 
         protected MagicFactory()
         {
-            SetRootNode(1);
-            Customize(new CustomizeFactoryOptions<T>(this));
+            _customizeFactoryOptions = new CustomizeFactoryOptions<T>();
+            _objectFactory = new ObjectFactory<T>(_customizeFactoryOptions);
+            Customize(_customizeFactoryOptions);
+            SetRootNode(instanceCount: 1);
+        }
+
+        protected abstract void Customize(ICustomizeFactoryOptions<T> customization);
+
+        private void SetRootNode(int instanceCount)
+        {
+            var rootNode = new GeneratorNode<T>(instanceCount);
+            _objectFactory.AddRootNode(rootNode);
         }
 
         public ISimpleFactory<T> UsingConstructor(Func<T> customConstructor)
         {
-            _customConstructor = customConstructor;
-            _rootNode.OverrideCustomConstructor(customConstructor);
+            _customizeFactoryOptions.UpdateConstructor(customConstructor);
             return this;
-        }
-
-        internal void AddDefaultTransform<TValue>(Func<T, TValue> setMember)
-        {
-            _objectFactory.AddDefaultTransform(new FuncTransform<T,TValue>(setMember.Invoke));
         }
 
         public ISimpleFactory<T> WithBehavior(Behavior behavior)
         {
-            var transforms = behavior.GetTransforms<T>();
-            foreach (var transform in transforms)
-            {
-                _objectFactory.AddDefaultTransform(transform);
-            }
+            _customizeFactoryOptions.UpdateBehavior(behavior);
             return this;
         }
 
@@ -92,20 +91,21 @@ namespace ForeverFactory
 
         public ICustomizeManyBuildMany<T> Many(int count)
         {
-            SetRootNode(count);
+            SetRootNode(instanceCount: count);
             return this;
         }
 
         public ICustomizeOneBuildManyWithNavigation<T> PlusOne()
         {
-            var newNode = new GeneratorNode<T>(1, _customConstructor);
+            var newNode = new GeneratorNode<T>(instanceCount: 1);
             _objectFactory.AddNode(newNode);
+            
             return this;
         }
 
         public ICustomizeManyBuildMany<T> Plus(int count)
         {
-            var newNode = new GeneratorNode<T>(count, _customConstructor);
+            var newNode = new GeneratorNode<T>(instanceCount: count);
             _objectFactory.AddNode(newNode);
 
             return this;
@@ -145,14 +145,6 @@ namespace ForeverFactory
             return _objectFactory.Build();
         }
 
-        private void SetRootNode(int targetCount)
-        {
-            _rootNode = new GeneratorNode<T>(targetCount, _customConstructor);
-            _objectFactory.AddRootNode(_rootNode);
-        }
-
-        protected abstract void Customize(ICustomizeFactoryOptions<T> customization);
-
         private void AddTransformThatAlwaysApply<TValue>(Func<T, TValue> setMember)
         {
             _objectFactory.AddTransform(
@@ -165,7 +157,7 @@ namespace ForeverFactory
         {
             _objectFactory.AddTransform(
                 new FuncTransform<T, TValue>(setMember.Invoke),
-                node => new ApplyTransformToFirstInstancesSpecification(count, node.TargetCount)
+                node => new ApplyTransformToFirstInstancesSpecification(count, node.InstanceCount)
             );
         }
 
@@ -173,7 +165,7 @@ namespace ForeverFactory
         {
             _objectFactory.AddTransform(
                 new FuncTransform<T, TValue>(setMember.Invoke),
-                node => new ApplyTransformToLastInstancesSpecification(count, node.TargetCount)
+                node => new ApplyTransformToLastInstancesSpecification(count, node.InstanceCount)
             );
         }
     }

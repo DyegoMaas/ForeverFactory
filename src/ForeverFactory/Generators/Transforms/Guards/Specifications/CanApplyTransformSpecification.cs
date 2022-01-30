@@ -2,6 +2,6 @@
 {
     internal abstract class CanApplyTransformSpecification
     {
-        public abstract bool CanApply(int currentIndex);
+        public abstract bool CanApply(int index);
     }
 }

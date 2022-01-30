@@ -11,17 +11,23 @@ namespace ForeverFactory.Generators
     internal class ObjectFactory<T> : IBuildMany<T>
         where T : class
     {
-        private readonly List<NotGuardedTransform<T>> _defaultTransforms = new List<NotGuardedTransform<T>>();
-        private readonly List<GeneratorNode<T>> _nodes = new List<GeneratorNode<T>>();
+        private readonly IObjectFactoryOptions<T> _options;
+        private readonly List<GeneratorNode<T>> _generatorNodes = new List<GeneratorNode<T>>();
+
+        public ObjectFactory(IObjectFactoryOptions<T> options)
+        {
+            _options = options;
+        }
 
         public IEnumerable<T> Build()
         {
-            return _nodes.SelectMany(generatorNode => generatorNode.ProduceInstances(_defaultTransforms));
-        }
-
-        public void AddDefaultTransform(Transform<T> transform)
-        {
-            _defaultTransforms.Add(new NotGuardedTransform<T>(transform));
+            var behaviorTransforms = _options.SelectedBehavior.GetTransforms<T>();
+            var optionsTransforms = _options.Transforms;
+            var notGuardedTransforms = behaviorTransforms
+                .Union(optionsTransforms)
+                .Select(transform => new NotGuardedTransform<T>(transform));
+            
+            return _generatorNodes.SelectMany(node => node.GenerateInstances(notGuardedTransforms, _options.CustomConstructor));
         }
 
         public void AddTransform(Transform<T> transform, Func<GeneratorNode<T>, CanApplyTransformSpecification> guard)
@@ -32,20 +38,18 @@ namespace ForeverFactory.Generators
 
         private GeneratorNode<T> GetCurrentGeneratorNode()
         {
-            return _nodes.Any()
-                ? _nodes.Last()
-                : null;
+            return _generatorNodes.LastOrDefault();
         }
 
         public void AddRootNode(GeneratorNode<T> generatorNode)
         {
-            _nodes.Clear();
+            _generatorNodes.Clear();
             AddNode(generatorNode);
         }
 
         public void AddNode(GeneratorNode<T> generatorNode)
         {
-            _nodes.Add(generatorNode);
+            _generatorNodes.Add(generatorNode);
         }
     }
 }
