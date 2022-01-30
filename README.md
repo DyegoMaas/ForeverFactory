@@ -6,9 +6,13 @@
 ![Nuget](https://img.shields.io/nuget/v/ForeverFactory)
 ![Nuget](https://img.shields.io/nuget/dt/ForeverFactory)
 
-**Forever Factory** helps you build custom objects. By smartly merging design patterns like Factory and Builder, it makes it super easy to create hundreds of customized objects.
+**Forever Factory** helps you to easily build lots of custom objects. Some situations where it shines and is most helpful are:
 
-With Forever Factory, building a new object can be as simple as `MagicFactory.For<Person>().Build()`.
+- Creating test objects for any kind of automated tests, like unit, functional or acceptance tests
+- Creating objects to return from mocked services
+- Creating test data for when you are developing or testing new applications
+
+**With Forever Factory, building a new object can be as simple as `MagicFactory.For<Person>().Build()`.**
 
 ## How to use?
 
@@ -52,7 +56,7 @@ var vitorHugo = MagicFactory.For<Person>()
     .Build();
 ```
 
-### Building a multiple objects
+### Building multiple objects
 
 We can build a defined number of instances of this class as follows:
 
@@ -107,6 +111,8 @@ person.FirstName.Should().Be("Albert");
 person.LastName.Should().Be("Einstein");
 person.Age.Should().Be(56);
 ```
+
+This feature is heavily inspired by a Python project named [factory_boy](https://github.com/FactoryBoy/factory_boy).
 
 ### Custom constructors
 
@@ -172,7 +178,7 @@ private class ProductFactory : MagicFactory<Product>
 
 #### DoNotFillBehavior
 
-By default, it will not fill any properties, and it is up to you to fill any properties.
+By default, it will not fill anything, and it is up to you to fill any properties you need.
 
 #### FillWithSequentialValuesBehavior
 
