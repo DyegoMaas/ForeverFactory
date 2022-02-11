@@ -30,7 +30,9 @@ namespace ForeverFactory.Behaviors
 
             _recursiveTransformFactoryOptions = new RecursiveTransformFactoryOptions
             {
-                EnableRecursiveInstantiation = configuration.Recursive
+                EnableRecursiveInstantiation = configuration.Recursive,
+                DateTimeIncrements = configuration.DateTimeOptions?.DateTimeIncrements ?? DateTimeIncrements.Days,
+                StartDate = configuration.DateTimeOptions?.StartDate ?? RecursiveTransformFactoryOptions.DefaultStartDate
             };
         }
         
@@ -48,6 +50,27 @@ namespace ForeverFactory.Behaviors
         /// Default is true.
         /// </summary>
         public bool Recursive { get; set; } = true;
+
+        /// <summary>
+        /// Allows customizing how DateTimes are generated.
+        /// </summary>
+        public DateTimeSequenceOptions DateTimeOptions { get; set; }
+    }
+
+    public class DateTimeSequenceOptions
+    {
+        /// <summary>
+        /// Dates will be generated sequentially, starting from StartDate in increments determined by DateTimeIncrements
+        /// property.
+        /// Optional. Default value is 1753/1/1.
+        /// </summary>
+        public DateTime? StartDate { get; set; }
+        
+        /// <summary>
+        /// Determines by how much each instance will variate from the previous.
+        /// Default value is DateTimeIncrements.Days.
+        /// </summary>
+        public DateTimeIncrements DateTimeIncrements { get; set; } = DateTimeIncrements.Days;
     }
     
     public enum DateTimeIncrements

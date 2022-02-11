@@ -95,6 +95,60 @@ namespace ForeverFactory.Tests.Behaviors
             }
         }
 
+        public class CustomizedDateTimeGenerationTests
+        {
+            private static readonly DateTime StartDate = 25.December(2020).At(22.Hours());
+            private static readonly DateTimeIncrements DateTimeIncrements = DateTimeIncrements.Hours;
+
+            public static IEnumerable<object[]> FactoriesWithDefaultBehavior()
+            {
+                var customerFactoryWithPropertyNameFillingBehavior = new CustomerFactoryWithPropertyNameFillingBehavior();
+                var simpleFactory = MagicFactory.For<Customer>().WithBehavior(GetCustomizedBehavior(
+                    startDate: StartDate, 
+                    increments: DateTimeIncrements
+                ));
+                return new List<object[]>
+                {
+                    new object[] {customerFactoryWithPropertyNameFillingBehavior},
+                    new object[] {simpleFactory}
+                };
+            }
+
+            [Theory]
+            [MemberData(nameof(FactoriesWithDefaultBehavior))]
+            public void It_should_fill_all_objects_properties_with_sequential_numbers(ISimpleFactory<Customer> factory)
+            {
+                var customers = factory.Many(3).Build().ToArray();
+
+                customers[0].Birthday.Should().Be(25.December(2020).At(22.Hours()));
+                customers[1].Birthday.Should().Be(25.December(2020).At(23.Hours()));
+                customers[2].Birthday.Should().Be(26.December(2020).At(0.Hours()));
+            }
+            
+            private class CustomerFactoryWithPropertyNameFillingBehavior : MagicFactory<Customer>
+            {
+                protected override void Customize(ICustomizeFactoryOptions<Customer> customization)
+                {
+                    customization.SetDefaultBehavior(GetCustomizedBehavior(
+                        startDate: StartDate, 
+                        increments: DateTimeIncrements
+                    ));
+                }
+            }
+
+            private static FillWithSequentialValuesBehavior GetCustomizedBehavior(DateTime startDate, DateTimeIncrements increments)
+            {
+                return new FillWithSequentialValuesBehavior(options =>
+                {
+                    options.DateTimeOptions = new DateTimeSequenceOptions
+                    {
+                        StartDate = startDate,
+                        DateTimeIncrements = increments
+                    };
+                });
+            }
+        }
+
         public class Customer
         {
             public string Name { get; set; }
