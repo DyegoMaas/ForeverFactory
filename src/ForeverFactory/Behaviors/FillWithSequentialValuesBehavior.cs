@@ -52,8 +52,13 @@ namespace ForeverFactory.Behaviors
     
     public enum DateTimeIncrements
     {
-        Days = 1,
+        Years = 1,
         Months = 2,
-        Years = 3
+        Days = 3,
+        Hours = 4,
+        Minutes = 5,
+        Seconds = 6,
+        Milliseconds = 7,
+        Ticks = 8
     }
 }

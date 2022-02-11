@@ -91,6 +91,95 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
                 instance.DateTimeProperty.Should().Be(new DateTime(expectedYear, expectedMonth, expectedDay));
             }
             
+            [Theory]
+            [InlineData(0, 0)]
+            [InlineData(1, 1)]
+            [InlineData(2, 2)]
+            public void It_should_generate_sequential_dates_incrementing_by_hour(int index, int incrementedHours)
+            {
+                var transform = new FillWithSequentialValuesTransformFactory(new RecursiveTransformFactoryOptions
+                    {
+                        DateTimeIncrements = DateTimeIncrements.Hours
+                    })
+                    .GetTransform<ClassWithManyDifferentTypesOfProperties>();
+
+                var instance = new ClassWithManyDifferentTypesOfProperties();
+                transform.ApplyTo(instance, index);
+
+                instance.DateTimeProperty.Should().Be(FillWithSequentialValuesTransformFactory.StartingDateTime.Date + TimeSpan.FromHours(incrementedHours));
+            }
+            
+            [Theory]
+            [InlineData(0, 0)]
+            [InlineData(1, 1)]
+            [InlineData(2, 2)]
+            public void It_should_generate_sequential_dates_incrementing_by_minute(int index, int incrementedMinutes)
+            {
+                var transform = new FillWithSequentialValuesTransformFactory(new RecursiveTransformFactoryOptions
+                    {
+                        DateTimeIncrements = DateTimeIncrements.Minutes
+                    })
+                    .GetTransform<ClassWithManyDifferentTypesOfProperties>();
+
+                var instance = new ClassWithManyDifferentTypesOfProperties();
+                transform.ApplyTo(instance, index);
+
+                instance.DateTimeProperty.Should().Be(FillWithSequentialValuesTransformFactory.StartingDateTime.Date + TimeSpan.FromMinutes(incrementedMinutes));
+            }
+            
+            [Theory]
+            [InlineData(0, 0)]
+            [InlineData(1, 1)]
+            [InlineData(60, 60)]
+            public void It_should_generate_sequential_dates_incrementing_by_seconds(int index, int incrementedSeconds)
+            {
+                var transform = new FillWithSequentialValuesTransformFactory(new RecursiveTransformFactoryOptions
+                    {
+                        DateTimeIncrements = DateTimeIncrements.Seconds
+                    })
+                    .GetTransform<ClassWithManyDifferentTypesOfProperties>();
+
+                var instance = new ClassWithManyDifferentTypesOfProperties();
+                transform.ApplyTo(instance, index);
+
+                instance.DateTimeProperty.Should().Be(FillWithSequentialValuesTransformFactory.StartingDateTime.Date + TimeSpan.FromSeconds(incrementedSeconds));
+            }
+            
+            [Theory]
+            [InlineData(0, 0)]
+            [InlineData(1, 1)]
+            [InlineData(1200, 1200)]
+            public void It_should_generate_sequential_dates_incrementing_by_milliseconds(int index, int incrementedMilliseconds)
+            {
+                var transform = new FillWithSequentialValuesTransformFactory(new RecursiveTransformFactoryOptions
+                    {
+                        DateTimeIncrements = DateTimeIncrements.Milliseconds
+                    })
+                    .GetTransform<ClassWithManyDifferentTypesOfProperties>();
+
+                var instance = new ClassWithManyDifferentTypesOfProperties();
+                transform.ApplyTo(instance, index);
+
+                instance.DateTimeProperty.Should().Be(FillWithSequentialValuesTransformFactory.StartingDateTime.Date + TimeSpan.FromMilliseconds(incrementedMilliseconds));
+            }
+            
+            [Theory]
+            [InlineData(0, 0)]
+            [InlineData(1, 1)]
+            [InlineData(1000_000, 1000_000)]
+            public void It_should_generate_sequential_dates_incrementing_by_ticks(int index, int incrementedTicks)
+            {
+                var transform = new FillWithSequentialValuesTransformFactory(new RecursiveTransformFactoryOptions
+                    {
+                        DateTimeIncrements = DateTimeIncrements.Ticks
+                    })
+                    .GetTransform<ClassWithManyDifferentTypesOfProperties>();
+
+                var instance = new ClassWithManyDifferentTypesOfProperties();
+                transform.ApplyTo(instance, index);
+
+                instance.DateTimeProperty.Should().Be(FillWithSequentialValuesTransformFactory.StartingDateTime.Date + TimeSpan.FromTicks(incrementedTicks));
+            }
         }
 
         public class ClassWithManyDifferentTypesOfProperties

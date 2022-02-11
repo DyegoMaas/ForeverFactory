@@ -6,7 +6,7 @@ namespace ForeverFactory.Generators.Transforms.Factories
 {
     internal class FillWithSequentialValuesTransformFactory : BaseRecursiveTransformFactory
     {
-        private static DateTime StartingDateTime = new DateTime(
+        public static DateTime StartingDateTime = new DateTime(
             year: 1753, month: 1, day: 1, 
             hour: 0, minute: 0, second: 0,
             kind: DateTimeKind.Utc
@@ -75,6 +75,16 @@ namespace ForeverFactory.Generators.Transforms.Factories
 
                 switch (Options.DateTimeIncrements)
                 {
+                    case DateTimeIncrements.Hours:
+                        return () => StartingDateTime.AddHours(increment);
+                    case DateTimeIncrements.Minutes:
+                        return () => StartingDateTime.AddMinutes(increment);
+                    case DateTimeIncrements.Seconds:
+                        return () => StartingDateTime.AddSeconds(increment);
+                    case DateTimeIncrements.Milliseconds:
+                        return () => StartingDateTime.AddMilliseconds(increment);
+                    case DateTimeIncrements.Ticks:
+                        return () => StartingDateTime.AddTicks(increment);
                     case DateTimeIncrements.Years:
                         return () => StartingDateTime.AddYears(increment);
                     case DateTimeIncrements.Months:
