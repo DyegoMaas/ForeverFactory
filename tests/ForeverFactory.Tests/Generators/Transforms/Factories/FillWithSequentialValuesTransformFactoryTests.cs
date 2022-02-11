@@ -72,6 +72,25 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
                 instance.DateTimeProperty.Should().Be(new DateTime(expectedYear, expectedMonth, expectedDay));
             }
             
+            [Theory]
+            [InlineData(0, 1753, 1, 1)]
+            [InlineData(1, 1754, 1, 1)]
+            [InlineData(2, 1755, 1, 1)]
+            public void It_should_generate_sequential_dates_incrementing_by_year(int index,
+                int expectedYear, int expectedMonth, int expectedDay)
+            {
+                var transform = new FillWithSequentialValuesTransformFactory(new RecursiveTransformFactoryOptions
+                    {
+                        DateTimeIncrements = DateTimeIncrements.Years
+                    })
+                    .GetTransform<ClassWithManyDifferentTypesOfProperties>();
+
+                var instance = new ClassWithManyDifferentTypesOfProperties();
+                transform.ApplyTo(instance, index);
+
+                instance.DateTimeProperty.Should().Be(new DateTime(expectedYear, expectedMonth, expectedDay));
+            }
+            
         }
 
         public class ClassWithManyDifferentTypesOfProperties
