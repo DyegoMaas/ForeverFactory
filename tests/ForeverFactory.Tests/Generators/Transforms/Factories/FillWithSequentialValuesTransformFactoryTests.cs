@@ -1,14 +1,17 @@
-﻿using FluentAssertions;
+﻿using System;
+using System.Collections.Generic;
+using FluentAssertions;
+using FluentAssertions.Extensions;
 using ForeverFactory.Generators.Transforms.Factories;
 using Xunit;
 
 namespace ForeverFactory.Tests.Generators.Transforms.Factories
 {
-    public class FillWithPropertyNameTransformFactoryTests
+    public class FillWithSequentialValuesTransformFactoryTests
     {
         private readonly FillWithSequentialValuesTransformFactory _factory;
 
-        public FillWithPropertyNameTransformFactoryTests()
+        public FillWithSequentialValuesTransformFactoryTests()
         {
             _factory = new FillWithSequentialValuesTransformFactory();
         }
@@ -36,6 +39,26 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
             instance.DoubleProperty.Should().Be(sequentialNumberExpected);
             instance.DecimalProperty.Should().Be(sequentialNumberExpected);
         }
+        
+        [Theory]
+        [MemberData(nameof(SequentialDateTimeValues))]
+        public void It_should_fill_datetime_properties_with_sequential_values(int index, DateTime sequentialDateTimeExpected)
+        {
+            var transform = _factory.GetTransform<ClassWithManyDifferentTypesOfProperties>();
+
+            var instance = new ClassWithManyDifferentTypesOfProperties();
+            transform.ApplyTo(instance, index);
+
+            instance.DateTimeProperty.Should().Be(sequentialDateTimeExpected);
+        }
+
+        public static IEnumerable<object[]> SequentialDateTimeValues => 
+            new List<object[]>
+            {
+                new object[] {0, 1.January(1753)},
+                new object[] {1, 2.January(1753)},
+                new object[] {2, 3.January(1753)},
+            };
 
         public class ClassWithManyDifferentTypesOfProperties
         {
@@ -50,6 +73,7 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
             public float FloatProperty { get; set; }
             public double DoubleProperty { get; set; }
             public decimal DecimalProperty { get; set; }
+            public DateTime DateTimeProperty { get; set; }
         }
 
         [Fact]

@@ -62,6 +62,12 @@ namespace ForeverFactory.Generators.Transforms.Factories
             if (targetInfo.TargetType == typeof(decimal))
                 return () => Convert.ToDecimal(sequentialNumber);
 
+            if (targetInfo.TargetType == typeof(DateTime))
+            {
+                var daysToAdd = index;
+                return () => new DateTime(year: 1753, month: 1, day: 1).AddDays(daysToAdd);
+            }
+
             return null;
         }
     }
