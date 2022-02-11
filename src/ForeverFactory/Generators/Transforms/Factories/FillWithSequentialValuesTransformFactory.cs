@@ -1,4 +1,5 @@
 ﻿using System;
+using ForeverFactory.Behaviors;
 using ForeverFactory.Generators.Transforms.Factories.ReflectionTargets;
 
 namespace ForeverFactory.Generators.Transforms.Factories
@@ -64,8 +65,17 @@ namespace ForeverFactory.Generators.Transforms.Factories
 
             if (targetInfo.TargetType == typeof(DateTime))
             {
-                var daysToAdd = index;
-                return () => new DateTime(year: 1753, month: 1, day: 1).AddDays(daysToAdd);
+                var increment = index;
+
+                switch (Options.DateTimeIncrements)
+                {
+                    case DateTimeIncrements.Months:
+                        return () => new DateTime(year: 1753, month: 1, day: 1).AddMonths(increment);
+                    case DateTimeIncrements.Days:
+                    default:
+                        return () => new DateTime(year: 1753, month: 1, day: 1).AddDays(increment);
+                }
+                
             }
 
             return null;

@@ -49,4 +49,10 @@ namespace ForeverFactory.Behaviors
         /// </summary>
         public bool Recursive { get; set; } = true;
     }
+    
+    public enum DateTimeIncrements
+    {
+        Days = 1,
+        Months = 2
+    }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using FluentAssertions.Extensions;
+using ForeverFactory.Behaviors;
 using ForeverFactory.Generators.Transforms.Factories;
 using Xunit;
 
@@ -36,33 +37,41 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
 
         public class SequentialDateTimeTests
         {
-            private readonly FillWithSequentialValuesTransformFactory _factory;
-
-            public SequentialDateTimeTests()
-            {
-                _factory = new FillWithSequentialValuesTransformFactory();
-            }
-            
             [Theory]
-            [MemberData(nameof(SequentialDateTimeValues))]
-            public void It_should_fill_datetime_properties_with_sequential_values(int index,
-                DateTime sequentialDateTimeExpected)
+            [InlineData(0, 1753, 1, 1)]
+            [InlineData(1, 1753, 1, 2)]
+            [InlineData(2, 1753, 1, 3)]
+            public void It_should_generate_sequential_dates_incrementing_by_day(int index,
+                int expectedYear, int expectedMonth, int expectedDay)
             {
-                var transform = _factory.GetTransform<ClassWithManyDifferentTypesOfProperties>();
+                var transform = new FillWithSequentialValuesTransformFactory()
+                    .GetTransform<ClassWithManyDifferentTypesOfProperties>();
 
                 var instance = new ClassWithManyDifferentTypesOfProperties();
                 transform.ApplyTo(instance, index);
 
-                instance.DateTimeProperty.Should().Be(sequentialDateTimeExpected);
+                instance.DateTimeProperty.Should().Be(new DateTime(expectedYear, expectedMonth, expectedDay));
             }
 
-            public static IEnumerable<object[]> SequentialDateTimeValues =>
-                new List<object[]>
-                {
-                    new object[] {0, 1.January(1753)},
-                    new object[] {1, 2.January(1753)},
-                    new object[] {2, 3.January(1753)},
-                };
+            [Theory]
+            [InlineData(0, 1753, 1, 1)]
+            [InlineData(1, 1753, 2, 1)]
+            [InlineData(2, 1753, 3, 1)]
+            public void It_should_generate_sequential_dates_incrementing_by_month(int index,
+                int expectedYear, int expectedMonth, int expectedDay)
+            {
+                var transform = new FillWithSequentialValuesTransformFactory(new RecursiveTransformFactoryOptions
+                    {
+                        DateTimeIncrements = DateTimeIncrements.Months
+                    })
+                    .GetTransform<ClassWithManyDifferentTypesOfProperties>();
+
+                var instance = new ClassWithManyDifferentTypesOfProperties();
+                transform.ApplyTo(instance, index);
+
+                instance.DateTimeProperty.Should().Be(new DateTime(expectedYear, expectedMonth, expectedDay));
+            }
+            
         }
 
         public class ClassWithManyDifferentTypesOfProperties
