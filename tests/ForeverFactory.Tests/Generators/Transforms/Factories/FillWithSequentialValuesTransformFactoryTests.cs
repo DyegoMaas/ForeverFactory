@@ -106,7 +106,7 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
                 var instance = new ClassWithManyDifferentTypesOfProperties();
                 transform.ApplyTo(instance, index);
 
-                instance.DateTimeProperty.Should().Be(FillWithSequentialValuesTransformFactory.StartingDateTime.Date + TimeSpan.FromHours(incrementedHours));
+                instance.DateTimeProperty.Should().Be(RecursiveTransformFactoryOptions.DefaultStartDate.Date + TimeSpan.FromHours(incrementedHours));
             }
             
             [Theory]
@@ -124,7 +124,7 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
                 var instance = new ClassWithManyDifferentTypesOfProperties();
                 transform.ApplyTo(instance, index);
 
-                instance.DateTimeProperty.Should().Be(FillWithSequentialValuesTransformFactory.StartingDateTime.Date + TimeSpan.FromMinutes(incrementedMinutes));
+                instance.DateTimeProperty.Should().Be(RecursiveTransformFactoryOptions.DefaultStartDate.Date + TimeSpan.FromMinutes(incrementedMinutes));
             }
             
             [Theory]
@@ -142,7 +142,7 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
                 var instance = new ClassWithManyDifferentTypesOfProperties();
                 transform.ApplyTo(instance, index);
 
-                instance.DateTimeProperty.Should().Be(FillWithSequentialValuesTransformFactory.StartingDateTime.Date + TimeSpan.FromSeconds(incrementedSeconds));
+                instance.DateTimeProperty.Should().Be(RecursiveTransformFactoryOptions.DefaultStartDate.Date + TimeSpan.FromSeconds(incrementedSeconds));
             }
             
             [Theory]
@@ -160,7 +160,7 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
                 var instance = new ClassWithManyDifferentTypesOfProperties();
                 transform.ApplyTo(instance, index);
 
-                instance.DateTimeProperty.Should().Be(FillWithSequentialValuesTransformFactory.StartingDateTime.Date + TimeSpan.FromMilliseconds(incrementedMilliseconds));
+                instance.DateTimeProperty.Should().Be(RecursiveTransformFactoryOptions.DefaultStartDate.Date + TimeSpan.FromMilliseconds(incrementedMilliseconds));
             }
             
             [Theory]
@@ -178,7 +178,27 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
                 var instance = new ClassWithManyDifferentTypesOfProperties();
                 transform.ApplyTo(instance, index);
 
-                instance.DateTimeProperty.Should().Be(FillWithSequentialValuesTransformFactory.StartingDateTime.Date + TimeSpan.FromTicks(incrementedTicks));
+                instance.DateTimeProperty.Should().Be(RecursiveTransformFactoryOptions.DefaultStartDate.Date + TimeSpan.FromTicks(incrementedTicks));
+            }
+            
+            [Theory]
+            [InlineData(0, 1999, 12, 25, 0)]
+            [InlineData(365, 2012, 12, 31, 365)]
+            public void It_should_generate_sequential_dates_based_on_the_start_date(int index, 
+                int startYear, int startMonth, int startDay, int incrementedDays)
+            {
+                var startDate = new DateTime(startYear, startMonth, startDay);
+                var transform = new FillWithSequentialValuesTransformFactory(new RecursiveTransformFactoryOptions
+                    {
+                        DateTimeIncrements = DateTimeIncrements.Days,
+                        StartDate = startDate
+                    })
+                    .GetTransform<ClassWithManyDifferentTypesOfProperties>();
+
+                var instance = new ClassWithManyDifferentTypesOfProperties();
+                transform.ApplyTo(instance, index);
+
+                instance.DateTimeProperty.Should().Be(startDate + TimeSpan.FromDays(incrementedDays));
             }
         }
 

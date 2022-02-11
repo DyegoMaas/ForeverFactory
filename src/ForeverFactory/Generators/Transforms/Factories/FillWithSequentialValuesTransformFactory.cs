@@ -6,12 +6,6 @@ namespace ForeverFactory.Generators.Transforms.Factories
 {
     internal class FillWithSequentialValuesTransformFactory : BaseRecursiveTransformFactory
     {
-        public static DateTime StartingDateTime = new DateTime(
-            year: 1753, month: 1, day: 1, 
-            hour: 0, minute: 0, second: 0,
-            kind: DateTimeKind.Utc
-        );
-
         public FillWithSequentialValuesTransformFactory(RecursiveTransformFactoryOptions options = null) 
             : base(options)
         {
@@ -76,22 +70,22 @@ namespace ForeverFactory.Generators.Transforms.Factories
                 switch (Options.DateTimeIncrements)
                 {
                     case DateTimeIncrements.Hours:
-                        return () => StartingDateTime.AddHours(increment);
+                        return () => Options.StartDate.AddHours(increment);
                     case DateTimeIncrements.Minutes:
-                        return () => StartingDateTime.AddMinutes(increment);
+                        return () => Options.StartDate.AddMinutes(increment);
                     case DateTimeIncrements.Seconds:
-                        return () => StartingDateTime.AddSeconds(increment);
+                        return () => Options.StartDate.AddSeconds(increment);
                     case DateTimeIncrements.Milliseconds:
-                        return () => StartingDateTime.AddMilliseconds(increment);
+                        return () => Options.StartDate.AddMilliseconds(increment);
                     case DateTimeIncrements.Ticks:
-                        return () => StartingDateTime.AddTicks(increment);
+                        return () => Options.StartDate.AddTicks(increment);
                     case DateTimeIncrements.Years:
-                        return () => StartingDateTime.AddYears(increment);
+                        return () => Options.StartDate.AddYears(increment);
                     case DateTimeIncrements.Months:
-                        return () => StartingDateTime.AddMonths(increment);
+                        return () => Options.StartDate.AddMonths(increment);
                     case DateTimeIncrements.Days:
                     default:
-                        return () => StartingDateTime.AddDays(increment);
+                        return () => Options.StartDate.AddDays(increment);
                 }
             }
 
