@@ -6,7 +6,9 @@ using ForeverFactory.Generators.Transforms.Factories;
 namespace ForeverFactory.Behaviors
 {
     /// <summary>
-    /// This behavior will automatically set all string properties do "".
+    /// This behavior will automatically set all string properties to "", numbers to 0.
+    /// DateTimes will be set to 1753/1/1. This date was chosen because it is the minimum date allowed in many
+    /// SQL databases.
     /// Nested types will also be recursively initialized.
     /// </summary>
     public class FillWithEmptyValuesBehavior : Behavior

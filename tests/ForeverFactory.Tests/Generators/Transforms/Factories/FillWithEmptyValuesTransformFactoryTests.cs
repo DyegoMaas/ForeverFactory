@@ -35,6 +35,7 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
             transform.ApplyTo(instanceOfA);
 
             instanceOfA.StringProperty.Should().Be(string.Empty);
+            instanceOfA.DateTimeProperty.Should().Be(RecursiveTransformFactoryOptions.DefaultStartDate);
             instanceOfA.NullableByteProperty.Should().Be(0);
             instanceOfA.NullableShortProperty.Should().Be(0);
             instanceOfA.NullableUShortProperty.Should().Be(0);
@@ -51,6 +52,7 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
         private class ClassA
         {
             public string StringProperty { get; set; }
+            public DateTime DateTimeProperty { get; set; }
             public byte? NullableByteProperty { get; set; }
             public short? NullableShortProperty { get; set; }
             public ushort? NullableUShortProperty { get; set; }
