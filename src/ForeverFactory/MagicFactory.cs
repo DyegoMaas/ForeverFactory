@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using ForeverFactory.Behaviors;
 using ForeverFactory.Customizations;
 using ForeverFactory.FluentInterfaces;
@@ -46,9 +47,8 @@ namespace ForeverFactory
 
         protected MagicFactory()
         {
-            _customizeFactoryOptions = new CustomizeFactoryOptions<T>();
+            _customizeFactoryOptions = new CustomizeFactoryOptions<T>(initialize: Customize);
             _objectFactory = new ObjectFactory<T>(_customizeFactoryOptions);
-            Customize(_customizeFactoryOptions);
             SetRootNode(instanceCount: 1);
         }
 
