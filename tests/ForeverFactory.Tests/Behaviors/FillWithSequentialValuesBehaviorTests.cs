@@ -13,12 +13,15 @@ namespace ForeverFactory.Tests.Behaviors
     {
         public class DefaultConfigurationTests
         {
-            public static IEnumerable<object[]> FactoriesWithDefaultBehavior =>
-                new List<object[]>
+            public static IEnumerable<object[]> FactoriesWithDefaultBehavior()
+            {
+                var behavior = new FillWithSequentialValuesBehavior();
+                return new List<object[]>
                 {
-                    new object[] {new CustomerFactoryWithPropertyNameFillingBehavior()},
-                    new object[] {MagicFactory.For<Customer>().WithBehavior(new FillWithSequentialValuesBehavior())}
+                    new object[] { new CustomerFactory(behavior) },
+                    new object[] { MagicFactory.For<Customer>().WithBehavior(behavior) }
                 };
+            }
 
             [Theory]
             [MemberData(nameof(FactoriesWithDefaultBehavior))]
@@ -47,14 +50,6 @@ namespace ForeverFactory.Tests.Behaviors
                 customer[1].Address.ZipCode.Should().Be("ZipCode2");
                 customer[2].Address.ZipCode.Should().Be("ZipCode3");
             }
-            
-            private class CustomerFactoryWithPropertyNameFillingBehavior : MagicFactory<Customer>
-            {
-                protected override void Customize(ICustomizeFactoryOptions<Customer> customization)
-                {
-                    customization.SetDefaultBehavior(new FillWithSequentialValuesBehavior());
-                }
-            }
         }
 
         public class RecursionDisabledTests
@@ -72,45 +67,42 @@ namespace ForeverFactory.Tests.Behaviors
                 customer.Address.Should().BeNull();
             }
 
-            public static IEnumerable<object[]> FactoriesWithRecursionDisabled =>
-                new List<object[]>
+            public static IEnumerable<object[]> FactoriesWithRecursionDisabled()
+            {
+                var customizedBehavior = new FillWithSequentialValuesBehavior(options =>
                 {
-                    new object[] {new CustomerFactoryWithPropertyNameFillingBehaviorWithRecursionDisabled()},
-                    new object[]
-                    {
-                        MagicFactory.For<Customer>()
-                            .WithBehavior(new FillWithSequentialValuesBehavior(options => options.Recursive = false))
+                    options.Recursive = false;
+                });
+                
+                return new List<object[]>
+                {
+                    new object[] { new CustomerFactory(customizedBehavior) },
+                    new object[] { MagicFactory.For<Customer>()
+                        .WithBehavior(new FillWithSequentialValuesBehavior(options => 
+                            options.Recursive = false)
+                        )
                     }
                 };
-            
-            private class CustomerFactoryWithPropertyNameFillingBehaviorWithRecursionDisabled : MagicFactory<Customer>
-            {
-                protected override void Customize(ICustomizeFactoryOptions<Customer> customization)
-                {
-                    customization.SetDefaultBehavior(new FillWithSequentialValuesBehavior(options =>
-                    {
-                        options.Recursive = false;
-                    }));
-                }
             }
         }
 
         public class CustomizedDateTimeGenerationTests
         {
-            private static readonly DateTime StartDate = 25.December(2020).At(22.Hours());
-            private static readonly DateTimeIncrements DateTimeIncrements = DateTimeIncrements.Hours;
-
             public static IEnumerable<object[]> FactoriesWithDefaultBehavior()
             {
-                var customerFactoryWithPropertyNameFillingBehavior = new CustomerFactoryWithPropertyNameFillingBehavior();
-                var simpleFactory = MagicFactory.For<Customer>().WithBehavior(GetCustomizedBehavior(
-                    startDate: StartDate, 
-                    increments: DateTimeIncrements
-                ));
+                var customizedBehavior = new FillWithSequentialValuesBehavior(options =>
+                {
+                    options.DateTimeOptions = new DateTimeSequenceOptions
+                    {
+                        StartDate = 25.December(2020).At(22.Hours()),
+                        DateTimeIncrements = DateTimeIncrements.Hours
+                    };
+                });
+                
                 return new List<object[]>
                 {
-                    new object[] {customerFactoryWithPropertyNameFillingBehavior},
-                    new object[] {simpleFactory}
+                    new object[] {new CustomerFactory(customizedBehavior)},
+                    new object[] {MagicFactory.For<Customer>().WithBehavior(customizedBehavior)}
                 };
             }
 
@@ -124,28 +116,20 @@ namespace ForeverFactory.Tests.Behaviors
                 customers[1].Birthday.Should().Be(25.December(2020).At(23.Hours()));
                 customers[2].Birthday.Should().Be(26.December(2020).At(0.Hours()));
             }
-            
-            private class CustomerFactoryWithPropertyNameFillingBehavior : MagicFactory<Customer>
+        }
+        
+        public class CustomerFactory : MagicFactory<Customer>
+        {
+            private readonly FillWithSequentialValuesBehavior _customizedBehavior;
+
+            public CustomerFactory(FillWithSequentialValuesBehavior customizedBehavior)
             {
-                protected override void Customize(ICustomizeFactoryOptions<Customer> customization)
-                {
-                    customization.SetDefaultBehavior(GetCustomizedBehavior(
-                        startDate: StartDate, 
-                        increments: DateTimeIncrements
-                    ));
-                }
+                _customizedBehavior = customizedBehavior;
             }
 
-            private static FillWithSequentialValuesBehavior GetCustomizedBehavior(DateTime startDate, DateTimeIncrements increments)
+            protected override void Customize(ICustomizeFactoryOptions<Customer> customization)
             {
-                return new FillWithSequentialValuesBehavior(options =>
-                {
-                    options.DateTimeOptions = new DateTimeSequenceOptions
-                    {
-                        StartDate = startDate,
-                        DateTimeIncrements = increments
-                    };
-                });
+                customization.SetDefaultBehavior(_customizedBehavior);
             }
         }
 
