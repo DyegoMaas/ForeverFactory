@@ -17,8 +17,9 @@ namespace ForeverFactory.Generators.Transforms.Factories
             
             if (targetInfo.TargetType == typeof(string)) 
                 return () => targetInfo.Name + sequentialNumber;
-            
-            if (targetInfo.TargetType == typeof(byte))
+
+            var nullableUnderlyingType = Nullable.GetUnderlyingType(targetInfo.TargetType);
+            if (targetInfo.TargetType == typeof(byte) || nullableUnderlyingType == typeof(byte))
                 return () =>
                 {
                     if (sequentialNumber > byte.MaxValue)
@@ -26,7 +27,7 @@ namespace ForeverFactory.Generators.Transforms.Factories
                     return (byte)sequentialNumber;
                 };
             
-            if (targetInfo.TargetType == typeof(short))
+            if (targetInfo.TargetType == typeof(short) || nullableUnderlyingType == typeof(short))
                 return () =>
                 {
                     if (sequentialNumber > short.MaxValue)
@@ -34,7 +35,7 @@ namespace ForeverFactory.Generators.Transforms.Factories
                     return (short)sequentialNumber;
                 };
             
-            if (targetInfo.TargetType == typeof(ushort))
+            if (targetInfo.TargetType == typeof(ushort) || nullableUnderlyingType == typeof(ushort))
                 return () =>
                 {
                     if (sequentialNumber > ushort.MaxValue)
@@ -42,28 +43,28 @@ namespace ForeverFactory.Generators.Transforms.Factories
                     return (ushort)sequentialNumber;
                 };
             
-            if (targetInfo.TargetType == typeof(int))
+            if (targetInfo.TargetType == typeof(int) || nullableUnderlyingType == typeof(int))
                 return () => sequentialNumber;
             
-            if (targetInfo.TargetType == typeof(uint))
+            if (targetInfo.TargetType == typeof(uint) || nullableUnderlyingType == typeof(uint))
                 return () => (uint)sequentialNumber;
             
-            if (targetInfo.TargetType == typeof(long))
-                return () => sequentialNumber;
+            if (targetInfo.TargetType == typeof(long) || nullableUnderlyingType == typeof(long))
+                return () => (long)sequentialNumber;
             
-            if (targetInfo.TargetType == typeof(ulong))
+            if (targetInfo.TargetType == typeof(ulong) || nullableUnderlyingType == typeof(ulong))
                 return () => (ulong)sequentialNumber;
             
-            if (targetInfo.TargetType == typeof(float))
-                return () => sequentialNumber;
+            if (targetInfo.TargetType == typeof(float) || nullableUnderlyingType == typeof(float))
+                return () => (float)sequentialNumber;
             
-            if (targetInfo.TargetType == typeof(double))
-                return () => sequentialNumber;
+            if (targetInfo.TargetType == typeof(double) || nullableUnderlyingType == typeof(double))
+                return () => (double)sequentialNumber;
             
-            if (targetInfo.TargetType == typeof(decimal))
+            if (targetInfo.TargetType == typeof(decimal) || nullableUnderlyingType == typeof(decimal))
                 return () => Convert.ToDecimal(sequentialNumber);
 
-            if (targetInfo.TargetType == typeof(DateTime))
+            if (targetInfo.TargetType == typeof(DateTime) || nullableUnderlyingType == typeof(DateTime))
             {
                 var increment = index;
 

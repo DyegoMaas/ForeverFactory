@@ -5,6 +5,7 @@ using FluentAssertions;
 using FluentAssertions.Extensions;
 using ForeverFactory.Behaviors;
 using ForeverFactory.FluentInterfaces;
+using ForeverFactory.Generators.Transforms.Factories;
 using Xunit;
 
 namespace ForeverFactory.Tests.Behaviors
@@ -38,6 +39,27 @@ namespace ForeverFactory.Tests.Behaviors
                 customers[2].Name.Should().Be("Name3");
                 customers[2].Age.Should().Be(3);
                 customers[2].Birthday.Should().Be(3.January(1753));
+            }
+            
+            [Theory]
+            [MemberData(nameof(FactoriesWithDefaultBehavior))]
+            public void It_should_fill_all_nullable_properties_of_supported_types(ISimpleFactory<Customer> factory)
+            {
+                var customers = factory.Many(2).Build().ToArray();
+
+                var secondCustomer = customers[1];
+                secondCustomer.NullableStringProperty.Should().Be("NullableStringProperty2");
+                secondCustomer.NullableByteProperty.Should().Be(2);
+                secondCustomer.NullableShortProperty.Should().Be(2);
+                secondCustomer.NullableUShortProperty.Should().Be(2);
+                secondCustomer.NullableIntProperty.Should().Be(2);
+                secondCustomer.NullableUIntProperty.Should().Be(2);
+                secondCustomer.NullableLongProperty.Should().Be(2);
+                secondCustomer.NullableULongProperty.Should().Be(2);
+                secondCustomer.NullableFloatProperty.Should().Be(2f);
+                secondCustomer.NullableDoubleProperty.Should().Be(2d);
+                secondCustomer.NullableDecimalProperty.Should().Be(2m);
+                secondCustomer.NullableDateTimeProperty.Should().Be(RecursiveTransformFactoryOptions.DefaultStartDate.AddDays(1));
             }
 
             [Theory]
@@ -139,6 +161,21 @@ namespace ForeverFactory.Tests.Behaviors
             public int Age { get; set; }
             public DateTime Birthday { get; set; }
             public Address Address { get; set; }
+            
+#nullable enable
+            public string? NullableStringProperty { get; set; }
+#nullable disable
+            public byte? NullableByteProperty { get; set; }
+            public short? NullableShortProperty { get; set; }
+            public ushort? NullableUShortProperty { get; set; }
+            public int? NullableIntProperty { get; set; }
+            public uint? NullableUIntProperty { get; set; }
+            public long? NullableLongProperty { get; set; }
+            public ulong? NullableULongProperty { get; set; }
+            public float? NullableFloatProperty { get; set; }
+            public double? NullableDoubleProperty { get; set; }
+            public decimal? NullableDecimalProperty { get; set; }
+            public DateTime? NullableDateTimeProperty { get; set; }
         }
 
         public class Address

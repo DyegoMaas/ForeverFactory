@@ -70,9 +70,11 @@ namespace ForeverFactory.Generators.Transforms.Factories
 
         private bool CanApplyRecursion(TargetInfo targetInfo)
         {
+            var isNullable = Nullable.GetUnderlyingType(targetInfo.TargetType) != null;
             return Options.EnableRecursiveInstantiation && 
                targetInfo.TargetType != typeof(string) && 
-               targetInfo.TargetType != typeof(DateTime);
+               targetInfo.TargetType != typeof(DateTime) &&
+               !isNullable;
         }
     }
 }
