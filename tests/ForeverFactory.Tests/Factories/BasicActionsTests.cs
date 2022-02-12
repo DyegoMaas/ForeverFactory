@@ -74,6 +74,16 @@ namespace ForeverFactory.Tests.Factories
 
             product.Description.Should().Be("Nimbus 2000");
         }
+        
+        [Fact]
+        public void It_should_be_possible_to_explicitly_say_you_are_building_one_instance_without_customization()
+        {
+            var product = new ProductFactory()
+                .One()
+                .Build();
+
+            product.Description.Should().NotBeNullOrEmpty();
+        }
 
         [Fact]
         public void Transforms_are_applied_in_order_overriding_previous_ones()

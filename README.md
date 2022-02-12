@@ -78,7 +78,7 @@ var hundredPeople = MagicFactory.For<Person>()
 Additionally, we can create multiple sets of objects:
 
 ```csharp
-var hundredPeople = MagicFactory.For<Person>()
+var people = MagicFactory.For<Person>()
     .Many(10).With(x => x.Age = 5)
     .Plus(20).With(x => x.Age = 60)
     .PlusOne().With(x => x.Age = 100)

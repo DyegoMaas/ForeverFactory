@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using ForeverFactory.Customizations;
 using ForeverFactory.Generators;
-using ForeverFactory.Generators.Transforms;
 using ForeverFactory.Tests.Factories.CustomizedFactories.ExampleFactories;
 using Xunit;
 
@@ -13,7 +12,7 @@ namespace ForeverFactory.Tests.Generators
 
         public ObjectFactoryTests()
         {
-            var customizeFactoryOptions = new CustomizeFactoryOptions<Person>();
+            var customizeFactoryOptions = new OptionsCollector<Person>(customization => {});
             _factory = new ObjectFactory<Person>(customizeFactoryOptions);
         }
 
@@ -49,8 +48,10 @@ namespace ForeverFactory.Tests.Generators
         [Fact]
         public void It_should_apply_default_transforms_to_all_generator_nodes()
         {
-            var customizeFactoryOptions = new CustomizeFactoryOptions<Person>();
-            customizeFactoryOptions.Set(x => x.FirstName = "Clark");
+            var customizeFactoryOptions = new OptionsCollector<Person>(customization =>
+            {
+                customization.Set(x => x.FirstName = "Clark");
+            });
 
             var factory = new ObjectFactory<Person>(customizeFactoryOptions);
             factory.AddNode(new GeneratorNode<Person>(1));
