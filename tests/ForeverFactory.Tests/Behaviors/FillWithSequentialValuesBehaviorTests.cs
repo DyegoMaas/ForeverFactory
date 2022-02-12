@@ -139,6 +139,28 @@ namespace ForeverFactory.Tests.Behaviors
                 customers[2].Birthday.Should().Be(26.December(2020).At(0.Hours()));
             }
         }
+
+        public class NullableFillingDisabledTests
+        {
+            public static IEnumerable<object[]> FactoriesWithNullableFillingDisabled()
+            {
+                var customizedBehavior = new FillWithSequentialValuesBehavior(options => options.FillNullables = false);
+                return new List<object[]>
+                {
+                    new object[] { new CustomerFactory(customizedBehavior) },
+                    new object[] { MagicFactory.For<Customer>().WithBehavior(customizedBehavior) }
+                };
+            }
+
+            [Theory]
+            [MemberData(nameof(FactoriesWithNullableFillingDisabled))]
+            public void It_should_not_fill_nullable_properties_if_this_option_is_explicitly_disabled(ISimpleFactory<Customer> factory)
+            {
+                var customer = factory.Build();
+
+                customer.Age.Should().BeNull("filling nullables is disabled");
+            }
+        }
         
         public class CustomerFactory : MagicFactory<Customer>
         {
@@ -158,7 +180,7 @@ namespace ForeverFactory.Tests.Behaviors
         public class Customer
         {
             public string Name { get; set; }
-            public int Age { get; set; }
+            public int? Age { get; set; }
             public DateTime Birthday { get; set; }
             public Address Address { get; set; }
             

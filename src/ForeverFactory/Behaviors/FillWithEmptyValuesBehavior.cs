@@ -20,7 +20,8 @@ namespace ForeverFactory.Behaviors
 
             _recursiveTransformFactoryOptions = new RecursiveTransformFactoryOptions
             {
-                EnableRecursiveInstantiation = configuration.Recursive
+                EnableRecursiveInstantiation = configuration.Recursive,
+                FillNullables = configuration.FillNullables
             };
         }
 
@@ -38,5 +39,11 @@ namespace ForeverFactory.Behaviors
         /// Default is true.
         /// </summary>
         public bool Recursive { get; set; } = true;
+
+        /// <summary>
+        /// If enabled, nullable fields and classes will be filled the same way a normal field or property would.
+        /// Default is true.
+        /// </summary>
+        public bool FillNullables { get; set; } = true;
     }
 }

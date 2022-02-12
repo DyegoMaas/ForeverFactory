@@ -1,6 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Diagnostics;
 using ForeverFactory.Generators.Transforms.Factories.ReflectionTargets;
 
 namespace ForeverFactory.Generators.Transforms.Factories

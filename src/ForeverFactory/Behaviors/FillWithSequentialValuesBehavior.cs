@@ -31,6 +31,7 @@ namespace ForeverFactory.Behaviors
             _recursiveTransformFactoryOptions = new RecursiveTransformFactoryOptions
             {
                 EnableRecursiveInstantiation = configuration.Recursive,
+                FillNullables = configuration.FillNullables,
                 DateTimeIncrements = configuration.DateTimeOptions?.DateTimeIncrements ?? DateTimeIncrements.Days,
                 StartDate = configuration.DateTimeOptions?.StartDate ?? RecursiveTransformFactoryOptions.DefaultStartDate
             };
@@ -50,6 +51,12 @@ namespace ForeverFactory.Behaviors
         /// Default is true.
         /// </summary>
         public bool Recursive { get; set; } = true;
+
+        /// <summary>
+        /// If enabled, nullable fields and classes will be filled the same way a normal field or property would.
+        /// Default is true.
+        /// </summary>
+        public bool FillNullables { get; set; } = true;
 
         /// <summary>
         /// Allows customizing how DateTimes are generated.
