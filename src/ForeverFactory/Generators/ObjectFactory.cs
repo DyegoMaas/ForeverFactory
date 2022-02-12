@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ForeverFactory.FluentInterfaces;
+using ForeverFactory.Generators.Options;
 using ForeverFactory.Generators.Transforms;
 using ForeverFactory.Generators.Transforms.Guards;
 using ForeverFactory.Generators.Transforms.Guards.Specifications;

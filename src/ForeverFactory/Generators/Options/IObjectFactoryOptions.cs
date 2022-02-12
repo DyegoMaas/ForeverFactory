@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ForeverFactory.Behaviors;
 using ForeverFactory.Generators.Transforms;
 
-namespace ForeverFactory.Generators
+namespace ForeverFactory.Generators.Options
 {
     internal interface IObjectFactoryOptions<T>
         where T : class

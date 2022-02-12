@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ForeverFactory.Behaviors;
 using ForeverFactory.Generators;
+using ForeverFactory.Generators.Options;
 using ForeverFactory.Generators.Transforms;
 
 namespace ForeverFactory.Customizations

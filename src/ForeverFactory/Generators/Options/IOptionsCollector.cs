@@ -1,4 +1,4 @@
-﻿namespace ForeverFactory.Generators
+﻿namespace ForeverFactory.Generators.Options
 {
     internal interface IOptionsCollector<T>
         where T : class
