@@ -48,7 +48,6 @@ namespace ForeverFactory.Tests.Behaviors
                 var customers = factory.Many(2).Build().ToArray();
 
                 var secondCustomer = customers[1];
-                secondCustomer.NullableStringProperty.Should().Be("NullableStringProperty2");
                 secondCustomer.NullableByteProperty.Should().Be(2);
                 secondCustomer.NullableShortProperty.Should().Be(2);
                 secondCustomer.NullableUShortProperty.Should().Be(2);
@@ -183,10 +182,6 @@ namespace ForeverFactory.Tests.Behaviors
             public int? Age { get; set; }
             public DateTime Birthday { get; set; }
             public Address Address { get; set; }
-            
-#nullable enable
-            public string? NullableStringProperty { get; set; }
-#nullable disable
             public byte? NullableByteProperty { get; set; }
             public short? NullableShortProperty { get; set; }
             public ushort? NullableUShortProperty { get; set; }
