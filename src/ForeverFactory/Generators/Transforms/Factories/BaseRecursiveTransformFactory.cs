@@ -36,6 +36,9 @@ namespace ForeverFactory.Generators.Transforms.Factories
             var targetInfos = propertyInfos.Cast<TargetInfo>().Union(fieldInfos);
             foreach (var targetInfo in targetInfos)
             {
+                if (Nullable.GetUnderlyingType(targetInfo.TargetType) != null && !Options.FillNullables)
+                    continue; //skips nullables
+                
                 var buildFunction = GetBuildFunction(targetInfo, index);
                 if (buildFunction == null)
                     continue;

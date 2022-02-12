@@ -35,7 +35,6 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
             transform.ApplyTo(instanceOfA);
 
             instanceOfA.StringProperty.Should().Be(string.Empty);
-            instanceOfA.NullableStringProperty.Should().Be(string.Empty);
             instanceOfA.NullableByteProperty.Should().Be(0);
             instanceOfA.NullableShortProperty.Should().Be(0);
             instanceOfA.NullableUShortProperty.Should().Be(0);
@@ -52,9 +51,6 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
         private class ClassA
         {
             public string StringProperty { get; set; }
-#nullable enable
-            public string? NullableStringProperty { get; set; }
-#nullable disable
             public byte? NullableByteProperty { get; set; }
             public short? NullableShortProperty { get; set; }
             public ushort? NullableUShortProperty { get; set; }
