@@ -253,7 +253,6 @@ dotnet stryker
 
 ## Roadmap
 
-- Support DateTime in the Sequential generator
 - Support initializing nullable types
 - Allow to configure custom builder per builder (single builder and many builder)
 - Support custom constructor scoped by builder (for now, custom constructors are shared along the linked builders)

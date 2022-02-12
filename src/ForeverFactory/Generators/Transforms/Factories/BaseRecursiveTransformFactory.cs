@@ -7,11 +7,11 @@ namespace ForeverFactory.Generators.Transforms.Factories
 {
     internal abstract class BaseRecursiveTransformFactory : ITranformFactory
     {
-        private readonly RecursiveTransformFactoryOptions _options;
+        protected readonly RecursiveTransformFactoryOptions Options;
 
         protected BaseRecursiveTransformFactory(RecursiveTransformFactoryOptions options = null)
         {
-            _options = options ?? new RecursiveTransformFactoryOptions();
+            Options = options ?? new RecursiveTransformFactoryOptions();
         }
 
         public Transform<T> GetTransform<T>()
@@ -54,7 +54,7 @@ namespace ForeverFactory.Generators.Transforms.Factories
             if (buildFunction != null)
                 return buildFunction;
 
-            if (_options.EnableRecursiveInstantiation is false)
+            if (Options.EnableRecursiveInstantiation is false)
                 return null;
 
             var parameterlessConstructor = targetInfo.TargetType
@@ -70,7 +70,9 @@ namespace ForeverFactory.Generators.Transforms.Factories
 
         private bool CanApplyRecursion(TargetInfo targetInfo)
         {
-            return _options.EnableRecursiveInstantiation && targetInfo.TargetType != typeof(string);
+            return Options.EnableRecursiveInstantiation && 
+               targetInfo.TargetType != typeof(string) && 
+               targetInfo.TargetType != typeof(DateTime);
         }
     }
 }

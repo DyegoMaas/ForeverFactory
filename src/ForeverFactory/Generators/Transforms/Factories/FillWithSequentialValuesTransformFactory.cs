@@ -1,4 +1,5 @@
 ﻿using System;
+using ForeverFactory.Behaviors;
 using ForeverFactory.Generators.Transforms.Factories.ReflectionTargets;
 
 namespace ForeverFactory.Generators.Transforms.Factories
@@ -61,6 +62,32 @@ namespace ForeverFactory.Generators.Transforms.Factories
             
             if (targetInfo.TargetType == typeof(decimal))
                 return () => Convert.ToDecimal(sequentialNumber);
+
+            if (targetInfo.TargetType == typeof(DateTime))
+            {
+                var increment = index;
+
+                switch (Options.DateTimeIncrements)
+                {
+                    case DateTimeIncrements.Hours:
+                        return () => Options.StartDate.AddHours(increment);
+                    case DateTimeIncrements.Minutes:
+                        return () => Options.StartDate.AddMinutes(increment);
+                    case DateTimeIncrements.Seconds:
+                        return () => Options.StartDate.AddSeconds(increment);
+                    case DateTimeIncrements.Milliseconds:
+                        return () => Options.StartDate.AddMilliseconds(increment);
+                    case DateTimeIncrements.Ticks:
+                        return () => Options.StartDate.AddTicks(increment);
+                    case DateTimeIncrements.Years:
+                        return () => Options.StartDate.AddYears(increment);
+                    case DateTimeIncrements.Months:
+                        return () => Options.StartDate.AddMonths(increment);
+                    case DateTimeIncrements.Days:
+                    default:
+                        return () => Options.StartDate.AddDays(increment);
+                }
+            }
 
             return null;
         }

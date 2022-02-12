@@ -1,40 +1,205 @@
-﻿using FluentAssertions;
+﻿using System;
+using System.Collections.Generic;
+using FluentAssertions;
+using FluentAssertions.Extensions;
+using ForeverFactory.Behaviors;
 using ForeverFactory.Generators.Transforms.Factories;
 using Xunit;
 
 namespace ForeverFactory.Tests.Generators.Transforms.Factories
 {
-    public class FillWithPropertyNameTransformFactoryTests
+    public class FillWithSequentialValuesTransformFactoryTests
     {
-        private readonly FillWithSequentialValuesTransformFactory _factory;
-
-        public FillWithPropertyNameTransformFactoryTests()
-        {
-            _factory = new FillWithSequentialValuesTransformFactory();
-        }
-
         [Theory]
         [InlineData(0, 1)]
         [InlineData(1, 2)]
         [InlineData(2, 3)]
         public void It_should_fill_properties_with_sequential_values(int index, int sequentialNumberExpected)
         {
-            var transform = _factory.GetTransform<ClassWithManyDifferentTypesOfProperties>();
+            var transform = new FillWithSequentialValuesTransformFactory()
+                .GetTransform<ClassWithManyDifferentTypesOfProperties>();
 
             var instance = new ClassWithManyDifferentTypesOfProperties();
             transform.ApplyTo(instance, index);
 
             instance.StringProperty.Should().Be($"StringProperty{sequentialNumberExpected}");
-            instance.ByteProperty.Should().Be((byte)sequentialNumberExpected, "byte properties should be filled");
-            instance.ShortProperty.Should().Be((short)sequentialNumberExpected);
-            instance.UShortProperty.Should().Be((ushort)sequentialNumberExpected);
+            instance.ByteProperty.Should().Be((byte) sequentialNumberExpected, "byte properties should be filled");
+            instance.ShortProperty.Should().Be((short) sequentialNumberExpected);
+            instance.UShortProperty.Should().Be((ushort) sequentialNumberExpected);
             instance.IntProperty.Should().Be(sequentialNumberExpected);
-            instance.UIntProperty.Should().Be((uint)sequentialNumberExpected);
+            instance.UIntProperty.Should().Be((uint) sequentialNumberExpected);
             instance.LongProperty.Should().Be(sequentialNumberExpected);
-            instance.ULongProperty.Should().Be((ulong)sequentialNumberExpected);
+            instance.ULongProperty.Should().Be((ulong) sequentialNumberExpected);
             instance.FloatProperty.Should().Be(sequentialNumberExpected);
             instance.DoubleProperty.Should().Be(sequentialNumberExpected);
             instance.DecimalProperty.Should().Be(sequentialNumberExpected);
+        }
+
+        public class SequentialDateTimeTests
+        {
+            [Theory]
+            [InlineData(0, 1753, 1, 1)]
+            [InlineData(1, 1753, 1, 2)]
+            [InlineData(2, 1753, 1, 3)]
+            public void It_should_generate_sequential_dates_incrementing_by_day(int index,
+                int expectedYear, int expectedMonth, int expectedDay)
+            {
+                var transform = new FillWithSequentialValuesTransformFactory()
+                    .GetTransform<ClassWithManyDifferentTypesOfProperties>();
+
+                var instance = new ClassWithManyDifferentTypesOfProperties();
+                transform.ApplyTo(instance, index);
+
+                instance.DateTimeProperty.Should().Be(new DateTime(expectedYear, expectedMonth, expectedDay));
+            }
+
+            [Theory]
+            [InlineData(0, 1753, 1, 1)]
+            [InlineData(1, 1753, 2, 1)]
+            [InlineData(2, 1753, 3, 1)]
+            public void It_should_generate_sequential_dates_incrementing_by_month(int index,
+                int expectedYear, int expectedMonth, int expectedDay)
+            {
+                var transform = new FillWithSequentialValuesTransformFactory(new RecursiveTransformFactoryOptions
+                    {
+                        DateTimeIncrements = DateTimeIncrements.Months
+                    })
+                    .GetTransform<ClassWithManyDifferentTypesOfProperties>();
+
+                var instance = new ClassWithManyDifferentTypesOfProperties();
+                transform.ApplyTo(instance, index);
+
+                instance.DateTimeProperty.Should().Be(new DateTime(expectedYear, expectedMonth, expectedDay));
+            }
+            
+            [Theory]
+            [InlineData(0, 1753, 1, 1)]
+            [InlineData(1, 1754, 1, 1)]
+            [InlineData(2, 1755, 1, 1)]
+            public void It_should_generate_sequential_dates_incrementing_by_year(int index,
+                int expectedYear, int expectedMonth, int expectedDay)
+            {
+                var transform = new FillWithSequentialValuesTransformFactory(new RecursiveTransformFactoryOptions
+                    {
+                        DateTimeIncrements = DateTimeIncrements.Years
+                    })
+                    .GetTransform<ClassWithManyDifferentTypesOfProperties>();
+
+                var instance = new ClassWithManyDifferentTypesOfProperties();
+                transform.ApplyTo(instance, index);
+
+                instance.DateTimeProperty.Should().Be(new DateTime(expectedYear, expectedMonth, expectedDay));
+            }
+            
+            [Theory]
+            [InlineData(0, 0)]
+            [InlineData(1, 1)]
+            [InlineData(2, 2)]
+            public void It_should_generate_sequential_dates_incrementing_by_hour(int index, int incrementedHours)
+            {
+                var transform = new FillWithSequentialValuesTransformFactory(new RecursiveTransformFactoryOptions
+                    {
+                        DateTimeIncrements = DateTimeIncrements.Hours
+                    })
+                    .GetTransform<ClassWithManyDifferentTypesOfProperties>();
+
+                var instance = new ClassWithManyDifferentTypesOfProperties();
+                transform.ApplyTo(instance, index);
+
+                instance.DateTimeProperty.Should().Be(RecursiveTransformFactoryOptions.DefaultStartDate.Date + TimeSpan.FromHours(incrementedHours));
+            }
+            
+            [Theory]
+            [InlineData(0, 0)]
+            [InlineData(1, 1)]
+            [InlineData(2, 2)]
+            public void It_should_generate_sequential_dates_incrementing_by_minute(int index, int incrementedMinutes)
+            {
+                var transform = new FillWithSequentialValuesTransformFactory(new RecursiveTransformFactoryOptions
+                    {
+                        DateTimeIncrements = DateTimeIncrements.Minutes
+                    })
+                    .GetTransform<ClassWithManyDifferentTypesOfProperties>();
+
+                var instance = new ClassWithManyDifferentTypesOfProperties();
+                transform.ApplyTo(instance, index);
+
+                instance.DateTimeProperty.Should().Be(RecursiveTransformFactoryOptions.DefaultStartDate.Date + TimeSpan.FromMinutes(incrementedMinutes));
+            }
+            
+            [Theory]
+            [InlineData(0, 0)]
+            [InlineData(1, 1)]
+            [InlineData(60, 60)]
+            public void It_should_generate_sequential_dates_incrementing_by_seconds(int index, int incrementedSeconds)
+            {
+                var transform = new FillWithSequentialValuesTransformFactory(new RecursiveTransformFactoryOptions
+                    {
+                        DateTimeIncrements = DateTimeIncrements.Seconds
+                    })
+                    .GetTransform<ClassWithManyDifferentTypesOfProperties>();
+
+                var instance = new ClassWithManyDifferentTypesOfProperties();
+                transform.ApplyTo(instance, index);
+
+                instance.DateTimeProperty.Should().Be(RecursiveTransformFactoryOptions.DefaultStartDate.Date + TimeSpan.FromSeconds(incrementedSeconds));
+            }
+            
+            [Theory]
+            [InlineData(0, 0)]
+            [InlineData(1, 1)]
+            [InlineData(1200, 1200)]
+            public void It_should_generate_sequential_dates_incrementing_by_milliseconds(int index, int incrementedMilliseconds)
+            {
+                var transform = new FillWithSequentialValuesTransformFactory(new RecursiveTransformFactoryOptions
+                    {
+                        DateTimeIncrements = DateTimeIncrements.Milliseconds
+                    })
+                    .GetTransform<ClassWithManyDifferentTypesOfProperties>();
+
+                var instance = new ClassWithManyDifferentTypesOfProperties();
+                transform.ApplyTo(instance, index);
+
+                instance.DateTimeProperty.Should().Be(RecursiveTransformFactoryOptions.DefaultStartDate.Date + TimeSpan.FromMilliseconds(incrementedMilliseconds));
+            }
+            
+            [Theory]
+            [InlineData(0, 0)]
+            [InlineData(1, 1)]
+            [InlineData(1000_000, 1000_000)]
+            public void It_should_generate_sequential_dates_incrementing_by_ticks(int index, int incrementedTicks)
+            {
+                var transform = new FillWithSequentialValuesTransformFactory(new RecursiveTransformFactoryOptions
+                    {
+                        DateTimeIncrements = DateTimeIncrements.Ticks
+                    })
+                    .GetTransform<ClassWithManyDifferentTypesOfProperties>();
+
+                var instance = new ClassWithManyDifferentTypesOfProperties();
+                transform.ApplyTo(instance, index);
+
+                instance.DateTimeProperty.Should().Be(RecursiveTransformFactoryOptions.DefaultStartDate.Date + TimeSpan.FromTicks(incrementedTicks));
+            }
+            
+            [Theory]
+            [InlineData(0, 1999, 12, 25, 0)]
+            [InlineData(365, 2012, 12, 31, 365)]
+            public void It_should_generate_sequential_dates_based_on_the_start_date(int index, 
+                int startYear, int startMonth, int startDay, int incrementedDays)
+            {
+                var startDate = new DateTime(startYear, startMonth, startDay);
+                var transform = new FillWithSequentialValuesTransformFactory(new RecursiveTransformFactoryOptions
+                    {
+                        DateTimeIncrements = DateTimeIncrements.Days,
+                        StartDate = startDate
+                    })
+                    .GetTransform<ClassWithManyDifferentTypesOfProperties>();
+
+                var instance = new ClassWithManyDifferentTypesOfProperties();
+                transform.ApplyTo(instance, index);
+
+                instance.DateTimeProperty.Should().Be(startDate + TimeSpan.FromDays(incrementedDays));
+            }
         }
 
         public class ClassWithManyDifferentTypesOfProperties
@@ -50,85 +215,117 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
             public float FloatProperty { get; set; }
             public double DoubleProperty { get; set; }
             public decimal DecimalProperty { get; set; }
+            public DateTime DateTimeProperty { get; set; }
         }
 
-        [Fact]
-        public void Bytes_should_reset_to_1_when_overflowing()
+        public class NumberOverflowTests
         {
-            var transform = _factory.GetTransform<ClassWithManyDifferentTypesOfProperties>();
-            var instance = new ClassWithManyDifferentTypesOfProperties();
+            private readonly FillWithSequentialValuesTransformFactory _factory;
 
-            transform.ApplyTo(instance, index: byte.MaxValue - 1);
-            instance.ByteProperty.Should().Be(byte.MaxValue);
+            public NumberOverflowTests()
+            {
+                _factory = new FillWithSequentialValuesTransformFactory();
+            }
             
-            transform.ApplyTo(instance, index: byte.MaxValue);
-            instance.ByteProperty.Should().Be(1);
-            
-            transform.ApplyTo(instance, index: byte.MaxValue + 1);
-            instance.ByteProperty.Should().Be(2);
-            
-            transform.ApplyTo(instance, index: byte.MaxValue * 2);
-            instance.ByteProperty.Should().Be(1);
+            [Fact]
+            public void Bytes_should_reset_to_1_when_overflowing()
+            {
+                var transform = _factory.GetTransform<ClassWithManyDifferentTypesOfProperties>();
+                var instance = new ClassWithManyDifferentTypesOfProperties();
+
+                transform.ApplyTo(instance, index: byte.MaxValue - 1);
+                instance.ByteProperty.Should().Be(byte.MaxValue);
+
+                transform.ApplyTo(instance, index: byte.MaxValue);
+                instance.ByteProperty.Should().Be(1);
+
+                transform.ApplyTo(instance, index: byte.MaxValue + 1);
+                instance.ByteProperty.Should().Be(2);
+
+                transform.ApplyTo(instance, index: byte.MaxValue * 2);
+                instance.ByteProperty.Should().Be(1);
+            }
+
+            [Fact]
+            public void Short_should_reset_to_1_when_overflowing()
+            {
+                var transform = _factory.GetTransform<ClassWithManyDifferentTypesOfProperties>();
+                var instance = new ClassWithManyDifferentTypesOfProperties();
+
+                transform.ApplyTo(instance, index: short.MaxValue - 1);
+                instance.ShortProperty.Should().Be(short.MaxValue);
+
+                transform.ApplyTo(instance, index: short.MaxValue);
+                instance.ShortProperty.Should().Be(1);
+
+                transform.ApplyTo(instance, index: short.MaxValue + 1);
+                instance.ShortProperty.Should().Be(2);
+
+                transform.ApplyTo(instance, index: short.MaxValue * 2);
+                instance.ShortProperty.Should().Be(1);
+            }
+
+            [Fact]
+            public void UShort_should_reset_to_1_when_overflowing()
+            {
+                var transform = _factory.GetTransform<ClassWithManyDifferentTypesOfProperties>();
+                var instance = new ClassWithManyDifferentTypesOfProperties();
+
+                transform.ApplyTo(instance, index: ushort.MaxValue - 1);
+                instance.UShortProperty.Should().Be(ushort.MaxValue);
+
+                transform.ApplyTo(instance, index: ushort.MaxValue);
+                instance.UShortProperty.Should().Be(1);
+
+                transform.ApplyTo(instance, index: ushort.MaxValue + 1);
+                instance.UShortProperty.Should().Be(2);
+
+                transform.ApplyTo(instance, index: ushort.MaxValue * 2);
+                instance.UShortProperty.Should().Be(1);
+            }
         }
-        
-        [Fact]
-        public void Short_should_reset_to_1_when_overflowing()
+
+        public class RecursionTests
         {
-            var transform = _factory.GetTransform<ClassWithManyDifferentTypesOfProperties>();
-            var instance = new ClassWithManyDifferentTypesOfProperties();
+            [Theory]
+            [InlineData(0, 1)]
+            [InlineData(1, 2)]
+            [InlineData(2, 3)]
+            public void It_should_build_a_function_that_recursively_sets_all_properties_to_the_name_of_the_property(
+                int index, int sequentialNumberExpected)
+            {
+                var transform = new FillWithSequentialValuesTransformFactory().GetTransform<ClassA>();
 
-            transform.ApplyTo(instance, index: short.MaxValue - 1);
-            instance.ShortProperty.Should().Be(short.MaxValue);
-            
-            transform.ApplyTo(instance, index: short.MaxValue);
-            instance.ShortProperty.Should().Be(1);
-            
-            transform.ApplyTo(instance, index: short.MaxValue + 1);
-            instance.ShortProperty.Should().Be(2);
-            
-            transform.ApplyTo(instance, index: short.MaxValue * 2);
-            instance.ShortProperty.Should().Be(1);
-        }
-        
-        [Fact]
-        public void UShort_should_reset_to_1_when_overflowing()
-        {
-            var transform = _factory.GetTransform<ClassWithManyDifferentTypesOfProperties>();
-            var instance = new ClassWithManyDifferentTypesOfProperties();
-            
-            transform.ApplyTo(instance, index: ushort.MaxValue - 1);
-            instance.UShortProperty.Should().Be(ushort.MaxValue);
-            
-            transform.ApplyTo(instance, index: ushort.MaxValue);
-            instance.UShortProperty.Should().Be(1);
-            
-            transform.ApplyTo(instance, index: ushort.MaxValue + 1);
-            instance.UShortProperty.Should().Be(2);
-            
-            transform.ApplyTo(instance, index: ushort.MaxValue * 2);
-            instance.UShortProperty.Should().Be(1);
-        }
-        
-        [Theory]
-        [InlineData(0, 1)]
-        [InlineData(1, 2)]
-        [InlineData(2, 3)]
-        public void It_should_build_a_function_that_recursively_sets_all_properties_to_the_name_of_the_property(int index, int sequentialNumberExpected)
-        {
-            var transform = _factory.GetTransform<ClassA>();
+                var instanceOfA = new ClassA();
+                transform.ApplyTo(instanceOfA, index);
 
-            var instanceOfA = new ClassA();
-            transform.ApplyTo(instanceOfA, index);
+                instanceOfA.PropertyX.Should().Be($"PropertyX{sequentialNumberExpected}");
+                instanceOfA.B.Should().NotBeNull();
 
-            instanceOfA.PropertyX.Should().Be($"PropertyX{sequentialNumberExpected}");
-            instanceOfA.B.Should().NotBeNull();
+                var instanceOfB = instanceOfA.B;
+                instanceOfB.PropertyY.Should().Be($"PropertyY{sequentialNumberExpected}");
+                instanceOfB.C.Should().NotBeNull();
 
-            var instanceOfB = instanceOfA.B;
-            instanceOfB.PropertyY.Should().Be($"PropertyY{sequentialNumberExpected}");
-            instanceOfB.C.Should().NotBeNull();
+                var instanceOfC = instanceOfB.C;
+                instanceOfC.PropertyZ.Should().Be($"PropertyZ{sequentialNumberExpected}");
+            }
             
-            var instanceOfC = instanceOfB.C;
-            instanceOfC.PropertyZ.Should().Be($"PropertyZ{sequentialNumberExpected}");
+            [Fact]
+            public void Should_disable_recursive_fill()
+            {
+                var factoryWithRecursionDisabled = new FillWithSequentialValuesTransformFactory(
+                    new RecursiveTransformFactoryOptions {
+                        EnableRecursiveInstantiation = false
+                    }
+                );
+
+                var transform = factoryWithRecursionDisabled.GetTransform<ClassA>();
+                var instance = new ClassA();
+                transform.ApplyTo(instance);
+
+                instance.PropertyX.Should().Be("PropertyX1");
+                instance.B.Should().Be(null, "should not recursively fill when it is disable via options");
+            }
         }
 
         private class ClassA
@@ -146,23 +343,6 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
         private class ClassC
         {
             public string PropertyZ { get; set; }
-        }
-
-        [Fact]
-        public void Should_disable_recursive_fill()
-        {
-            var factoryWithRecursionDisabled = new FillWithSequentialValuesTransformFactory(
-                new RecursiveTransformFactoryOptions {
-                    EnableRecursiveInstantiation = false
-                }
-            );
-
-            var transform = factoryWithRecursionDisabled.GetTransform<ClassA>();
-            var instance = new ClassA();
-            transform.ApplyTo(instance);
-
-            instance.PropertyX.Should().Be("PropertyX1");
-            instance.B.Should().Be(null, "should not recursively fill when it is disable via options");
         }
     }
 }
