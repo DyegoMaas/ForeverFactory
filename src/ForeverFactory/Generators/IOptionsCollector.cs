@@ -3,6 +3,6 @@
     internal interface IOptionsCollector<T>
         where T : class
     {
-        IObjectFactoryOptions<T> Initialize();
+        IObjectFactoryOptions<T> Collect();
     }
 }

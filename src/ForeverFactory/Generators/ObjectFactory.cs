@@ -21,7 +21,7 @@ namespace ForeverFactory.Generators
 
         public IEnumerable<T> Build()
         {
-            var options = _optionsCollector.Initialize();
+            var options = _optionsCollector.Collect();
             
             var behaviorTransforms = options.SelectedBehavior.GetTransforms<T>();
             var optionsTransforms = options.Transforms;

@@ -13,7 +13,7 @@ namespace ForeverFactory.Tests.Generators
 
         public ObjectFactoryTests()
         {
-            var customizeFactoryOptions = new CustomizeFactoryOptions<Person>(initialization => {});
+            var customizeFactoryOptions = new OptionsCollector<Person>(customization => {});
             _factory = new ObjectFactory<Person>(customizeFactoryOptions);
         }
 
@@ -49,8 +49,29 @@ namespace ForeverFactory.Tests.Generators
         [Fact]
         public void It_should_apply_default_transforms_to_all_generator_nodes()
         {
-            var customizeFactoryOptions = new CustomizeFactoryOptions<Person>(initialization => {});
-            customizeFactoryOptions.Set(x => x.FirstName = "Clark");
+            var customizeFactoryOptions = new OptionsCollector<Person>(customization =>
+            {
+                customization.Set(x => x.FirstName = "Clark");
+            });
+
+            var factory = new ObjectFactory<Person>(customizeFactoryOptions);
+            factory.AddNode(new GeneratorNode<Person>(1));
+            factory.AddNode(new GeneratorNode<Person>(2));
+
+            var persons = factory.Build();
+
+            foreach (var person in persons) 
+                person.FirstName.Should().Be("Clark");
+        }
+
+        // TODO refactor
+        [Fact]
+        public void It_should_apply_default_transforms_to_all_generator_nodes2()
+        {
+            var customizeFactoryOptions = new OptionsCollector<Person>(initialization =>
+            {
+                initialization.Set(x => x.FirstName = "Clark");
+            });
 
             var factory = new ObjectFactory<Person>(customizeFactoryOptions);
             factory.AddNode(new GeneratorNode<Person>(1));

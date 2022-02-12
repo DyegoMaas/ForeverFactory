@@ -6,55 +6,76 @@ using ForeverFactory.Generators.Transforms;
 
 namespace ForeverFactory.Customizations
 {
-    internal class CustomizeFactoryOptions<T> : ICustomizeFactoryOptions<T>, IObjectFactoryOptions<T>, IOptionsCollector<T>
+    internal class OptionsCollector<T> : IOptionsCollector<T>
         where T : class
     {
-        private readonly Action<ICustomizeFactoryOptions<T>> _initialize;
+        private readonly Action<ICustomizeFactoryOptions<T>> _customize;
+        private readonly ObjectFactoryOptions<T> _options;
 
-        public CustomizeFactoryOptions(Action<ICustomizeFactoryOptions<T>> initialize)
+        public OptionsCollector(Action<ICustomizeFactoryOptions<T>> customize)
         {
-            _initialize = initialize;
-            
+            _customize = customize;
+            _options = new ObjectFactoryOptions<T>();
+        }
+
+        public IObjectFactoryOptions<T> Collect()
+        {
+            var customizationOptions = new CustomizeFactoryOptions2<T>(_options);
+            _customize.Invoke(customizationOptions);
+
+            return _options;
+        }
+        
+        internal void UpdateConstructor(Func<T> customConstructor)
+        {
+            _options.CustomConstructor = customConstructor;
+        }
+        
+        internal void UpdateBehavior(Behavior behavior)
+        {
+            _options.SelectedBehavior = behavior;
+        }
+    }
+
+    internal class ObjectFactoryOptions<T> : IObjectFactoryOptions<T>
+        where T : class
+    {
+        public Func<T> CustomConstructor { get; internal set; }
+        public Behavior SelectedBehavior { get; internal set; }
+        public IList<Transform<T>> Transforms { get; }
+
+        public ObjectFactoryOptions()
+        {
             Transforms = new List<Transform<T>>();
             SelectedBehavior = new DoNotFillBehavior();
         }
+    }
 
-        public Func<T> CustomConstructor { get; private set; }
-        public Behavior SelectedBehavior { get; private set; }
+    internal class CustomizeFactoryOptions2<T> : ICustomizeFactoryOptions<T>
+        where T : class
+    {
+        private readonly ObjectFactoryOptions<T> _objectFactoryOptions;
 
-        public IList<Transform<T>> Transforms { get; }
+        public CustomizeFactoryOptions2(ObjectFactoryOptions<T> objectFactoryOptions)
+        {
+            _objectFactoryOptions = objectFactoryOptions;
+        }
 
         public ICustomizeFactoryOptions<T> UseConstructor(Func<T> customConstructor)
         {
-            CustomConstructor = customConstructor;
-            return this;
-        }
-
-        public ICustomizeFactoryOptions<T> Set<TValue>(Func<T, TValue> setMember)
-        {
-            Transforms.Add(new FuncTransform<T, TValue>(setMember.Invoke));
+            _objectFactoryOptions.CustomConstructor = customConstructor;
             return this;
         }
 
         public ICustomizeFactoryOptions<T> SetDefaultBehavior(Behavior behavior)
         {
-            SelectedBehavior = behavior;
+            _objectFactoryOptions.SelectedBehavior = behavior;
             return this;
         }
 
-        internal void UpdateConstructor(Func<T> customConstructor)
+        public ICustomizeFactoryOptions<T> Set<TValue>(Func<T, TValue> setMember)
         {
-            CustomConstructor = customConstructor;
-        }
-
-        internal void UpdateBehavior(Behavior behavior)
-        {
-            SelectedBehavior = behavior;
-        }
-
-        IObjectFactoryOptions<T> IOptionsCollector<T>.Initialize()
-        {
-            _initialize.Invoke(this);
+            _objectFactoryOptions.Transforms.Add(new FuncTransform<T, TValue>(setMember.Invoke));
             return this;
         }
     }
