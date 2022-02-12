@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using ForeverFactory.Behaviors;
 using ForeverFactory.Customizations;
 using ForeverFactory.FluentInterfaces;
@@ -42,13 +43,12 @@ namespace ForeverFactory
         where T : class
     {
         private readonly ObjectFactory<T> _objectFactory;
-        private readonly CustomizeFactoryOptions<T> _customizeFactoryOptions;
+        private readonly OptionsCollector<T> _optionsCollector;
 
         protected MagicFactory()
         {
-            _customizeFactoryOptions = new CustomizeFactoryOptions<T>();
-            _objectFactory = new ObjectFactory<T>(_customizeFactoryOptions);
-            Customize(_customizeFactoryOptions);
+            _optionsCollector = new OptionsCollector<T>(customize: Customize);
+            _objectFactory = new ObjectFactory<T>(_optionsCollector);
             SetRootNode(instanceCount: 1);
         }
 
@@ -62,13 +62,13 @@ namespace ForeverFactory
 
         public ISimpleFactory<T> UsingConstructor(Func<T> customConstructor)
         {
-            _customizeFactoryOptions.UpdateConstructor(customConstructor);
+            _optionsCollector.UpdateConstructor(customConstructor);
             return this;
         }
 
         public ISimpleFactory<T> WithBehavior(Behavior behavior)
         {
-            _customizeFactoryOptions.UpdateBehavior(behavior);
+            _optionsCollector.UpdateBehavior(behavior);
             return this;
         }
 

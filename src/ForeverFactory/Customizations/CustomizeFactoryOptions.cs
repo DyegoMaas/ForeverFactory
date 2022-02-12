@@ -1,50 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
 using ForeverFactory.Behaviors;
-using ForeverFactory.Generators;
 using ForeverFactory.Generators.Transforms;
 
 namespace ForeverFactory.Customizations
 {
-    internal class CustomizeFactoryOptions<T> : ICustomizeFactoryOptions<T>, IObjectFactoryOptions<T>
+    internal class CustomizeFactoryOptions<T> : ICustomizeFactoryOptions<T>
         where T : class
     {
-        public CustomizeFactoryOptions()
-        {
-            Transforms = new List<Transform<T>>();
-            SelectedBehavior = new DoNotFillBehavior();
-        }
+        private readonly ObjectFactoryOptions<T> _objectFactoryOptions;
 
-        public Func<T> CustomConstructor { get; private set; }
-        public Behavior SelectedBehavior { get; private set; }
-        public IList<Transform<T>> Transforms { get; }
+        public CustomizeFactoryOptions(ObjectFactoryOptions<T> objectFactoryOptions)
+        {
+            _objectFactoryOptions = objectFactoryOptions;
+        }
 
         public ICustomizeFactoryOptions<T> UseConstructor(Func<T> customConstructor)
         {
-            CustomConstructor = customConstructor;
-            return this;
-        }
-
-        public ICustomizeFactoryOptions<T> Set<TValue>(Func<T, TValue> setMember)
-        {
-            Transforms.Add(new FuncTransform<T, TValue>(setMember.Invoke));
+            _objectFactoryOptions.CustomConstructor = customConstructor;
             return this;
         }
 
         public ICustomizeFactoryOptions<T> SetDefaultBehavior(Behavior behavior)
         {
-            SelectedBehavior = behavior;
+            _objectFactoryOptions.SelectedBehavior = behavior;
             return this;
         }
 
-        internal void UpdateConstructor(Func<T> customConstructor)
+        public ICustomizeFactoryOptions<T> Set<TValue>(Func<T, TValue> setMember)
         {
-            CustomConstructor = customConstructor;
-        }
-
-        internal void UpdateBehavior(Behavior behavior)
-        {
-            SelectedBehavior = behavior;
+            _objectFactoryOptions.Transforms.Add(new FuncTransform<T, TValue>(setMember.Invoke));
+            return this;
         }
     }
 }
