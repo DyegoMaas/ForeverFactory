@@ -8,12 +8,15 @@ namespace ForeverFactory.Tests.Behaviors
 {
     public class FillWithEmptyValuesBehaviorTests
     {
-        public static IEnumerable<object[]> FactoriesWithDefaultBehavior =>
-            new List<object[]>
+        public static IEnumerable<object[]> FactoriesWithDefaultBehavior()
+        {
+            var customizedBehavior = new FillWithEmptyValuesBehavior();
+            return new List<object[]>
             {
-                new object[] {new CustomerFactoryWithEmptyFillingBehavior()},
-                new object[] {MagicFactory.For<Customer>().WithBehavior(new FillWithEmptyValuesBehavior())}
+                new object[] { new CustomerFactory(customizedBehavior) },
+                new object[] { MagicFactory.For<Customer>().WithBehavior(customizedBehavior) }
             };
+        }
 
         [Theory]
         [MemberData(nameof(FactoriesWithDefaultBehavior))]
@@ -25,17 +28,20 @@ namespace ForeverFactory.Tests.Behaviors
             customer.Address.Should().NotBeNull();
             customer.Address.ZipCode.Should().Be(string.Empty);
         }
-        
-        public static IEnumerable<object[]> FactoriesWithRecursionDisabled =>
-            new List<object[]>
+
+        public static IEnumerable<object[]> FactoriesWithRecursionDisabled()
+        {
+            var customizedBehavior = new FillWithEmptyValuesBehavior(options => options.Recursive = false);
+            return new List<object[]>
             {
-                new object[] {new CustomerFactoryWithEmptyFillingBehaviorWithRecursionDisabled()},
-                new object[] {
-                    MagicFactory.For<Customer>()
-                        .WithBehavior(new FillWithEmptyValuesBehavior(options => options.Recursive = false))
+                new object[] { new CustomerFactory(customizedBehavior) },
+                new object[]
+                {
+                    MagicFactory.For<Customer>().WithBehavior(customizedBehavior)
                 }
             };
-        
+        }
+
         [Theory]
         [MemberData(nameof(FactoriesWithRecursionDisabled))]
         public void It_should_fill_all_properties_with_empty_values_without_recursion(ISimpleFactory<Customer> factory)
@@ -57,22 +63,18 @@ namespace ForeverFactory.Tests.Behaviors
             public string ZipCode { get; set; }
         }
 
-        private class CustomerFactoryWithEmptyFillingBehavior : MagicFactory<Customer>
+        private class CustomerFactory : MagicFactory<Customer>
         {
-            protected override void Customize(ICustomizeFactoryOptions<Customer> customization)
+            private readonly FillWithEmptyValuesBehavior _behavior;
+
+            public CustomerFactory(FillWithEmptyValuesBehavior behavior)
             {
-                customization.SetDefaultBehavior(new FillWithEmptyValuesBehavior());
+                _behavior = behavior;
             }
-        }
-        
-        private class CustomerFactoryWithEmptyFillingBehaviorWithRecursionDisabled : MagicFactory<Customer>
-        {
+
             protected override void Customize(ICustomizeFactoryOptions<Customer> customization)
             {
-                customization.SetDefaultBehavior(new FillWithEmptyValuesBehavior(options =>
-                {
-                    options.Recursive = false;
-                }));
+                customization.SetDefaultBehavior(_behavior);
             }
         }
     }
