@@ -17,7 +17,7 @@ namespace ForeverFactory.Generators.Transforms.Factories
             if (targetInfo.TargetType == typeof(string)) 
                 return () => string.Empty;
 
-            var nullableUnderlyingType = Nullable.GetUnderlyingType(targetInfo.TargetType);
+            var nullableUnderlyingType = targetInfo.GetNullableUnderlyingType();
             if (nullableUnderlyingType == typeof(byte))
                 return () => default(byte);
             if (nullableUnderlyingType == typeof(short))

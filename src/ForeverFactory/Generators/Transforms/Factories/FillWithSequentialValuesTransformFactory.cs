@@ -18,7 +18,7 @@ namespace ForeverFactory.Generators.Transforms.Factories
             if (targetInfo.TargetType == typeof(string)) 
                 return () => targetInfo.Name + sequentialNumber;
 
-            var nullableUnderlyingType = Nullable.GetUnderlyingType(targetInfo.TargetType);
+            var nullableUnderlyingType = targetInfo.GetNullableUnderlyingType();
             if (targetInfo.TargetType == typeof(byte) || nullableUnderlyingType == typeof(byte))
                 return () =>
                 {
