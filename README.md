@@ -253,6 +253,8 @@ dotnet stryker
 
 ## Roadmap
  
+- Global static options: allows users to configure ForeverFactory's behaviors in one place
+- FillWithRandomValuesBehavior: create a random value generator
 - **\[Breaking Change\]** Change Build() for returning an IList<T> instead of an IEnumerable<T>. This will avoid the inconvenience of having to cast to list or array in tests.- Support initializing nullable types
 - Allow to configure custom builder per builder (single builder and many builder)
 - Support custom constructor scoped by builder (for now, custom constructors are shared along the linked builders)
