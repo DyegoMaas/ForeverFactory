@@ -16,35 +16,47 @@ public class RecursiveTransformFactoryTests
 
         instanceOfA.PublicProperty.Should().Be(string.Empty);
         instanceOfA.PublicField.Should().Be(string.Empty);
+        instanceOfA.NullableProperty.Should().Be(0);
+        instanceOfA.NullableField.Should().Be(0);
         instanceOfA.B.Should().NotBeNull();
 
         var instanceOfB = instanceOfA.B;
-        instanceOfB.PropertyY.Should().Be(string.Empty);
+        instanceOfB.Property.Should().Be(string.Empty);
         instanceOfB.PublicField.Should().Be(string.Empty);
+        instanceOfB.NullableProperty.Should().Be(0);
+        instanceOfB.NullableField.Should().Be(0);
         instanceOfB.C.Should().NotBeNull();
             
         var instanceOfC = instanceOfB.C;
-        instanceOfC.PropertyZ.Should().Be(string.Empty);
+        instanceOfC.PublicProperty.Should().Be(string.Empty);
         instanceOfC.PublicField.Should().Be(string.Empty);
+        instanceOfC.NullableProperty.Should().Be(0);
+        instanceOfC.NullableField.Should().Be(0);
     }
 
     private class ClassA
     {
         public string PublicProperty { get; set; }
         public string PublicField;
+        public int? NullableProperty { get; set; }
+        public int? NullableField;
         public ClassB B { get; set; }
     }
 
     private class ClassB
     {
-        public string PropertyY { get; set; }
+        public string Property { get; set; }
         public string PublicField;
+        public int? NullableProperty { get; set; }
+        public int? NullableField;
         public ClassC C { get; set; }
     }
     
     private class ClassC
     {
-        public string PropertyZ { get; set; }
+        public string PublicProperty { get; set; }
         public string PublicField;
+        public int? NullableProperty { get; set; }
+        public int? NullableField;
     }
 }

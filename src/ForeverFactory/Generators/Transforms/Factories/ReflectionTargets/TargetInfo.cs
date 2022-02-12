@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace ForeverFactory.Generators.Transforms.Factories.ReflectionTargets
 {
+    [DebuggerDisplay("{TargetType}: {Name}")]
     internal abstract class TargetInfo
     {
         public abstract Type TargetType { get; }
