@@ -36,6 +36,9 @@ namespace ForeverFactory.Generators.Transforms.Factories
             var targetInfos = propertyInfos.Cast<TargetInfo>().Union(fieldInfos);
             foreach (var targetInfo in targetInfos)
             {
+                if (targetInfo.IsNullable() && !Options.FillNullables)
+                    continue;
+                
                 var buildFunction = GetBuildFunction(targetInfo, index);
                 if (buildFunction == null)
                     continue;
@@ -70,9 +73,18 @@ namespace ForeverFactory.Generators.Transforms.Factories
 
         private bool CanApplyRecursion(TargetInfo targetInfo)
         {
-            return Options.EnableRecursiveInstantiation && 
-               targetInfo.TargetType != typeof(string) && 
-               targetInfo.TargetType != typeof(DateTime);
+            if (!Options.EnableRecursiveInstantiation)
+                return false;
+
+            if (targetInfo.IsNullable())
+                return false;
+            
+            var isExcludedType = targetInfo.TargetType == typeof(string) ||
+                                 targetInfo.TargetType == typeof(DateTime);
+            if (isExcludedType)
+                return false;
+            
+            return true;
         }
     }
 }

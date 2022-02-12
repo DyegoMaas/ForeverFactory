@@ -12,9 +12,9 @@ namespace ForeverFactory.Generators.Transforms.Factories
         );
 
         public bool EnableRecursiveInstantiation { get; set; } = true;
+        public bool FillNullables { get; set; } = true;
 
         public DateTimeIncrements DateTimeIncrements { get; set; } = DateTimeIncrements.Days;
-
         public DateTime StartDate { get; set; } = DefaultStartDate;
     }
 }
