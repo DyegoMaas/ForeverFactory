@@ -26,7 +26,7 @@ namespace ForeverFactory.Behaviors
 
         internal override IEnumerable<Transform<T>> GetTransforms<T>()
         {
-            var factory = new FillWithEmptyStringTransformFactory(_recursiveTransformFactoryOptions);
+            var factory = new FillWithEmptyValuesTransformFactory(_recursiveTransformFactoryOptions);
             yield return factory.GetTransform<T>();
         }
     }

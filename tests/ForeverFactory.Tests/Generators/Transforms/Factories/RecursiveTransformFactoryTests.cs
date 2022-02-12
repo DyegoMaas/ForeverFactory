@@ -9,7 +9,7 @@ public class RecursiveTransformFactoryTests
     [Fact]
     public void It_should_build_a_function_that_recursively_sets_all_public_properties_and_fields_to_an_empty_value()
     {
-        var transform = new FillWithEmptyStringTransformFactory().GetTransform<ClassA>();
+        var transform = new FillWithEmptyValuesTransformFactory().GetTransform<ClassA>();
 
         var instanceOfA = new ClassA();
         transform.ApplyTo(instanceOfA);

@@ -4,12 +4,12 @@ using Xunit;
 
 namespace ForeverFactory.Tests.Generators.Transforms.Factories
 {
-    public class TransformFactoryTests
+    public class FillWithEmptyValuesTransformFactoryTests
     {
         [Fact]
         public void It_should_build_a_function_that_recursively_sets_all_properties_to_an_empty_value()
         {
-            var transform = new FillWithEmptyStringTransformFactory().GetTransform<ClassA>();
+            var transform = new FillWithEmptyValuesTransformFactory().GetTransform<ClassA>();
 
             var instanceOfA = new ClassA();
             transform.ApplyTo(instanceOfA);
@@ -45,7 +45,7 @@ namespace ForeverFactory.Tests.Generators.Transforms.Factories
         [Fact]
         public void Should_disable_recursive_fill()
         {
-            var factoryWithRecursionDisabled = new FillWithEmptyStringTransformFactory(
+            var factoryWithRecursionDisabled = new FillWithEmptyValuesTransformFactory(
                 new RecursiveTransformFactoryOptions {
                     EnableRecursiveInstantiation = false
                 }

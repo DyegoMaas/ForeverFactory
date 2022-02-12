@@ -3,9 +3,9 @@ using ForeverFactory.Generators.Transforms.Factories.ReflectionTargets;
 
 namespace ForeverFactory.Generators.Transforms.Factories
 {
-    internal class FillWithEmptyStringTransformFactory : BaseRecursiveTransformFactory
+    internal class FillWithEmptyValuesTransformFactory : BaseRecursiveTransformFactory
     {
-        public FillWithEmptyStringTransformFactory(RecursiveTransformFactoryOptions options = null) 
+        public FillWithEmptyValuesTransformFactory(RecursiveTransformFactoryOptions options = null) 
             : base(options)
         {
         }
