@@ -290,7 +290,7 @@ dotnet stryker
 ## Roadmap
  
 - FillWithRandomValuesBehavior: create a random value generator
-- **\[Breaking Change\]** Change Build() for returning an IList<T> instead of an IEnumerable<T>. This will avoid the inconvenience of having to cast to list or array in tests.- Support initializing nullable types
+- **\[Breaking Change\]** Change Build() for returning an IList<T> instead of an IEnumerable<T>. This will avoid the inconvenience of having to cast to list or array in tests.
 - Allow to configure custom builder per builder (single builder and many builder)
 - Support custom constructor scoped by builder (for now, custom constructors are shared along the linked builders)
 - Support "smart" behavior, which identifies by convention which type of sequences and rules to apply to every property 
