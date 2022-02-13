@@ -228,6 +228,42 @@ public class Address
 }
 ```
 
+### Global configuration
+
+You can set a default behavior for an entire project using `ForeverFactoryGlobalSettings`:
+
+```csharp
+// this needs to be executed before any tests
+ForeverFactoryGlobalSettings
+    .UseBehavior(new FillWithSequentialValuesBehavior(options =>
+    {
+        options.DateTimeOptions = new DateTimeSequenceOptions
+        {
+            DateTimeIncrements = DateTimeIncrements.Hours,
+            StartDate = 2.September(2020)
+        };
+        options.FillNullables = false;
+        options.Recursive = false;
+    }));
+    
+var instances = MagicFactory.For<ClassA>().Many(2).Build().ToArray();
+
+var secondInstance = instances[1];     
+secondInstance.DateTimeProperty.Should().Be(2.September(2020).At(1.Hours()));
+secondInstance.NullableDateTimeProperty.Should().BeNull("FillNullables option is set to false");
+secondInstance.B.Should().BeNull("Recursive option is set to false");
+```
+
+You can always override the behavior for a specific scenario:
+
+```csharp
+ var instance = MagicFactory.For<ClassA>()
+    .WithBehavior(new DoNotFillBehavior())
+    .Build();
+ 
+ instance.Name.Should().BeNull("global behavior was overridden");
+```
+
 ## How to contribute
 
 You can help this project in many ways. Here are some ideas:
@@ -253,7 +289,6 @@ dotnet stryker
 
 ## Roadmap
  
-- Global static options: allows users to configure ForeverFactory's behaviors in one place
 - FillWithRandomValuesBehavior: create a random value generator
 - **\[Breaking Change\]** Change Build() for returning an IList<T> instead of an IEnumerable<T>. This will avoid the inconvenience of having to cast to list or array in tests.- Support initializing nullable types
 - Allow to configure custom builder per builder (single builder and many builder)

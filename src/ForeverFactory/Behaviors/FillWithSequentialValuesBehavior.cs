@@ -36,7 +36,7 @@ namespace ForeverFactory.Behaviors
                 StartDate = configuration.DateTimeOptions?.StartDate ?? RecursiveTransformFactoryOptions.DefaultStartDate
             };
         }
-        
+
         internal override IEnumerable<Transform<T>> GetTransforms<T>()
         {
             var factory = new FillWithSequentialValuesTransformFactory(_recursiveTransformFactoryOptions);
