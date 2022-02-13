@@ -12,7 +12,7 @@
 - Creating objects to return from mocked services
 - Creating test data for when you are developing or testing new applications
 
-**With Forever Factory, building a new object can be as simple as `MagicFactory.For<Person>().Build()`.**
+**With ForeverFactory, building a new object can be as simple as `MagicFactory.For<Person>().Build()`.**
 
 ## How to use?
 
