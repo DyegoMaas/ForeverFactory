@@ -4,10 +4,10 @@ namespace ForeverFactory.Customizations.Global
 {
     public static class ForeverFactoryGlobalSettings
     {
-        internal static Behavior GlobalBehavior { get; set; }
+        internal static Behavior GlobalBehavior { get; private set; }
         
         public static void UseBehavior<TBehavior>(TBehavior behavior)
-            where TBehavior : Behavior, new()
+            where TBehavior : Behavior
         {
             GlobalBehavior = behavior;
         }
