@@ -23,6 +23,10 @@ namespace ForeverFactory.Behaviors
     {
         private readonly RecursiveTransformFactoryOptions _recursiveTransformFactoryOptions;
 
+        public FillWithSequentialValuesBehavior() : this(options: null)
+        {
+        }
+
         public FillWithSequentialValuesBehavior(Action<FillWithSequentialValuesBehaviorOptions> options = null)
         {
             var configuration = new FillWithSequentialValuesBehaviorOptions();
@@ -36,7 +40,7 @@ namespace ForeverFactory.Behaviors
                 StartDate = configuration.DateTimeOptions?.StartDate ?? RecursiveTransformFactoryOptions.DefaultStartDate
             };
         }
-        
+
         internal override IEnumerable<Transform<T>> GetTransforms<T>()
         {
             var factory = new FillWithSequentialValuesTransformFactory(_recursiveTransformFactoryOptions);
@@ -44,7 +48,7 @@ namespace ForeverFactory.Behaviors
         }
     }
     
-    public class FillWithSequentialValuesBehaviorOptions
+    public class FillWithSequentialValuesBehaviorOptions : IOptions<FillWithSequentialValuesBehavior>
     {
         /// <summary>
         /// If enabled, nested classes will be instantiated and all its properties will be set with sequential values.

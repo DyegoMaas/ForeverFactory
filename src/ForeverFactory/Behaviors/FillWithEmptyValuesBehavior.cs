@@ -15,6 +15,10 @@ namespace ForeverFactory.Behaviors
     {
         private readonly RecursiveTransformFactoryOptions _recursiveTransformFactoryOptions;
 
+        public FillWithEmptyValuesBehavior() : this(options: null)
+        {
+        }
+
         public FillWithEmptyValuesBehavior(Action<FillWithEmptyValuesBehaviorOptions> options = null)
         {
             var configuration = new FillWithEmptyValuesBehaviorOptions();
@@ -34,7 +38,7 @@ namespace ForeverFactory.Behaviors
         }
     }
 
-    public class FillWithEmptyValuesBehaviorOptions
+    public class FillWithEmptyValuesBehaviorOptions : IOptions<FillWithEmptyValuesBehavior>
     {
         /// <summary>
         /// If enabled, nested classes will be instantiated and all its properties will be set with "".
