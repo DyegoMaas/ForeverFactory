@@ -288,6 +288,7 @@ dotnet stryker
 
 ## Roadmap
  
+- Generate infinite enumerable sets
 - FillWithRandomValuesBehavior: create a random value generator
 - **\[Breaking Change\]** Change Build() for returning an IList<T> instead of an IEnumerable<T>. This will avoid the inconvenience of having to cast to list or array in tests.
 - Allow to configure custom builder per builder (single builder and many builder)
