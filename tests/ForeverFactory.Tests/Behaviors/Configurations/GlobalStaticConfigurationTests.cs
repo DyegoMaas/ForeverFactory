@@ -10,8 +10,7 @@ namespace ForeverFactory.Tests.Behaviors.Configurations;
 
 public class GlobalStaticConfigurationTests : IDisposable
 {
-    [Fact]
-    public void globally_set_behaviors_should_be_used_in_new_factories()
+    public GlobalStaticConfigurationTests()
     {
         ForeverFactoryGlobalSettings
             .UseBehavior(new FillWithSequentialValuesBehavior(options =>
@@ -24,7 +23,11 @@ public class GlobalStaticConfigurationTests : IDisposable
                 options.FillNullables = false;
                 options.Recursive = false;
             }));
-    
+    }
+
+    [Fact]
+    public void globally_set_behaviors_should_be_used_in_new_factories()
+    {
         var instances = MagicFactory.For<ClassA>().Many(2).Build().ToArray();
     
         instances[0].DateTimeProperty.Should().Be(2.September(2020));
@@ -38,18 +41,6 @@ public class GlobalStaticConfigurationTests : IDisposable
     [Fact]
     public void globally_set_behaviors_should_be_overridable()
     {
-        ForeverFactoryGlobalSettings
-            .UseBehavior(new FillWithSequentialValuesBehavior(options =>
-            {
-                options.DateTimeOptions = new DateTimeSequenceOptions
-                {
-                    DateTimeIncrements = DateTimeIncrements.Hours,
-                    StartDate = 2.September(2020)
-                };
-                options.FillNullables = false;
-                options.Recursive = false;
-            }));
-
         var instance = MagicFactory.For<ClassA>()
             .WithBehavior(new DoNotFillBehavior())
             .Build();
