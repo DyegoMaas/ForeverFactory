@@ -3,7 +3,6 @@ using System.Linq;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using ForeverFactory.Behaviors;
-using ForeverFactory.Customizations.Global;
 using Xunit;
 
 namespace ForeverFactory.Tests.Behaviors.Configurations;

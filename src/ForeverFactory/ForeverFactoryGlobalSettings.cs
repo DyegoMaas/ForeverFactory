@@ -1,6 +1,6 @@
 ﻿using ForeverFactory.Behaviors;
 
-namespace ForeverFactory.Customizations.Global
+namespace ForeverFactory
 {
     public static class ForeverFactoryGlobalSettings
     {

@@ -1,6 +1,5 @@
 ﻿using System;
 using ForeverFactory.Behaviors;
-using ForeverFactory.Customizations.Global;
 using ForeverFactory.Generators.Options;
 
 namespace ForeverFactory.Customizations
