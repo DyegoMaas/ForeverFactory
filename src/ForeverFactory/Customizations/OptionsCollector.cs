@@ -28,11 +28,11 @@ namespace ForeverFactory.Customizations
             return _options;
         }
 
-        private void LoadStaticCustomizationInto(CustomizeFactoryOptions<T> customizationOptions)
+        private static void LoadStaticCustomizationInto(ICustomizeFactoryOptions<T> customizationOptions)
         {
             if (ForeverFactoryGlobalSettings.GlobalBehavior != null)
             {
-                _customizationOptions.SetDefaultBehavior(ForeverFactoryGlobalSettings.GlobalBehavior);
+                customizationOptions.SetDefaultBehavior(ForeverFactoryGlobalSettings.GlobalBehavior);
             }
         }
 

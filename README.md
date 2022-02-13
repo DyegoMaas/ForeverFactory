@@ -233,6 +233,7 @@ public class Address
 You can set a default behavior for an entire project using `ForeverFactoryGlobalSettings`:
 
 ```csharp
+// this needs to be executed before any tests
 ForeverFactoryGlobalSettings
     .UseBehavior(new FillWithSequentialValuesBehavior(options =>
     {
