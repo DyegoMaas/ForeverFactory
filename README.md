@@ -215,7 +215,6 @@ public class Address
 With this behavior, ForeverFactory will recursively initialize every property it can with empty values. For example, the following class structure will resolve as shown below?
 
 ```csharp
-
 var customers = MagicFactory.For<Customer>()
     .WithBehavior(new FillWithEmptyValuesBehavior())
     .Many(2)
