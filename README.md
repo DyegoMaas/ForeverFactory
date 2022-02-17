@@ -272,7 +272,7 @@ You can always override the behavior for a specific scenario:
     .WithBehavior(new DoNotFillBehavior())
     .Build();
  
- instance.Name.Should().BeNull("global behavior was overridden");
+ instance.Name.Should().BeNull();
 ```
 
 ## How to contribute
