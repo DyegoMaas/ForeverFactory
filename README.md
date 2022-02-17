@@ -215,7 +215,6 @@ public class Address
 With this behavior, ForeverFactory will recursively initialize every property it can with empty values. For example, the following class structure will resolve as shown below?
 
 ```csharp
-
 var customers = MagicFactory.For<Customer>()
     .WithBehavior(new FillWithEmptyValuesBehavior())
     .Many(2)
@@ -240,7 +239,7 @@ public class Address
 }
 ```
 
-### Global settings
+### Global settings (*preview*)
 
 You can set a default behavior for an entire project using `ForeverFactoryGlobalSettings`:
 
@@ -273,7 +272,7 @@ You can always override the behavior for a specific scenario:
     .WithBehavior(new DoNotFillBehavior())
     .Build();
  
- instance.Name.Should().BeNull("global behavior was overridden");
+ instance.Name.Should().BeNull();
 ```
 
 ## How to contribute
