@@ -187,7 +187,7 @@ With this behavior, ForeverFactory will recursively initialize every property it
 ```csharp
 var customers = MagicFactory.For<Customer>()
     .WithBehavior(new FillWithSequentialValuesBehavior())
-    .Many(100)
+    .Many(2)
     .Build();
    
 customers[0].Name.Should().Be("Name1");
@@ -215,15 +215,28 @@ public class Address
 With this behavior, ForeverFactory will recursively initialize every property it can with empty values. For example, the following class structure will resolve as shown below?
 
 ```csharp
+
+var customers = MagicFactory.For<Customer>()
+    .WithBehavior(new FillWithEmptyValuesBehavior())
+    .Many(2)
+    .Build();
+   
+customers[0].Name.Should().Be("");
+customers[0].Age.Should().Be(0);
+customers[0].Address.ZipCode.Should().Be("");
+customers[1].Name.Should().Be("");
+customers[1].Age.Should().Be(0);
+customers[1].Address.ZipCode.Should().Be("0");
+
 public class Customer
 {
-    public string Name { get; set; } // will be set to ""
-    public Address Address { get; set; } // will be set to 'new Address()' 
+    public string Name { get; set; }
+    public Address Address { get; set; }
 }
 
 public class Address
 {
-    public string ZipCode { get; set; } // will be set to ""
+    public string ZipCode { get; set; }
 }
 ```
 
