@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using FluentAssertions.Extensions;
+using ForeverFactory.Behaviors;
 using ForeverFactory.Tests.ApresentacaoCompartilhamento.Models;
 using Xunit;
 
@@ -53,6 +55,44 @@ public class ManualVersusForeverFactory
             .Build();
         
         inserirComboRequestA.Should().BeEquivalentTo(inserirComboRequestB);
+    }
+
+    [Fact]
+    public void should_build_funny_objects()
+    {
+        var pessoas = new PessoaFactory()
+            .WithBehavior(new FillWithSequentialValuesBehavior(options =>
+            {
+                options.DateTimeOptions = new DateTimeSequenceOptions
+                {
+                    DateTimeIncrements = DateTimeIncrements.Months,
+                    StartDate = 2.April(2004)
+                };
+            }))
+            .Many(10)
+                .WithFirst(2, x => x.Nome = "Ana")
+                .WithLast(2, x => x.Nome = "Bianca")
+            .Plus(10)
+                .With(x => x.Nome = "Joao")
+            .Build().ToList();
+        Console.WriteLine(pessoas);
+    }
+    
+    public class PessoaFactory : MagicFactory<Pessoa>
+    {
+        protected override void Customize(ICustomizeFactoryOptions<Pessoa> customization)
+        {
+            // customization
+            //     .Set(x => x.Nome = "Pedro");
+            // .Set(x => x.Idade = 18);
+        }
+    }
+
+    public class Pessoa
+    {
+        public string Nome { get; set; }
+        public int Idade { get; set; }
+        public DateTime DataRegistroRG { get; set; }
     }
     
     public class InserirComboRequestBuilder
@@ -165,6 +205,7 @@ public class InserirComboRequestFactory2 : MagicFactory<InserirComboRequest>
     protected override void Customize(ICustomizeFactoryOptions<InserirComboRequest> customization)
     {
         customization
+            .UseConstructor(() => new InserirComboRequest())
             .Set(x => x.UploadId = "4be1569c-a1aa-4f3e-9456-d6ed4ad987af")
             .Set(x => x.ArquivoComboId = "7f226d19-c061-4009-bdde-8c6c0c57bd06")
             .Set(x => x.ComboSolicitado = new ComboSolicitadoDtoFactory().Build());
