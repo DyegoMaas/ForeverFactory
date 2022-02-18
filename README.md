@@ -239,7 +239,7 @@ public class Address
 }
 ```
 
-### Global settings (*preview*)
+### Global settings
 
 You can set a default behavior for an entire project using `ForeverFactoryGlobalSettings`:
 
