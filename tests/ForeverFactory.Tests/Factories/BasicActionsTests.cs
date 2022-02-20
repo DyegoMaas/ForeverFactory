@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Linq;
+using FluentAssertions;
 using ForeverFactory.Tests.Factories.CustomizedFactories.ExampleFactories;
 using Xunit;
 
@@ -54,7 +55,8 @@ namespace ForeverFactory.Tests.Factories
                 .UsingConstructor(() => new Product("MAG-7", "Shotgun"))
                 .Many(2)
                 .Plus(2)
-                .Build();
+                .Build()
+                .ToArray();
 
             products.Should().HaveCount(4);
             foreach (var product in products)
