@@ -6,11 +6,11 @@ using Xunit;
 
 namespace ForeverFactory.Tests.Generators
 {
-    public class ObjectFactoryTests
+    public class ObjectBuilderTests
     {
         private readonly ObjectBuilder<Person> _builder;
 
-        public ObjectFactoryTests()
+        public ObjectBuilderTests()
         {
             var customizeFactoryOptions = new OptionsCollector<Person>(customization => {});
             _builder = new ObjectBuilder<Person>(customizeFactoryOptions);
