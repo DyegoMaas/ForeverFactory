@@ -8,18 +8,18 @@ namespace ForeverFactory.Tests.Generators
 {
     public class ObjectFactoryTests
     {
-        private readonly ObjectFactory<Person> _factory;
+        private readonly ObjectBuilder<Person> _builder;
 
         public ObjectFactoryTests()
         {
             var customizeFactoryOptions = new OptionsCollector<Person>(customization => {});
-            _factory = new ObjectFactory<Person>(customizeFactoryOptions);
+            _builder = new ObjectBuilder<Person>(customizeFactoryOptions);
         }
 
         [Fact]
         public void It_should_build_an_enumerable_if_no_nodes_are_added()
         {
-            var persons = _factory.Build();
+            var persons = _builder.Build();
 
             persons.Should().NotBeNull();
         }
@@ -27,9 +27,9 @@ namespace ForeverFactory.Tests.Generators
         [Fact]
         public void It_should_build_upon_the_added_generator_nodes()
         {
-            _factory.AddNode(new GeneratorNode<Person>(1));
-            _factory.AddNode(new GeneratorNode<Person>(2));
-            var persons = _factory.Build();
+            _builder.AddNode(new GeneratorNode<Person>(1));
+            _builder.AddNode(new GeneratorNode<Person>(2));
+            var persons = _builder.Build();
 
             persons.Should().HaveCount(3);
         }
@@ -37,10 +37,10 @@ namespace ForeverFactory.Tests.Generators
         [Fact]
         public void It_should_clear_nodes_when_adding_root_node()
         {
-            _factory.AddNode(new GeneratorNode<Person>(1));
-            _factory.AddRootNode(new GeneratorNode<Person>(2));
+            _builder.AddNode(new GeneratorNode<Person>(1));
+            _builder.AddRootNode(new GeneratorNode<Person>(2));
 
-            var persons = _factory.Build();
+            var persons = _builder.Build();
 
             persons.Should().HaveCount(2, "the other node was deleted when the new root was added");
         }
@@ -53,7 +53,7 @@ namespace ForeverFactory.Tests.Generators
                 customization.Set(x => x.FirstName = "Clark");
             });
 
-            var factory = new ObjectFactory<Person>(customizeFactoryOptions);
+            var factory = new ObjectBuilder<Person>(customizeFactoryOptions);
             factory.AddNode(new GeneratorNode<Person>(1));
             factory.AddNode(new GeneratorNode<Person>(2));
 
