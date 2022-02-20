@@ -41,13 +41,13 @@ namespace ForeverFactory
     public abstract class MagicFactory<T> : ISimpleFactory<T>, ICustomizeOneBuildOneWithNavigation<T>, ICustomizeManyBuildMany<T>, ICustomizeOneBuildManyWithNavigation<T>
         where T : class
     {
-        private readonly ObjectFactory<T> _objectFactory;
+        private readonly ObjectBuilder<T> _objectBuilder;
         private readonly OptionsCollector<T> _optionsCollector;
 
         protected MagicFactory()
         {
             _optionsCollector = new OptionsCollector<T>(customize: Customize);
-            _objectFactory = new ObjectFactory<T>(_optionsCollector);
+            _objectBuilder = new ObjectBuilder<T>(_optionsCollector);
             SetRootNode(instanceCount: 1);
         }
 
@@ -56,7 +56,7 @@ namespace ForeverFactory
         private void SetRootNode(int instanceCount)
         {
             var rootNode = new GeneratorNode<T>(instanceCount);
-            _objectFactory.AddRootNode(rootNode);
+            _objectBuilder.AddRootNode(rootNode);
         }
 
         public ISimpleFactory<T> UsingConstructor(Func<T> customConstructor)
@@ -91,7 +91,7 @@ namespace ForeverFactory
         public ICustomizeOneBuildManyWithNavigation<T> PlusOne()
         {
             var newNode = new GeneratorNode<T>(instanceCount: 1);
-            _objectFactory.AddNode(newNode);
+            _objectBuilder.AddNode(newNode);
             
             return this;
         }
@@ -105,19 +105,19 @@ namespace ForeverFactory
         public ICustomizeManyBuildMany<T> Plus(int count)
         {
             var newNode = new GeneratorNode<T>(instanceCount: count);
-            _objectFactory.AddNode(newNode);
+            _objectBuilder.AddNode(newNode);
 
             return this;
         }
 
         public T Build()
         {
-            return _objectFactory.Build().First();
+            return _objectBuilder.Build().First();
         }
 
         IEnumerable<T> IBuildMany<T>.Build()
         {
-            return _objectFactory.Build();
+            return _objectBuilder.Build();
         }
 
         ICustomizeOneBuildManyWithNavigation<T> ICustomizeOneBuildManyWithNavigation<T>.With<TValue>(Func<T, TValue> setMember)
@@ -134,7 +134,7 @@ namespace ForeverFactory
 
         private void AddTransformThatAlwaysApply<TValue>(Func<T, TValue> setMember)
         {
-            _objectFactory.AddTransform(
+            _objectBuilder.AddTransform(
                 new FuncTransform<T, TValue>(setMember.Invoke),
                 node => new AlwaysApplyTransformSpecification()
             );
@@ -148,7 +148,7 @@ namespace ForeverFactory
 
         private void AddTransformThatAppliesToFirstNInstances<TValue>(int count, Func<T, TValue> setMember)
         {
-            _objectFactory.AddTransform(
+            _objectBuilder.AddTransform(
                 new FuncTransform<T, TValue>(setMember.Invoke),
                 node => new ApplyTransformToFirstInstancesSpecification(count, node.InstanceCount)
             );
@@ -162,7 +162,7 @@ namespace ForeverFactory
 
         private void AddTransformThatAppliesToLastNInstances<TValue>(int count, Func<T, TValue> setMember)
         {
-            _objectFactory.AddTransform(
+            _objectBuilder.AddTransform(
                 new FuncTransform<T, TValue>(setMember.Invoke),
                 node => new ApplyTransformToLastInstancesSpecification(count, node.InstanceCount)
             );

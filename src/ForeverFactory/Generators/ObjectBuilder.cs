@@ -9,13 +9,13 @@ using ForeverFactory.Generators.Transforms.Guards.Specifications;
 
 namespace ForeverFactory.Generators
 {
-    internal class ObjectFactory<T> : IBuildMany<T>
+    internal class ObjectBuilder<T> : IBuildMany<T>
         where T : class
     {
         private readonly IOptionsCollector<T> _optionsCollector;
         private readonly List<GeneratorNode<T>> _generatorNodes = new List<GeneratorNode<T>>();
 
-        public ObjectFactory(IOptionsCollector<T> optionsCollector)
+        public ObjectBuilder(IOptionsCollector<T> optionsCollector)
         {
             _optionsCollector = optionsCollector;
         }
