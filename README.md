@@ -37,6 +37,7 @@ public class Person
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }
+    public string Email { get; set; }
     public int Age { get; set; }
 }
 ```
@@ -47,12 +48,13 @@ We can build a new instance of this class as follows:
 var person = MagicFactory.For<Person>().Build();
 ```
 
-And we can customize each field:
+And we can customize each property:
 
 ```csharp
 var vitorHugo = MagicFactory.For<Person>()
     .With(x => x.FirstName = "Vitor")
     .With(x => x.LastName = "Hugo")
+    .With(x => x.Email = $"{x.FirstName}.{LastName}@gmail.com".ToLower())
     .Build();
 ```
 
