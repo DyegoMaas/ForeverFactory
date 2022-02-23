@@ -77,6 +77,15 @@ namespace ForeverFactory
             return this;
         }
 
+        public ICustomizeOneBuildOne<T> Do<TValue>(Func<T, TValue> setMember)
+        {
+            _objectBuilder.AddDeferredTransform(
+                new FuncTransform<T, TValue>(setMember.Invoke),
+                node => new AlwaysApplyTransformSpecification()
+            );
+            return this;
+        }
+
         ICustomizeOneBuildOneWithNavigation<T> ICustomizeOneBuildOneWithNavigation<T>.With<TValue>(Func<T, TValue> setMember)
         {
             AddTransformThatAlwaysApply(setMember);

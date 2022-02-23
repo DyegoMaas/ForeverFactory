@@ -16,5 +16,7 @@ namespace ForeverFactory.FluentInterfaces
         ///     >
         /// </param>
         ICustomizeOneBuildOne<T> With<TValue>(Func<T, TValue> setMember);
+
+        ICustomizeOneBuildOne<T> Do<TValue>(Func<T, TValue> func);
     }
 }
