@@ -1,4 +1,4 @@
-# Forever Factory - Build test objects quickly
+****# Forever Factory - Build test objects quickly
 
 ![License](https://img.shields.io/github/license/DyegoMaas/ForeverFactory.svg)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/DyegoMaas/ForeverFactory/build-and-test?label=tests)
@@ -37,6 +37,7 @@ public class Person
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }
+    public string Email { get; set; }
     public int Age { get; set; }
 }
 ```
@@ -47,12 +48,13 @@ We can build a new instance of this class as follows:
 var person = MagicFactory.For<Person>().Build();
 ```
 
-And we can customize each field:
+And we can customize each property:
 
 ```csharp
 var vitorHugo = MagicFactory.For<Person>()
     .With(x => x.FirstName = "Vitor")
     .With(x => x.LastName = "Hugo")
+    .With(x => x.Email = $"{x.FirstName}.{LastName}@gmail.com".ToLower())
     .Build();
 ```
 
@@ -300,9 +302,14 @@ dotnet stryker
 
 ## Roadmap
  
-- FillWithRandomValuesBehavior: create a random value generator
+- Elaborate examples combining ForeverFactory with **Faker**-_like_ libraries, like:
+  - [bchavez/Bogus](https://github.com/bchavez/Bogus)
+  - [jonwingfield/Faker.Net](https://github.com/jonwingfield/Faker.Net)
+  - [mrstebo/FakerDotNet](https://github.com/mrstebo/FakerDotNet)
+  - [Kuree/Faker.Net](https://github.com/Kuree/Faker.Net)
+- Add support for void actions like `.Do(x => {})`
+- Rewrite README; make it more exciting 
 - **\[Breaking Change\]** Change Build() for returning an IList<T> instead of an IEnumerable<T>. This will avoid the inconvenience of having to cast to list or array in tests.
 - Allow to configure custom builder per builder (single builder and many builder)
 - Support custom constructor scoped by builder (for now, custom constructors are shared along the linked builders)
-- Support "smart" behavior, which identifies by convention which type of sequences and rules to apply to every property 
-- Add the concept of "Localization Extensions", which could contain localized versions of the fluent API, translated for other languages, like, portuguese, spanish, etc
+- "Smart" behavior, which identifies by convention which type of sequences and rules to apply to every property 
