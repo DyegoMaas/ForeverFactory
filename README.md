@@ -1,4 +1,4 @@
-****# Forever Factory - Build test objects quickly
+# Forever Factory - Build test objects quickly
 
 ![License](https://img.shields.io/github/license/DyegoMaas/ForeverFactory.svg)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/DyegoMaas/ForeverFactory/build-and-test?label=tests)
