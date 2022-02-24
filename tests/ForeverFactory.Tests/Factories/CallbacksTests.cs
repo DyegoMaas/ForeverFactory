@@ -9,6 +9,22 @@ namespace ForeverFactory.Tests.Factories;
 public class CallbacksTests
 {
     [Fact]
+    public void should_execute_callbacks_in_order()
+    {
+        string shipNameBefore = null;
+        string shipNameAfter = null;
+        
+        MagicFactory.For<Ship>()
+            .Do(x => shipNameBefore = x.Name)
+            .With(x => x.Name = "Mary")
+            .Do(x => shipNameAfter = x.Name)
+            .Build();
+
+        shipNameBefore.Should().BeNull();
+        shipNameAfter.Should().Be("Mary");
+    }
+
+    [Fact]
     public void should_execute_callback_through_ICustomizeOneBuildOne()
     {
         string shipName = null;
@@ -22,7 +38,7 @@ public class CallbacksTests
 
         shipName.Should().Be("Mary");
     }
-    
+
     [Fact]
     public void should_execute_callback_through_ICustomizeManyBuildMany()
     {
@@ -40,7 +56,7 @@ public class CallbacksTests
         shipName.Should().Be("Mary");
     }
 
-    
+
     [Fact]
     public void should_execute_callback_through_ICustomizeOneBuildOneWithNavigation()
     {
@@ -56,7 +72,7 @@ public class CallbacksTests
 
         shipName.Should().Be("Mary");
     }
-    
+
     [Fact]
     public void should_execute_callback_through_ICustomizeOneBuildManyWithNavigation()
     {
@@ -74,7 +90,7 @@ public class CallbacksTests
 
         shipName.Should().Be("Mary");
     }
-    
+
     private class Ship
     {
         public string Name { get; set; }
