@@ -11,5 +11,8 @@ namespace ForeverFactory.FluentInterfaces
         ///     <example>x => x.Name = "Karen"</example>
         /// </param>
         ICustomizeOneBuildManyWithNavigation<T> With<TValue>(Func<T, TValue> setMember);
+        
+        // TODO document
+        ICustomizeOneBuildManyWithNavigation<T> Do(Action<T> callback);
     }
 }

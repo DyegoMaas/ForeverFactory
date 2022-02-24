@@ -77,6 +77,35 @@ namespace ForeverFactory
             return this;
         }
 
+        ICustomizeOneBuildManyWithNavigation<T> ICustomizeOneBuildManyWithNavigation<T>.Do(Action<T> callback)
+        {
+            AddTransformThatAlwaysApply(WrapAction(callback));
+            return this;
+        }
+
+        ICustomizeOneBuildOneWithNavigation<T> ICustomizeOneBuildOneWithNavigation<T>.Do(Action<T> callback)
+        {
+            AddTransformThatAlwaysApply(WrapAction(callback));
+            return this;
+        }
+
+        ICustomizeOneBuildOne<T> ICustomizeOneBuildOne<T>.Do(Action<T> callback)
+        {
+            AddTransformThatAlwaysApply(WrapAction(callback));
+            return this;
+        }
+        
+        private Func<T, bool> WrapAction(Action<T> callback)
+        {
+            bool Wrapper(T instance)
+            {
+                callback.Invoke(instance);
+                return true;
+            }
+
+            return Wrapper;
+        }
+
         ICustomizeOneBuildOneWithNavigation<T> ICustomizeOneBuildOneWithNavigation<T>.With<TValue>(Func<T, TValue> setMember)
         {
             AddTransformThatAlwaysApply(setMember);
@@ -157,6 +186,12 @@ namespace ForeverFactory
         public ICustomizeManyBuildMany<T> WithLast<TValue>(int count, Func<T, TValue> setMember)
         {
             AddTransformThatAppliesToLastNInstances(count, setMember);
+            return this;
+        }
+
+        ICustomizeManyBuildMany<T> ICustomizeManyBuildMany<T>.Do(Action<T> callback)
+        {
+            AddTransformThatAlwaysApply(WrapAction(callback));
             return this;
         }
 

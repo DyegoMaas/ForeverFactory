@@ -12,5 +12,8 @@ namespace ForeverFactory.FluentInterfaces
         ///     >
         /// </param>
         ICustomizeOneBuildOneWithNavigation<T> With<TValue>(Func<T, TValue> setMember);
+        
+        // TODO document
+        ICustomizeOneBuildOneWithNavigation<T> Do(Action<T> callback);
     }
 }

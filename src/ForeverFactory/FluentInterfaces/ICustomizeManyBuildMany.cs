@@ -33,5 +33,8 @@ namespace ForeverFactory.FluentInterfaces
         ///     <example>x => x.Name = "Karen"</example>
         /// </param>
         ICustomizeManyBuildMany<T> WithLast<TValue>(int count, Func<T, TValue> setMember);
+        
+        // TODO document
+        ICustomizeManyBuildMany<T> Do(Action<T> callback);
     }
 }
