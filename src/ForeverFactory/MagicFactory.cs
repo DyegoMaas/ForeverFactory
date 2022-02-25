@@ -71,9 +71,66 @@ namespace ForeverFactory
             return this;
         }
 
+        public ICustomizeOneBuildOneWithNavigation<T> One()
+        {
+            return this;
+        }
+
+        public ICustomizeManyBuildMany<T> Many(int count)
+        {
+            SetRootNode(instanceCount: count);
+            return this;
+        }
+
+        public ICustomizeOneBuildManyWithNavigation<T> PlusOne()
+        {
+            var newNode = new GeneratorNode<T>(instanceCount: 1);
+            _objectBuilder.AddNode(newNode);
+            
+            return this;
+        }
+
+        public ICustomizeManyBuildMany<T> Plus(int count)
+        {
+            var newNode = new GeneratorNode<T>(instanceCount: count);
+            _objectBuilder.AddNode(newNode);
+
+            return this;
+        }
+
         public ICustomizeOneBuildOne<T> With<TValue>(Func<T, TValue> setMember)
         {
             AddTransformThatAlwaysApply(setMember);
+            return this;
+        }
+
+        ICustomizeOneBuildOneWithNavigation<T> ICustomizeOneBuildOneWithNavigation<T>.With<TValue>(Func<T, TValue> setMember)
+        {
+            AddTransformThatAlwaysApply(setMember);
+            return this;
+        }
+
+        ICustomizeOneBuildManyWithNavigation<T> ICustomizeOneBuildManyWithNavigation<T>.With<TValue>(Func<T, TValue> setMember)
+        {
+            AddTransformThatAlwaysApply(setMember);
+            return this;
+        }
+
+        ICustomizeManyBuildMany<T> ICustomizeManyBuildMany<T>.With<TValue>(Func<T, TValue> setMember)
+        {
+            AddTransformThatAlwaysApply(setMember);
+            return this;
+        }
+
+        public ICustomizeManyBuildMany<T> WithFirst<TValue>(int count, Func<T, TValue> setMember)
+        {
+            AddTransformThatAppliesToFirstNInstances(count, setMember);
+            return this;
+        }
+
+        public ICustomizeManyBuildMany<T> WithLast<TValue>(int count, Func<T, TValue> setMember)
+        {
+            AddTransformThatAppliesToLastNInstances(count, setMember);
             return this;
         }
 
@@ -94,48 +151,10 @@ namespace ForeverFactory
             AddTransformThatAlwaysApply(WrapAction(callback));
             return this;
         }
-        
-        private Func<T, bool> WrapAction(Action<T> callback)
+
+        ICustomizeManyBuildMany<T> ICustomizeManyBuildMany<T>.Do(Action<T> callback)
         {
-            bool Wrapper(T instance)
-            {
-                callback.Invoke(instance);
-                return true;
-            }
-
-            return Wrapper;
-        }
-
-        ICustomizeOneBuildOneWithNavigation<T> ICustomizeOneBuildOneWithNavigation<T>.With<TValue>(Func<T, TValue> setMember)
-        {
-            AddTransformThatAlwaysApply(setMember);
-            return this;
-        }
-
-        public ICustomizeOneBuildOneWithNavigation<T> One()
-        {
-            return this;
-        }
-
-        public ICustomizeOneBuildManyWithNavigation<T> PlusOne()
-        {
-            var newNode = new GeneratorNode<T>(instanceCount: 1);
-            _objectBuilder.AddNode(newNode);
-            
-            return this;
-        }
-
-        public ICustomizeManyBuildMany<T> Many(int count)
-        {
-            SetRootNode(instanceCount: count);
-            return this;
-        }
-
-        public ICustomizeManyBuildMany<T> Plus(int count)
-        {
-            var newNode = new GeneratorNode<T>(instanceCount: count);
-            _objectBuilder.AddNode(newNode);
-
+            AddTransformThatAlwaysApply(WrapAction(callback));
             return this;
         }
 
@@ -149,16 +168,20 @@ namespace ForeverFactory
             return _objectBuilder.Build();
         }
 
-        ICustomizeOneBuildManyWithNavigation<T> ICustomizeOneBuildManyWithNavigation<T>.With<TValue>(Func<T, TValue> setMember)
+        private void AddTransformThatAppliesToFirstNInstances<TValue>(int count, Func<T, TValue> setMember)
         {
-            AddTransformThatAlwaysApply(setMember);
-            return this;
+            _objectBuilder.AddTransform(
+                new FuncTransform<T, TValue>(setMember.Invoke),
+                node => new ApplyTransformToFirstInstancesSpecification(count, node.InstanceCount)
+            );
         }
 
-        ICustomizeManyBuildMany<T> ICustomizeManyBuildMany<T>.With<TValue>(Func<T, TValue> setMember)
+        private void AddTransformThatAppliesToLastNInstances<TValue>(int count, Func<T, TValue> setMember)
         {
-            AddTransformThatAlwaysApply(setMember);
-            return this;
+            _objectBuilder.AddTransform(
+                new FuncTransform<T, TValue>(setMember.Invoke),
+                node => new ApplyTransformToLastInstancesSpecification(count, node.InstanceCount)
+            );
         }
 
         private void AddTransformThatAlwaysApply<TValue>(Func<T, TValue> setMember)
@@ -169,38 +192,15 @@ namespace ForeverFactory
             );
         }
 
-        public ICustomizeManyBuildMany<T> WithFirst<TValue>(int count, Func<T, TValue> setMember)
+        private Func<T, bool> WrapAction(Action<T> callback)
         {
-            AddTransformThatAppliesToFirstNInstances(count, setMember);
-            return this;
-        }
+            bool Wrapper(T instance)
+            {
+                callback.Invoke(instance);
+                return true;
+            }
 
-        private void AddTransformThatAppliesToFirstNInstances<TValue>(int count, Func<T, TValue> setMember)
-        {
-            _objectBuilder.AddTransform(
-                new FuncTransform<T, TValue>(setMember.Invoke),
-                node => new ApplyTransformToFirstInstancesSpecification(count, node.InstanceCount)
-            );
-        }
-
-        public ICustomizeManyBuildMany<T> WithLast<TValue>(int count, Func<T, TValue> setMember)
-        {
-            AddTransformThatAppliesToLastNInstances(count, setMember);
-            return this;
-        }
-
-        ICustomizeManyBuildMany<T> ICustomizeManyBuildMany<T>.Do(Action<T> callback)
-        {
-            AddTransformThatAlwaysApply(WrapAction(callback));
-            return this;
-        }
-
-        private void AddTransformThatAppliesToLastNInstances<TValue>(int count, Func<T, TValue> setMember)
-        {
-            _objectBuilder.AddTransform(
-                new FuncTransform<T, TValue>(setMember.Invoke),
-                node => new ApplyTransformToLastInstancesSpecification(count, node.InstanceCount)
-            );
+            return Wrapper;
         }
     }
 }
