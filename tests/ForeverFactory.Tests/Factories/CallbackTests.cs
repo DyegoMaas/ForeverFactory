@@ -55,7 +55,6 @@ public class CallbackTests
 
         shipName.Should().Be("Mary");
     }
-
     
     [Fact]
     public void should_execute_callback_through_ICustomizeOneBuildOneWithNavigation()

@@ -34,7 +34,12 @@ namespace ForeverFactory.FluentInterfaces
         /// </param>
         ICustomizeManyBuildMany<T> WithLast<TValue>(int count, Func<T, TValue> setMember);
         
-        // TODO document
+        /// <summary>
+        ///     Executes the callback passing the instance with its current state.
+        /// </summary>
+        /// <param name="callback">
+        ///     <example>x => Console.WriteLine(x.Name)</example>
+        /// </param>
         ICustomizeManyBuildMany<T> Do(Action<T> callback);
     }
 }
