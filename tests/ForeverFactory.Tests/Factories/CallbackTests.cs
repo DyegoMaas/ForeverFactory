@@ -89,7 +89,37 @@ public class CallbackTests
 
         shipName.Should().Be("Mary");
     }
-    
+
+    [Fact]
+    public void should_execute_callback_in_a_customized_factory()
+    {
+        string shipName = null;
+        
+        Action<Ship> saveShipName = ship => shipName = ship.Name;
+        new ShipFactory("Sauron", saveShipName).Build();
+        
+        shipName.Should().Be("Sauron");
+    }
+
+    private class ShipFactory : MagicFactory<Ship>
+    {
+        private readonly string _shipName;
+        private readonly Action<Ship> _callback;
+
+        public ShipFactory(string shipName, Action<Ship> callback)
+        {
+            _callback = callback;
+            _shipName = shipName;
+        }
+
+        protected override void Customize(ICustomizeFactoryOptions<Ship> customization)
+        {
+            customization
+                .Set(x => x.Name = _shipName)
+                .Do(_callback);
+        }
+    }
+
     private class Ship
     {
         public string Name { get; set; }

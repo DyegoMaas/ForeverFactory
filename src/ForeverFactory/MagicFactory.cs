@@ -38,7 +38,8 @@ namespace ForeverFactory
     ///     A customizable factory of objects of type "T". It can be extended with predefined configurations.
     /// </summary>
     /// <typeparam name="T">The type of objects that this factory will build.</typeparam>
-    public abstract class MagicFactory<T> : ISimpleFactory<T>, ICustomizeOneBuildOneWithNavigation<T>, ICustomizeManyBuildMany<T>, ICustomizeOneBuildManyWithNavigation<T>
+    public abstract class MagicFactory<T> : ISimpleFactory<T>, ICustomizeOneBuildOneWithNavigation<T>,
+        ICustomizeManyBuildMany<T>, ICustomizeOneBuildManyWithNavigation<T>
         where T : class
     {
         private readonly ObjectBuilder<T> _objectBuilder;
@@ -86,7 +87,7 @@ namespace ForeverFactory
         {
             var newNode = new GeneratorNode<T>(instanceCount: 1);
             _objectBuilder.AddNode(newNode);
-            
+
             return this;
         }
 
@@ -104,13 +105,15 @@ namespace ForeverFactory
             return this;
         }
 
-        ICustomizeOneBuildOneWithNavigation<T> ICustomizeOneBuildOneWithNavigation<T>.With<TValue>(Func<T, TValue> setMember)
+        ICustomizeOneBuildOneWithNavigation<T> ICustomizeOneBuildOneWithNavigation<T>.With<TValue>(
+            Func<T, TValue> setMember)
         {
             AddTransformThatAlwaysApply(setMember);
             return this;
         }
 
-        ICustomizeOneBuildManyWithNavigation<T> ICustomizeOneBuildManyWithNavigation<T>.With<TValue>(Func<T, TValue> setMember)
+        ICustomizeOneBuildManyWithNavigation<T> ICustomizeOneBuildManyWithNavigation<T>.With<TValue>(
+            Func<T, TValue> setMember)
         {
             AddTransformThatAlwaysApply(setMember);
             return this;
@@ -136,25 +139,25 @@ namespace ForeverFactory
 
         ICustomizeOneBuildManyWithNavigation<T> ICustomizeOneBuildManyWithNavigation<T>.Do(Action<T> callback)
         {
-            AddTransformThatAlwaysApply(WrapAction(callback));
+            AddTransformThatAlwaysApply(callback.WrapAsFunction());
             return this;
         }
 
         ICustomizeOneBuildOneWithNavigation<T> ICustomizeOneBuildOneWithNavigation<T>.Do(Action<T> callback)
         {
-            AddTransformThatAlwaysApply(WrapAction(callback));
+            AddTransformThatAlwaysApply(callback.WrapAsFunction());
             return this;
         }
 
         ICustomizeOneBuildOne<T> ICustomizeOneBuildOne<T>.Do(Action<T> callback)
         {
-            AddTransformThatAlwaysApply(WrapAction(callback));
+            AddTransformThatAlwaysApply(callback.WrapAsFunction());
             return this;
         }
 
         ICustomizeManyBuildMany<T> ICustomizeManyBuildMany<T>.Do(Action<T> callback)
         {
-            AddTransformThatAlwaysApply(WrapAction(callback));
+            AddTransformThatAlwaysApply(callback.WrapAsFunction());
             return this;
         }
 
@@ -190,17 +193,6 @@ namespace ForeverFactory
                 new FuncTransform<T, TValue>(setMember.Invoke),
                 node => new AlwaysApplyTransformSpecification()
             );
-        }
-
-        private Func<T, bool> WrapAction(Action<T> callback)
-        {
-            bool Wrapper(T instance)
-            {
-                callback.Invoke(instance);
-                return true;
-            }
-
-            return Wrapper;
         }
     }
 }
