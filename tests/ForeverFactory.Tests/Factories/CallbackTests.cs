@@ -43,8 +43,13 @@ public class CallbackTests
     public void should_execute_callback_through_ICustomizeManyBuildMany()
     {
         string shipName = null;
+        var counter = 0;
         
-        Action<Ship> saveShipName = ship => shipName = ship.Name;
+        Action<Ship> saveShipName = ship =>
+        {
+            shipName = ship.Name;
+            counter++;
+        };
         ICustomizeManyBuildMany<Ship> factory = MagicFactory.For<Ship>()
             .Many(2)
             .With(x => x.Name = "Mary");
@@ -54,6 +59,7 @@ public class CallbackTests
             .ToArray();
 
         shipName.Should().Be("Mary");
+        counter.Should().Be(2);
     }
     
     [Fact]
