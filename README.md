@@ -277,6 +277,15 @@ You can always override the behavior for a specific scenario:
  instance.Name.Should().BeNull();
 ```
 
+### Callbacks
+
+```csharp
+var project = MagicFactory.For<Project>()
+    .With(x => x.ProjectName = "Apollo")
+    .Do(x => Console.WriteLine(x.ProjectName) // prints "Apollo"
+    .Build();
+```
+
 ## How to contribute
 
 You can help this project in many ways. Here are some ideas:

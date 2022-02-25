@@ -11,5 +11,13 @@ namespace ForeverFactory.FluentInterfaces
         ///     <example>x => x.Name = "Karen"</example>
         /// </param>
         ICustomizeOneBuildManyWithNavigation<T> With<TValue>(Func<T, TValue> setMember);
+        
+        /// <summary>
+        ///     Executes the callback passing the instance with its current state.
+        /// </summary>
+        /// <param name="callback">
+        ///     <example>x => Console.WriteLine(x.Name)</example>
+        /// </param>
+        ICustomizeOneBuildManyWithNavigation<T> Do(Action<T> callback);
     }
 }

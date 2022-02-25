@@ -16,5 +16,13 @@ namespace ForeverFactory.FluentInterfaces
         ///     >
         /// </param>
         ICustomizeOneBuildOne<T> With<TValue>(Func<T, TValue> setMember);
+        
+        /// <summary>
+        ///     Executes the callback passing the instance with its current state.
+        /// </summary>
+        /// <param name="callback">
+        ///     <example>x => Console.WriteLine(x.Name)</example>
+        /// </param>
+        ICustomizeOneBuildOne<T> Do(Action<T> callback);
     }
 }

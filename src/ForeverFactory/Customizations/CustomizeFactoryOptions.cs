@@ -31,5 +31,12 @@ namespace ForeverFactory.Customizations
             _objectFactoryOptions.Transforms.Add(new FuncTransform<T, TValue>(setMember.Invoke));
             return this;
         }
+
+        public ICustomizeFactoryOptions<T> Do(Action<T> callback)
+        {
+            var function = callback.WrapAsFunction();
+            _objectFactoryOptions.Transforms.Add(new FuncTransform<T, bool>(function.Invoke));
+            return this;
+        }
     }
 }
