@@ -316,9 +316,6 @@ dotnet stryker
   - [jonwingfield/Faker.Net](https://github.com/jonwingfield/Faker.Net)
   - [mrstebo/FakerDotNet](https://github.com/mrstebo/FakerDotNet)
   - [Kuree/Faker.Net](https://github.com/Kuree/Faker.Net)
-- Add support for void actions like `.Do(x => {})`
 - Rewrite README; make it more exciting 
 - **\[Breaking Change\]** Change Build() for returning an IList<T> instead of an IEnumerable<T>. This will avoid the inconvenience of having to cast to list or array in tests.
-- Allow to configure custom builder per builder (single builder and many builder)
-- Support custom constructor scoped by builder (for now, custom constructors are shared along the linked builders)
-- "Smart" behavior, which identifies by convention which type of sequences and rules to apply to every property 
+- Support custom constructor scoped by generator node (for now, custom constructors are shared along the linked builders)
