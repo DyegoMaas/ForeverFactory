@@ -39,12 +39,6 @@ namespace ForeverFactory.Generators
             node.AddTransform(transform, guard(node));
         }
 
-        public void AddDeferredTransform(Transform<T> transform, Func<GeneratorNode<T>, CanApplyTransformSpecification> guard)
-        {
-            var node = GetCurrentGeneratorNode();
-            node.AddDeferredTransform(transform, guard(node));
-        }
-
         private GeneratorNode<T> GetCurrentGeneratorNode()
         {
             return _generatorNodes.LastOrDefault();
@@ -60,7 +54,5 @@ namespace ForeverFactory.Generators
         {
             _generatorNodes.Add(generatorNode);
         }
-
-        // TODO add tests
     }
 }

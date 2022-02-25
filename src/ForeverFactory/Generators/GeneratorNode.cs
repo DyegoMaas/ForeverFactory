@@ -11,7 +11,6 @@ namespace ForeverFactory.Generators
         where T : class
     {
         private readonly List<GuardedTransform<T>> _transformsToApply = new List<GuardedTransform<T>>();
-        private readonly List<GuardedTransform<T>> _deferredTransformsToApply = new List<GuardedTransform<T>>();
 
         public GeneratorNode(int instanceCount = 1)
         {
@@ -26,12 +25,6 @@ namespace ForeverFactory.Generators
             _transformsToApply.Add(new GuardedTransform<T>(transform, guard));
         }
 
-        public void AddDeferredTransform(Transform<T> transform, CanApplyTransformSpecification guard)
-        {
-            guard = guard ?? new AlwaysApplyTransformSpecification();
-            _deferredTransformsToApply.Add(new GuardedTransform<T>(transform, guard));
-        }
-
         public IEnumerable<T> GenerateInstances(IEnumerable<NotGuardedTransform<T>> defaultTransforms = null, Func<T> customConstructor = null)
         {
             for (var index = 0; index < InstanceCount; index++)
@@ -40,8 +33,7 @@ namespace ForeverFactory.Generators
 
                 var defaultTransformsToApply = defaultTransforms ?? Enumerable.Empty<GuardedTransform<T>>();
                 var transformsToApply = defaultTransformsToApply
-                    .Union(_transformsToApply)
-                    .Union(_deferredTransformsToApply);
+                    .Union(_transformsToApply);
                 ApplyTransformsToInstance(transformsToApply, instance, index);
 
                 yield return instance;
@@ -62,7 +54,5 @@ namespace ForeverFactory.Generators
                 if (guardedTransform.Guard.CanApply(instanceIndex))
                     guardedTransform.Transform.ApplyTo(instance, instanceIndex);
         }
-
-        // TODO test
     }
 }
