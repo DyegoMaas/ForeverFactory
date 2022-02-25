@@ -32,8 +32,7 @@ namespace ForeverFactory.Generators
                 var instance = CreateInstance(customConstructor);
 
                 var defaultTransformsToApply = defaultTransforms ?? Enumerable.Empty<GuardedTransform<T>>();
-                var transformsToApply = defaultTransformsToApply
-                    .Union(_transformsToApply);
+                var transformsToApply = defaultTransformsToApply.Union(_transformsToApply);
                 ApplyTransformsToInstance(transformsToApply, instance, index);
 
                 yield return instance;
