@@ -82,8 +82,13 @@ public class CallbackTests
     public void should_execute_callback_through_ICustomizeOneBuildManyWithNavigation()
     {
         string shipName = null;
+        var counter = 0;
         
-        Action<Ship> saveShipName = ship => shipName = ship.Name;
+        Action<Ship> saveShipName = ship =>
+        {
+            shipName = ship.Name;
+            counter++;
+        };
         ICustomizeOneBuildManyWithNavigation<Ship> factory = MagicFactory.For<Ship>()
             .One()
             .PlusOne()
@@ -94,6 +99,7 @@ public class CallbackTests
             .ToArray();
 
         shipName.Should().Be("Mary");
+        counter.Should().Be(1, "the first generator node does not configure a configure");
     }
 
     [Fact]
