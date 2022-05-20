@@ -310,7 +310,8 @@ dotnet stryker
 ```
 
 ## Roadmap
- 
+
+- Add **Faker**-_like_ functionality, seamlessly integrated into the current APIs
 - Elaborate examples combining ForeverFactory with **Faker**-_like_ libraries, like:
   - [bchavez/Bogus](https://github.com/bchavez/Bogus)
   - [jonwingfield/Faker.Net](https://github.com/jonwingfield/Faker.Net)
