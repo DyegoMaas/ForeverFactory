@@ -1,6 +1,7 @@
 {
   "stryker-config":
   {
+    "reporters": [ "progress", "html"],
     "project": "ForeverFactory.csproj",
     "test-projects": [
       "./tests/ForeverFactory.Tests/ForeverFactory.Tests.csproj"
