@@ -70,4 +70,4 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: MutationResults
-          path: ./tests/ForeverFactory.Tests/StrykerOutput
+          path: ./StrykerOutput
