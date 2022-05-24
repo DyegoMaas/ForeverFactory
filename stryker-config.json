@@ -4,6 +4,9 @@
     "project": "ForeverFactory.csproj",
     "test-projects": [
       "./tests/ForeverFactory.Tests/ForeverFactory.Tests.csproj"
-    ]
+    ],
+    "thresholds": { "high": 90, "low": 75, "break": 60 },
+    "mutate": ["**/*.cs", "!FluentInterfaces/*.cs"],
+    "mutation-level": "Standard"
   }
 }
